@@ -21,6 +21,7 @@ public class ActionDcMotor {
     private DcMotorSub motor;
     private String motorName;
 
+
     public ActionDcMotor(HardwareMap hardwareMap, String MotorName, int minPos, int maxPos, double posCoefficient,double tolerance){
         motor = new DcMotorSub(hardwareMap,MotorName,minPos, maxPos,posCoefficient,tolerance);
         motorName = MotorName;
