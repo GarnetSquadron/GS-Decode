@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.enums.AngleUnitV2;
 import java.util.function.Function;
 
 public class ActionDcMotor {
-    //hi
     private DcMotorSub motor;
     private String motorName;
     public ActionDcMotor(HardwareMap hardwareMap, String MotorName, int minPos, int maxPos, double posCoefficient,double tolerance){
