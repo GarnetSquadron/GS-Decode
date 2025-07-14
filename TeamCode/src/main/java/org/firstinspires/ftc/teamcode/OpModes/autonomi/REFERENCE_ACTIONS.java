@@ -3,11 +3,14 @@ package org.firstinspires.ftc.teamcode.OpModes.autonomi;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.SequentialAction;
 
-import org.firstinspires.ftc.teamcode.Subsystems.Bot;
+import org.firstinspires.ftc.teamcode.depricated.IntoTheDeepStuff.Bot;
 
-public class REFERENCE_ACTIONS {
+public class REFERENCE_ACTIONS
+{
     Bot bot;
-    public Action DoEverything(){
+
+    public Action DoEverything()
+    {
         return new SequentialAction(
                 bot.SafeDeployIntake(1),//deploy the intake. 1 is maximum distance, 0 is minimum distance
                 bot.SafeUndeployIntake(),//undeploy the intake

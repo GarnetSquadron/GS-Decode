@@ -5,22 +5,25 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.cv.Pipelines.SamplePipeline.AnalyzedStone;
-import org.firstinspires.ftc.teamcode.cv.Vision;
+import org.firstinspires.ftc.teamcode.depricated.IntoTheDeepStuff.cv.Pipelines.SamplePipeline.AnalyzedStone;
+import org.firstinspires.ftc.teamcode.depricated.IntoTheDeepStuff.cv.Vision;
 
 @TeleOp(name = "AutoWristTest", group = "tests")
 @Disabled
-public class AutoWrist extends LinearOpMode {
+public class AutoWrist extends LinearOpMode
+{
     Servo wrist;
-    Vision vision = new Vision(hardwareMap,telemetry);
+    Vision vision = new Vision(hardwareMap, telemetry);
+
     @Override
-    public void runOpMode(){
+    public void runOpMode()
+    {
         wrist = hardwareMap.get(Servo.class, "wrist");
         vision.InitPipeline();
         waitForStart();
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
             AnalyzedStone Sample = vision.getNearestSample();
-            if(Sample!=null) {
+            if (Sample != null) {
                 double pos = (Sample.getAngleRad()) / (2 * Math.PI);
                 //adjust for a possible 180 degree rotation
                 if (pos + 0.5 < wrist.getPosition()) {
