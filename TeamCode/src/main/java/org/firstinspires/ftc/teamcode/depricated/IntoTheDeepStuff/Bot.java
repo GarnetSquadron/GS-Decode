@@ -272,7 +272,7 @@ public class Bot
     //endregion
     public void turnOffTheServos()
     {
-        intake.pivot.pivot.servo.turnOffController();
+        intake.pivot.pivot.servo.disableServo();
     }
 
 }

@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.hardwareClasses;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoControllerEx;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.ExtraMath;
 import org.firstinspires.ftc.teamcode.time.TTimer;
@@ -11,7 +13,7 @@ import java.util.function.DoubleSupplier;
 
 public class SERVO
 {
-    private final Servo servo;
+    private final ServoImplEx servo;
     private final double max;
     private final double min;
     public TTimer timer;
@@ -20,7 +22,7 @@ public class SERVO
 
     public SERVO(HardwareMap hardwareMap, String name, double min, double max, DoubleSupplier time, double runtimeCoefficient/*the time it takes for the servo to rotate to its maximum position*/)
     {
-        servo = hardwareMap.get(Servo.class, name);
+        servo = hardwareMap.get(ServoImplEx.class, name);
         this.max = max;
         this.min = min;
         timer = new TTimer(time);
@@ -111,11 +113,9 @@ public class SERVO
     /**
      * This turns off the servo, but only for certain types of servos. I hate servos.
      */
-    public void turnOffController()
+    public void disableServo()
     {
-        ServoControllerEx controller = (ServoControllerEx) servo.getController();
-        controller.setServoPwmDisable(servo.getPortNumber());
-        //controller.close();
+        servo.setPwmDisable();
     }
 
 }

@@ -36,6 +36,8 @@ continuous rotation servo
 
 Servo:
 servo class provided by sdk
+ServoImplEx:
+servo class that can disable the servo
 
 REMOVE EXTENDS SUBSYSTEM BASE
 
