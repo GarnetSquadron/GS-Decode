@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.hardwareClasses.motors.LimitedMotor;
 
 public class RingArm
 {
-    LimitedMotor arm;
+    public LimitedMotor arm;
     Servo wrist;
 
     public RingArm(HardwareMap hardwareMap)
@@ -17,7 +17,7 @@ public class RingArm
         arm = new LimitedMotor(hardwareMap, "armmotor", 0, 100);
         arm.getEncoder().setCPR(Motor.GoBILDA.RPM_117);
         arm.getEncoder().scaleToAngleUnit(AngleUnitV2.DEGREES);
-        arm.setPID(0.02, 0.01, 0);
+        arm.setPID(0.01, 0.02, 0);
         wrist = hardwareMap.get(Servo.class, "wristservo");
 
     }

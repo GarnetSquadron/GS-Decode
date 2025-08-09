@@ -94,6 +94,10 @@ public class MOTOR extends RAWMOTOR
         runToTargetPosition();
     }
 
+    public double getIntegral(){
+        return ((PIDCon)positionController).getIntegral();
+    }
+
     public boolean targetReached()
     {
         return positionController.targetReached();

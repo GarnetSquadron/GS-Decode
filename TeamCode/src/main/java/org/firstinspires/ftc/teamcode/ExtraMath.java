@@ -1,6 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.roadrunner.Vector2d;
+import com.pedropathing.pathgen.MathFunctions;
+
 import org.firstinspires.ftc.teamcode.enums.AngleUnitV2;
+
+import java.util.Arrays;
+import java.util.Vector;
 
 public class ExtraMath
 {
@@ -9,6 +17,25 @@ public class ExtraMath
      * Tau is superior to pi. Fight me
      */
     public static double Tau = Math.PI * 2;
+
+    //region vectors
+    public static Vector2d getVecFromPolarCoords(double r,double theta){
+        return new Vector2d(r*Math.cos(theta),r*Math.sin(theta));
+    }
+    public static Vector2d project(Vector2d projectee, Vector2d directionVector){
+        return directionVector.times(projectee.dot(directionVector)).div(directionVector.dot(directionVector));
+    }
+    public static Vector2d normalize(Vector2d vec){
+        return vec.div(vec.norm());
+    }
+    //endregion
+
+    public static double min(double...vals){
+        return Arrays.stream(vals).min().getAsDouble();
+    }
+    public static double max(double...vals){
+        return Arrays.stream(vals).max().getAsDouble();
+    }
 
     /**
      * if val is below min, it returns min. if val is above max, it returns max. otherwise, it just
@@ -115,4 +142,5 @@ public class ExtraMath
     {
         return (val1.getValue() - val2.getValue()) / (val1.getTimeStamp() - val2.getTimeStamp());
     }
+
 }

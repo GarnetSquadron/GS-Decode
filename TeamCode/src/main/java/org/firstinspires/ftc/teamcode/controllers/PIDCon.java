@@ -30,6 +30,9 @@ public class PIDCon extends PositionController
         this.targetPosition = targetPosition;
         reset();
     }
+    public double getIntegral(){
+        return integral;
+    }
 
     @Override
     public double calculate()

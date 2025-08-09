@@ -11,9 +11,9 @@ public class HeadlessDriveCommand
 {
     MecanumDrive drive;
 
-    public HeadlessDriveCommand(MecanumDrive m)
+    public HeadlessDriveCommand(MecanumDrive drive)
     {
-        drive = m;
+        this.drive = drive;
     }
 
     public void execute(DoubleSupplier xvel, DoubleSupplier yvel, DoubleSupplier AngularVel, double sensitivity)
