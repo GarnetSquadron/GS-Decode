@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.SeasonSpecific.OpModes.teleops;
+package org.firstinspires.ftc.teamcode.depricated.MatsWedding;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.GamepadClasses.BetterControllerClass;
-import org.firstinspires.ftc.teamcode.WeddingDrive;
 import org.firstinspires.ftc.teamcode.inputmodifiers.risingEdgeDetector;
-import org.firstinspires.ftc.teamcode.learningStuf.ArmsStuff;
 
 @TeleOp(name = "Bear The Ring")
+@Disabled
 public class BearTheRing extends OpMode
 {
     WeddingDrive weddingDrive;

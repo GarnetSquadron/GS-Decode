@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.controllers;
 
 import org.firstinspires.ftc.teamcode.ExtraMath;
+import org.firstinspires.ftc.teamcode.SmoothVelocityEncoder;
 import org.firstinspires.ftc.teamcode.ValueAtTimeStamp;
 import org.firstinspires.ftc.teamcode.time.TIME;
 
@@ -43,6 +44,12 @@ public class PIDCon extends PositionController
             integral += ExtraMath.integration.trapazoid(prevPos, new ValueAtTimeStamp(error, currentTime));
             prevPos = new ValueAtTimeStamp(error, currentTime);
         }
-        return kp * error + ki * integral + kd * encoder.getVelocity();
+        double velocity;
+        if(encoder.getClass()== SmoothVelocityEncoder.class){
+            velocity = ((SmoothVelocityEncoder)encoder).getAverageVelocity();
+        }
+        else
+            velocity = encoder.getVelocity();
+        return kp * error + ki * integral + kd * velocity;
     }
 }
