@@ -14,6 +14,7 @@ import java.util.function.DoubleSupplier;
  */
 public class SmoothVelocityEncoder extends Encoder
 {
+    int hi;
     ArrayList<Double> velocities = new ArrayList<>();
     /**
      * the number of previous velocities we keep track of to average
