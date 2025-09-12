@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing;
 //test comment
 
 import static org.firstinspires.ftc.teamcode.pathing.pedroPathing.Tuning.follower;
-
-import com.pedropathing.geometry.BezierCurve;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathBuilder;
-import com.pedropathing.paths.PathChain;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.PathBuilder;
+import com.pedropathing.pathgen.PathChain;
 
 public class PatternOneBlueSideSixBall {
 
