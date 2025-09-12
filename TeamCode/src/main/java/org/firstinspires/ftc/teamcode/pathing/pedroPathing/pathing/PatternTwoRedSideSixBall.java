@@ -33,7 +33,8 @@ public class PatternTwoRedSideSixBall {
             .addPath(
                     new BezierCurve(
                             new Pose(133.606, 59.324),
-                            new Pose(124.986, 28.141),
+                            new Pose(123.465, 41.070),
+                            new Pose(85.690, 52.986),
                             new Pose(80.000, 20.000)
                     )
             )
