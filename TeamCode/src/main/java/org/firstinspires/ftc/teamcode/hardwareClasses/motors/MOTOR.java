@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.hardwareClasses.motors;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.controllers.Controller;
-import org.firstinspires.ftc.teamcode.controllers.MaxSpeedController;
-import org.firstinspires.ftc.teamcode.controllers.NullController;
-import org.firstinspires.ftc.teamcode.controllers.PIDCon;
-import org.firstinspires.ftc.teamcode.controllers.PositionController;
+import UsefullClases.controllers.Controller;
+import UsefullClases.controllers.MaxSpeedController;
+import UsefullClases.controllers.NullController;
+import UsefullClases.controllers.PIDCon;
+import UsefullClases.controllers.PositionController;
 import org.firstinspires.ftc.teamcode.encoders.Encoder;
 
 public class MOTOR extends RAWMOTOR

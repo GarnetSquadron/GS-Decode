@@ -331,7 +331,7 @@ public final class TuningOpModes
                     MecanumMotorDirectionDebugger.class,
                     ManualFeedbackTuner.class
             )) {
-                configRoot.putVariable(c.getSimpleName(), ReflectionConfig.createVariableFromClass(c));
+                //configRoot.putVariable(c.getSimpleName(), ReflectionConfig.createVariableFromClass(c));
             }
         });
     }
