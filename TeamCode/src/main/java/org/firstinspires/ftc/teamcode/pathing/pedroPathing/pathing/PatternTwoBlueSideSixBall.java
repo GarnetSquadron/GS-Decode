@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pathing.pedroPathing;
+package org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing;
 //test comment
 
 import com.pedropathing.localization.Pose;
@@ -6,7 +6,7 @@ import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.PathBuilder;
 import com.pedropathing.pathgen.PathChain;
 
-public class PatternThreeRed {
+public class PatternTwoBlueSideSixBall {
 
     public static PathBuilder builder = new PathBuilder();
 
@@ -14,7 +14,7 @@ public class PatternThreeRed {
             .addPath(
                     new BezierCurve(
                             new Pose(56.000, 8.000),
-                            new Pose(72.761, 9.887),
+                            new Pose(74.535, 10.141),
                             new Pose(67.000, 22.000)
                     )
             )
@@ -25,8 +25,8 @@ public class PatternThreeRed {
             .addPath(
                     new BezierCurve(
                             new Pose(67.000, 22.000),
-                            new Pose(48.930, 92.282),
-                            new Pose(18.507, 83.915)
+                            new Pose(68.704, 67.690),
+                            new Pose(17.239, 57.803)
                     )
             )
             .setLinearHeadingInterpolation(Math.toRadians(32.5), Math.toRadians(100))
@@ -35,8 +35,8 @@ public class PatternThreeRed {
     public static PathChain line3 = builder
             .addPath(
                     new BezierCurve(
-                            new Pose(18.507, 83.915),
-                            new Pose(48.169, 32.704),
+                            new Pose(17.239, 57.803),
+                            new Pose(33.972, 23.070),
                             new Pose(67.000, 22.000)
                     )
             )
@@ -54,4 +54,3 @@ public class PatternThreeRed {
             .setLinearHeadingInterpolation(Math.toRadians(32.5), Math.toRadians(90))
             .build();
 }
-

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pathing.pedroPathing;
+package org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing;
 //test comment
 
 import com.pedropathing.localization.Pose;
@@ -6,15 +6,15 @@ import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.PathBuilder;
 import com.pedropathing.pathgen.PathChain;
 
-public class PatternTwoRed {
+public class PatternOneBlueSideSixBall {
 
     public static PathBuilder builder = new PathBuilder();
 
     public static PathChain line1 = builder
             .addPath(
                     new BezierCurve(
-                            new Pose(56.000, 8.000),
-                            new Pose(74.535, 10.141),
+                            new Pose(53.000, 8.000),
+                            new Pose(74.282, 9.887),
                             new Pose(67.000, 22.000)
                     )
             )
@@ -25,8 +25,8 @@ public class PatternTwoRed {
             .addPath(
                     new BezierCurve(
                             new Pose(67.000, 22.000),
-                            new Pose(68.704, 67.690),
-                            new Pose(17.239, 57.803)
+                            new Pose(26.873, 41.577),
+                            new Pose(18.254, 35.239)
                     )
             )
             .setLinearHeadingInterpolation(Math.toRadians(32.5), Math.toRadians(100))
@@ -35,8 +35,9 @@ public class PatternTwoRed {
     public static PathChain line3 = builder
             .addPath(
                     new BezierCurve(
-                            new Pose(17.239, 57.803),
-                            new Pose(33.972, 23.070),
+                            new Pose(18.254, 35.239),
+                            new Pose(39.549, 9.634),
+                            new Pose(78.592, 6.845),
                             new Pose(67.000, 22.000)
                     )
             )
@@ -54,3 +55,4 @@ public class PatternTwoRed {
             .setLinearHeadingInterpolation(Math.toRadians(32.5), Math.toRadians(90))
             .build();
 }
+
