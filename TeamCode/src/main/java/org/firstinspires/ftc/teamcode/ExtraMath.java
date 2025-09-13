@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.Vector2d;
-import com.pedropathing.pathgen.MathFunctions;
 
 import org.firstinspires.ftc.teamcode.enums.AngleUnitV2;
 
