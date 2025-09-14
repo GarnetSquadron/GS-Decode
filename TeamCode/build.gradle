@@ -61,7 +61,6 @@ dependencies {
 //        exclude group: "com.acmerobotics.dashboard"
 //    }
     implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
-    implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
     implementation "org.ftclib.ftclib:core:2.1.1"
 //    implementation("dev.frozenmilk.sinister:Sloth:0.2.4")
 

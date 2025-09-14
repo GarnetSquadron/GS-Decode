@@ -1,4 +1,4 @@
-package UsefullClases.controllers;
+package org.firstinspires.ftc.teamcode.controllers;
 
 import org.firstinspires.ftc.teamcode.ExtraMath;
 import org.firstinspires.ftc.teamcode.SmoothVelocityEncoder;
