@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 
-import java.lang.annotation.Inherited;
-
 @TeleOp(group = "test")
 public class ObeliskIdTest extends OpMode
 {

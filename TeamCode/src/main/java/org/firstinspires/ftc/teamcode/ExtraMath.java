@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.roadrunner.Vector2d;
 
 import org.firstinspires.ftc.teamcode.enums.AngleUnitV2;
 
 import java.util.Arrays;
-import java.util.Vector;
 
 public class ExtraMath
 {
