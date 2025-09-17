@@ -3,8 +3,9 @@ package org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing;
 
 
 import static org.firstinspires.ftc.teamcode.pathing.pedroPathing.Tuning.follower;
-import com.pedropathing.geometry.Pose;
 import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 
@@ -12,6 +13,8 @@ public class PatternTwoBlueSideSixBall {
 
     public static PathBuilder builder = follower.pathBuilder();
 
+    //Shooting position, change the Math.toRadians(32.5)) value to adjust angle,
+    //make sure to change the Math.toRadians(32.5)) value in line2 to the same number
     public static PathChain line1 = builder
             .addPath(
                     new BezierCurve(
@@ -34,6 +37,8 @@ public class PatternTwoBlueSideSixBall {
             .setLinearHeadingInterpolation(Math.toRadians(32.5), Math.toRadians(100))
             .build();
 
+    //Shooting position, change the Math.toRadians(32.5)) value to adjust angle,
+    //make sure to change the Math.toRadians(32.5)) value in line4 to the same number
     public static PathChain line3 = builder
             .addPath(
                     new BezierCurve(
@@ -44,8 +49,8 @@ public class PatternTwoBlueSideSixBall {
             )
             .setLinearHeadingInterpolation(Math.toRadians(100), Math.toRadians(32.5))
             .build();
-
-    public static PathChain line4 = builder
+    //Parks in middle of field
+public static PathChain line4 = builder
             .addPath(
                     new BezierCurve(
                             new Pose(67.000, 22.000),
