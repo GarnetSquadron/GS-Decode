@@ -38,7 +38,7 @@ public class Constants {
             .yVelocity(52.612);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(3)
+            .forwardPodY(3)//TODO: Check this and figure out which center it is
             .strafePodX(0)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
