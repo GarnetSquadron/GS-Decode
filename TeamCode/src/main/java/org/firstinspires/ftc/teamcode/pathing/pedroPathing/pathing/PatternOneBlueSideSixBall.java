@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing;
 //test comment
 
 import static org.firstinspires.ftc.teamcode.pathing.pedroPathing.Tuning.follower;
+
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.paths.PathBuilder;
@@ -9,13 +11,13 @@ import com.pedropathing.paths.PathChain;
 
 public class PatternOneBlueSideSixBall {
 
-    public static PathBuilder builder = follower.pathBuilder();
 
+    public static PathBuilder builder = follower.pathBuilder();
     public static PathChain line1 = builder
             .addPath(
                     new BezierCurve(
-                            new Pose(53.000, 8.000),
-                            new Pose(74.282, 9.887),
+                            new Pose(56.000, 8.000),
+                            new Pose(64.901, 14.704),
                             new Pose(67.000, 22.000)
                     )
             )
@@ -26,22 +28,15 @@ public class PatternOneBlueSideSixBall {
             .addPath(
                     new BezierCurve(
                             new Pose(67.000, 22.000),
-                            new Pose(26.873, 41.577),
-                            new Pose(18.254, 35.239)
+                            new Pose(58.563, 33.718),
+                            new Pose(18.761, 35.746)
                     )
             )
             .setLinearHeadingInterpolation(Math.toRadians(32.5), Math.toRadians(100))
             .build();
 
     public static PathChain line3 = builder
-            .addPath(
-                    new BezierCurve(
-                            new Pose(18.254, 35.239),
-                            new Pose(39.549, 9.634),
-                            new Pose(78.592, 6.845),
-                            new Pose(67.000, 22.000)
-                    )
-            )
+            .addPath(new BezierLine(new Pose(18.761, 35.746), new Pose(67.000, 22.000)))
             .setLinearHeadingInterpolation(Math.toRadians(100), Math.toRadians(32.5))
             .build();
 
@@ -56,4 +51,5 @@ public class PatternOneBlueSideSixBall {
             .setLinearHeadingInterpolation(Math.toRadians(32.5), Math.toRadians(90))
             .build();
 }
+
 
