@@ -66,6 +66,7 @@ public class ObeliskIdentifier
      */
     public void telemetryAprilTag(Telemetry telemetry) {
 
+        telemetry.addLine("remember to open the camera stream!");
         List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
 

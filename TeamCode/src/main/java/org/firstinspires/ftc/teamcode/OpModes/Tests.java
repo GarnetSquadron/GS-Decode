@@ -1,0 +1,153 @@
+package org.firstinspires.ftc.teamcode.OpModes;
+
+import com.bylazar.configurables.PanelsConfigurables;
+import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.configurables.annotations.IgnoreConfigurable;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
+import com.pedropathing.telemetry.SelectableOpMode;
+import com.pedropathing.util.PoseHistory;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
+import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
+import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Configurable
+@TeleOp(name = "Tests")
+public class Tests extends SelectableOpMode
+{
+    public static Follower follower;
+
+    @IgnoreConfigurable
+    static PoseHistory poseHistory;
+
+    @IgnoreConfigurable
+    static TelemetryManager telemetryM;
+
+    @IgnoreConfigurable
+    static ArrayList<String> changes = new ArrayList<>();
+
+    public void onLog(List<String> lines) {}
+    public Tests()
+    {
+        super("Select a Tuning OpMode", s -> {
+            s.folder("Vision", v->{
+                v.add("Obelisk Id Test",ObeliskIdTest::new);
+            });
+            s.add("motor test",MotorTest::new);
+            s.add("servo test",ServoTest::new);
+        });
+    }
+
+    @Override
+    public void onSelect() {
+        if (follower == null) {
+            follower = Constants.createFollower(hardwareMap);
+            PanelsConfigurables.INSTANCE.refreshClass(this);
+        } else {
+            follower = Constants.createFollower(hardwareMap);
+        }
+
+        follower.setStartingPose(new Pose());
+
+        poseHistory = follower.getPoseHistory();
+
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+    }
+}
+class MotorTest extends OpMode
+{
+    RAWMOTOR lf,rf,lb,rb;
+    @Override
+    public void init()
+    {
+        rf = new RAWMOTOR(hardwareMap,"rf");
+        rb = new RAWMOTOR(hardwareMap,"rb");
+        lf = new RAWMOTOR(hardwareMap,"lf");
+        lb = new RAWMOTOR(hardwareMap,"lb");
+        telemetry.addData("lf pos", lf.getEncoder().getPos());
+        telemetry.addData("rf pos", rf.getEncoder().getPos());
+        telemetry.addData("lb pos", lb.getEncoder().getPos());
+        telemetry.addData("rb pos", rb.getEncoder().getPos());
+        //lb=lf, lf=rb, rb=rf, rf=lb
+    }
+    public void loop(){
+        if (gamepad1.x) {
+            rf.setPower(1);
+        }
+        else {
+            rf.setPower(0);
+        }
+        if (gamepad1.y) {
+            lf.setPower(1);
+        }
+        else {
+            lf.setPower(0);
+        }
+        if (gamepad1.a) {
+            rb.setPower(1);
+        }
+        else {
+            rb.setPower(0);
+        }
+        if (gamepad1.b) {
+            lb.setPower(1);
+        }
+        else {
+            lb.setPower(0);
+        }
+        telemetry.update();
+    }
+}
+class ObeliskIdTest extends OpMode
+{
+    ObeliskIdentifier obeliskIdentifier;
+    @Override
+    public void init()
+    {
+        obeliskIdentifier = new ObeliskIdentifier(hardwareMap);
+    }
+
+    @Override
+    public void loop()
+    {
+        obeliskIdentifier.telemetryAprilTag(telemetry);
+    }
+}
+class ServoTest extends OpMode
+{
+    Servo servo;
+
+    public void init()
+    {
+        servo = hardwareMap.get(Servo.class, "servo");
+    }
+    public void loop(){
+        if (gamepad1.x) {
+            servo.setPosition(1);//up
+        }
+
+        if (gamepad1.a) {
+            servo.setPosition(0.66666);
+        }
+        if (gamepad1.b) {
+            servo.setPosition(0.33333);
+        }
+        if (gamepad1.y) {
+            servo.setPosition(0);//down
+        }
+        if (gamepad1.left_stick_x != 0) {
+            servo.setPosition(0.5 + gamepad1.left_stick_x * 0.5);
+        }
+        telemetry.addData("position", servo.getPosition());
+        telemetry.update();
+    }
+}

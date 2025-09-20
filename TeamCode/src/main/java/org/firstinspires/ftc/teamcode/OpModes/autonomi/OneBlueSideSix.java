@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.autonomi;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
@@ -26,8 +27,8 @@ public class OneBlueSideSix extends LinearOpMode
         PathChain line1 = builder
                 .addPath(
                         new BezierCurve(
-                                new Pose(53.000, 8.000),
-                                new Pose(74.282, 9.887),
+                                new Pose(56.000, 8.000),
+                                new Pose(64.901, 14.704),
                                 new Pose(67.000, 22.000)
                         )
                 )
@@ -38,24 +39,18 @@ public class OneBlueSideSix extends LinearOpMode
                 .addPath(
                         new BezierCurve(
                                 new Pose(67.000, 22.000),
-                                new Pose(26.873, 41.577),
-                                new Pose(18.254, 35.239)
+                                new Pose(58.563, 33.718),
+                                new Pose(18.761, 35.746)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(32.5), Math.toRadians(100))
                 .build();
 
         PathChain line3 = builder
-                .addPath(
-                        new BezierCurve(
-                                new Pose(18.254, 35.239),
-                                new Pose(39.549, 9.634),
-                                new Pose(78.592, 6.845),
-                                new Pose(67.000, 22.000)
-                        )
-                )
+                .addPath(new BezierLine(new Pose(18.761, 35.746), new Pose(67.000, 22.000)))
                 .setLinearHeadingInterpolation(Math.toRadians(100), Math.toRadians(32.5))
                 .build();
+
         PathChain line4 = builder
                 .addPath(
                         new BezierCurve(
