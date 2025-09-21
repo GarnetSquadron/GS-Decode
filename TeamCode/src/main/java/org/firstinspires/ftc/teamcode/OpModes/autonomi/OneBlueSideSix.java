@@ -7,17 +7,18 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
 
 @TeleOp(name = "AutoOneBlueSideSix")
-public class OneBlueSideSix extends LinearOpMode
+public class OneBlueSideSix extends OpMode
 {
     Follower follower;
+    PathChain line1,line2,line3,line4;
     @Override
-    public void runOpMode() throws InterruptedException
+    public void init()
     {
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(new Pose());
@@ -62,13 +63,15 @@ public class OneBlueSideSix extends LinearOpMode
                 .setLinearHeadingInterpolation(Math.toRadians(32.5), Math.toRadians(90))
                 .build();
         follower.update();
-        waitForStart();
+        //follower.followPath(line2);
+    }
+    @Override
+    public void loop(){
         follower.followPath(line1);//so basically the reason it wasnt working before I think is simply because we were using line4, and it was crashing because line4 only works if its in the right position
         while(follower.isBusy()){
             follower.update();
             telemetry.addData("path", follower.getChainIndex());
             telemetry.update();
         }
-        //follower.followPath(line2);
     }
 }
