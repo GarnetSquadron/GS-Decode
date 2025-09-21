@@ -38,7 +38,7 @@ public class Tests extends SelectableOpMode
     public void onLog(List<String> lines) {}
     public Tests()
     {
-        super("Select a Tuning OpMode", s -> {
+        super("Select a Test OpMode", s -> {
             s.folder("Vision", v->{
                 v.add("Obelisk Id Test",ObeliskIdTest::new);
             });
