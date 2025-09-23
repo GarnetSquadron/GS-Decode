@@ -12,20 +12,20 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 @TeleOp(name = "launcher")
 public class launcher extends OpMode {
-    RAWMOTOR moter1;
-    RAWMOTOR moter2;
+    RAWMOTOR motor1;
+    //RAWMOTOR motor2;
     int power = 0;
     @Override
     public void init() {
-        moter1 = new RAWMOTOR(hardwareMap, "launcherMoter1");
-        moter2 = new RAWMOTOR(hardwareMap, "launcherMoter2");
+        motor1 = new RAWMOTOR(hardwareMap, "launcherMotor1");
+        //motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
 
     }
     public void loop() {
-        moter1.setPower(power);
-        moter2.setPower(power);
+        motor1.setPower(power);
+        //motor2.setPower(power);
         if (gamepad1.a) {
-           power += 1;
+           power += 0.1;
         }
 
     }
