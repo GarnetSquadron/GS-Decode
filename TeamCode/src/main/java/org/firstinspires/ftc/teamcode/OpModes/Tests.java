@@ -11,10 +11,9 @@ import com.pedropathing.telemetry.SelectableOpMode;
 import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
@@ -47,6 +46,7 @@ public class Tests extends SelectableOpMode
             });
             s.add("motor test",MotorTest::new);
             s.add("servo test",ServoTest::new);
+            s.add("DistanceSensorDelayTest", TouchSensorDelayTest::new);
         });
     }
 
@@ -154,15 +154,15 @@ class ServoTest extends OpMode
         telemetry.update();
     }
 }
-class DistanceSensorDelayTest extends OpMode{
-    DistanceSensor sensor;
+class TouchSensorDelayTest extends OpMode{
+    TouchSensor sensor;
     double loopStartTime;
     double deltaTime = 0;
     double distance = 0;
     @Override
     public void init()
     {
-        sensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
+        sensor = hardwareMap.get(TouchSensor.class, "touchSensor");
         telemetry.addData("loopTime",deltaTime);
         telemetry.addData("distance", distance);
     }
@@ -172,7 +172,7 @@ class DistanceSensorDelayTest extends OpMode{
     {
         loopStartTime = TIME.getTime();
         if(gamepad1.a){
-            distance = sensor.getDistance(DistanceUnit.METER);
+            distance = sensor.getValue();
         }
         deltaTime = TIME.getTime()-loopStartTime;
     }
