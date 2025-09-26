@@ -30,8 +30,15 @@ public class launcher extends OpMode {
     }
     public void loop() {
         //temp
-        if (gamepad1.dpad_left) servoPosition += 0.1;
-        if (gamepad1.dpad_right) servoPosition -= 0.1;
+        if (gamepad1.dpad_left) {
+            servoPosition += 0.1;
+            telemetry.addData("left dPad presssed",servoPosition);
+
+        }
+        if (gamepad1.dpad_right){
+            servoPosition -= 0.1;
+            telemetry.addData("right dPad presssed",servoPosition);
+        }
 
         if (gamepad1.b) power = 1;
         else power = 0;
