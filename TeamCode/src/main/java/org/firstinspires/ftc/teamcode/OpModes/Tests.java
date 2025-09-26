@@ -11,11 +11,14 @@ import com.pedropathing.telemetry.SelectableOpMode;
 import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.time.TIME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,5 +152,28 @@ class ServoTest extends OpMode
         }
         telemetry.addData("position", servo.getPosition());
         telemetry.update();
+    }
+}
+class DistanceSensorDelayTest extends OpMode{
+    DistanceSensor sensor;
+    double loopStartTime;
+    double deltaTime = 0;
+    double distance = 0;
+    @Override
+    public void init()
+    {
+        sensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
+        telemetry.addData("loopTime",deltaTime);
+        telemetry.addData("distance", distance);
+    }
+
+    @Override
+    public void loop()
+    {
+        loopStartTime = TIME.getTime();
+        if(gamepad1.a){
+            distance = sensor.getDistance(DistanceUnit.METER);
+        }
+        deltaTime = TIME.getTime()-loopStartTime;
     }
 }
