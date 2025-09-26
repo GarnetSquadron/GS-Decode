@@ -19,7 +19,7 @@ public class launcher extends OpMode {
     RAWMOTOR motor2;
     double power = 0;
 
-    double servoPosition = 0.5;
+    double servoPosition = 0;
     boolean wasPressed = false;
     @Override
     public void init() {
@@ -29,6 +29,9 @@ public class launcher extends OpMode {
         motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
     }
     public void loop() {
+        //temp
+        if (gamepad1.dpad_left) servoPosition += 0.1;
+        if (gamepad1.dpad_right) servoPosition -= 0.1;
 
         if (gamepad1.b) power = 1;
         else power = 0;
