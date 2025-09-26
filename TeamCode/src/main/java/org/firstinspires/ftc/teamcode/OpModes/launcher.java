@@ -21,7 +21,9 @@ public class launcher extends OpMode {
     double power = 0;
 
     double servoPosition = 0;
-    boolean wasPressed = false;
+    //temp
+    boolean leftWasPressed = false;
+    boolean rightWasPressed = false;
     @Override
     public void init() {
 
@@ -30,16 +32,22 @@ public class launcher extends OpMode {
         motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
     }
     public void loop() {
-        //temp
         ExtraMath.Clamp(servoPosition,1,0);
-        if (gamepad1.dpad_left) {
+        //temp
+        leftWasPressed = false;
+        rightWasPressed = false;
+        if (gamepad1.dpad_left & !leftWasPressed) {
             servoPosition += 0.1;
             telemetry.addData("left dPad presssed",servoPosition);
+            ExtraMath.Clamp(servoPosition,1,0);
+            leftWasPressed = true;
 
         }
-        if (gamepad1.dpad_right){
+        if (gamepad1.dpad_right & !rightWasPressed){
             servoPosition -= 0.1;
             telemetry.addData("right dPad presssed",servoPosition);
+            ExtraMath.Clamp(servoPosition,1,0);
+            rightWasPressed = true;
         }
 
         if (gamepad1.b) power = 1;
