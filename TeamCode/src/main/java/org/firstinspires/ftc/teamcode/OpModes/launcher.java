@@ -44,7 +44,7 @@ public class launcher extends OpMode {
         telemetry.addData("power",power);
 
         telemetry.addData("motor power", motor1.getPower());
-        telemetry.addData("servo angle", angleServo.getDirection());
+        telemetry.addData("servo position", angleServo.getDirection());
 
 
     }
