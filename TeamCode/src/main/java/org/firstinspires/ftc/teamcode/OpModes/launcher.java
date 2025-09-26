@@ -7,6 +7,7 @@ import android.webkit.JavascriptInterface;
 
 import com.acmerobotics.roadrunner.SleepAction;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import org.firstinspires.ftc.teamcode.ExtraMath;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -30,6 +31,7 @@ public class launcher extends OpMode {
     }
     public void loop() {
         //temp
+        ExtraMath.Clamp(servoPosition,1,0);
         if (gamepad1.dpad_left) {
             servoPosition += 0.1;
             telemetry.addData("left dPad presssed",servoPosition);
