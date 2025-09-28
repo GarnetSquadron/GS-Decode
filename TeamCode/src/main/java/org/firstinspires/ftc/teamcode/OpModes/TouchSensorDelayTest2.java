@@ -17,6 +17,9 @@ public class TouchSensorDelayTest2 extends OpMode
     public void init()
     {
         sensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+        telemetry.addLine("press a to activate sensor");
+        telemetry.addData("loopTime",deltaTime);
+        telemetry.addData("distance", distance);
     }
 
     @Override
@@ -27,7 +30,6 @@ public class TouchSensorDelayTest2 extends OpMode
             distance = sensor.blue();
         }
         deltaTime = TIME.getTime()-loopStartTime;
-        telemetry.addData("loopTime",deltaTime);
-        telemetry.addData("distance", distance);
+        telemetry.update();
     }
 }
