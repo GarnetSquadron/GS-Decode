@@ -37,7 +37,7 @@ public class Tests extends SelectableOpMode
             });
             s.add("motor test",MotorTest::new);
             s.add("servo test",ServoTest::new);
-            s.add("DistanceSensorDelayTest", TouchSensorDelayTest2::new);
+            s.add("DistanceSensorDelayTest", TouchSensorDelayTest::new);
         });
     }
 
