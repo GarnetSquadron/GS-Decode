@@ -1,14 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
 import com.pedropathing.telemetry.SelectableOpMode;
-import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,26 +9,24 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
-import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.time.TIME;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Configurable
 @TeleOp(name = "Tests")
 public class Tests extends SelectableOpMode
 {
-    public static Follower follower;
-
-    @IgnoreConfigurable
-    static PoseHistory poseHistory;
-
-    @IgnoreConfigurable
-    static TelemetryManager telemetryM;
-
-    @IgnoreConfigurable
-    static ArrayList<String> changes = new ArrayList<>();
+//    public static Follower follower;
+//
+//    @IgnoreConfigurable
+//    static PoseHistory poseHistory;
+//
+//    @IgnoreConfigurable
+//    static TelemetryManager telemetryM;
+//
+//    @IgnoreConfigurable
+//    static ArrayList<String> changes = new ArrayList<>();
 
     public void onLog(List<String> lines) {}
     public Tests()
@@ -46,24 +37,24 @@ public class Tests extends SelectableOpMode
             });
             s.add("motor test",MotorTest::new);
             s.add("servo test",ServoTest::new);
-            s.add("DistanceSensorDelayTest", TouchSensorDelayTest::new);
+            s.add("DistanceSensorDelayTest", TouchSensorDelayTest2::new);
         });
     }
 
     @Override
     public void onSelect() {
-        if (follower == null) {
-            follower = Constants.createFollower(hardwareMap);
-            PanelsConfigurables.INSTANCE.refreshClass(this);
-        } else {
-            follower = Constants.createFollower(hardwareMap);
-        }
-
-        follower.setStartingPose(new Pose());
-
-        poseHistory = follower.getPoseHistory();
-
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+//        if (follower == null) {
+//            follower = Constants.createFollower(hardwareMap);
+//            PanelsConfigurables.INSTANCE.refreshClass(this);
+//        } else {
+//            follower = Constants.createFollower(hardwareMap);
+//        }
+//
+//        follower.setStartingPose(new Pose());
+//
+//        poseHistory = follower.getPoseHistory();
+//
+//        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
     }
 }
 class MotorTest extends OpMode
