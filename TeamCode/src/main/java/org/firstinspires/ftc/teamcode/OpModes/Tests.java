@@ -2,11 +2,15 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.telemetry.SelectableOpMode;
+import com.qualcomm.hardware.maxbotix.MaxSonarI2CXL;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.time.TIME;
@@ -37,7 +41,7 @@ public class Tests extends SelectableOpMode
             });
             s.add("motor test",MotorTest::new);
             s.add("servo test",ServoTest::new);
-            s.add("DistanceSensorDelayTest", TouchSensorDelayTest::new);
+            s.add("DistanceSensorDelayTest", SensorDelayTest::new);
         });
     }
 
@@ -145,15 +149,25 @@ class ServoTest extends OpMode
         telemetry.update();
     }
 }
-class TouchSensorDelayTest extends OpMode{
-    TouchSensor sensor;
+class SensorDelayTest extends OpMode{
+    TouchSensor touchSensor;
+    DistanceSensor distanceSensor;
+    ColorSensor colorSensor;
+    MaxSonarI2CXL sonarSensor;
+
     double loopStartTime;
     double deltaTime = 0;
+    boolean touched = false;
     double distance = 0;
+    double sonarDistance = 0;
+    int color = 0;
     @Override
     public void init()
     {
-        sensor = hardwareMap.get(TouchSensor.class, "touchSensor");
+        touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
+        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+        sonarSensor = hardwareMap.get(MaxSonarI2CXL.class,"sonar");
         telemetry.addData("loopTime",deltaTime);
         telemetry.addData("distance", distance);
     }
@@ -162,9 +176,29 @@ class TouchSensorDelayTest extends OpMode{
     public void loop()
     {
         loopStartTime = TIME.getTime();
-        if(gamepad1.a){
-            distance = sensor.getValue();
+        if(gamepad1.a)
+        {
+            touched = touchSensor.isPressed();
+            telemetry.addData("touched", touched);
         }
+        if(gamepad1.b)
+        {
+            distance = distanceSensor.getDistance(DistanceUnit.INCH);
+            telemetry.addData("distance", distance);
+        }
+        if(gamepad1.x)
+        {
+            color = colorSensor.argb();
+            telemetry.addData("color",color);
+        }
+        if(gamepad1.y)
+        {
+            sonarDistance = sonarSensor.getDistanceAsync(DistanceUnit.INCH);
+            telemetry.addData("sonaDistance",sonarDistance);
+        }
+
         deltaTime = TIME.getTime()-loopStartTime;
+        telemetry.addData("loopTime",deltaTime);
+        telemetry.update();
     }
 }
