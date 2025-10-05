@@ -55,7 +55,7 @@ public class launcher extends OpMode {
 
         telemetry.addData("motor power", motor1.getPower());
         telemetry.addData("servo position", angleServo.getPosition());
-        telemetry.addData("hi there"," this is from a test commit");
+//        telemetry.addData("hi there"," this is from a test commit");
 
 
     }
