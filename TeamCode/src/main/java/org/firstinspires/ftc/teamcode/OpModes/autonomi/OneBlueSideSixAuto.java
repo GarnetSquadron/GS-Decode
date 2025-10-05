@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
 
 @TeleOp(name = "AutoOneBlueSideSix")
-public class OneBlueSideSix extends OpMode
+public class OneBlueSideSixAuto extends OpMode
 {
     Follower follower;
     PathChain line1,line2,line3,line4;
