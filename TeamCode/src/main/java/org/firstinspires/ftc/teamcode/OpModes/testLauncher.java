@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ExtraMath;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 @TeleOp(name = "launcher")
-public class launcher extends OpMode {
+public class testLauncher extends OpMode {
     Servo angleServo;
     RAWMOTOR motor1;
     RAWMOTOR motor2;
