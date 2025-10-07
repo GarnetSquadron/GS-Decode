@@ -26,7 +26,7 @@ public class AngleFinder
         double[] tSquared = ExtraMath.quadraticFormula(a,b,c);
         if(tSquared.length==2){
             //not sure if stream is the fastest option but its simpler
-            return Arrays.stream(ExtraMath.quadraticFormula(a, b, c))//solves a quadratic in terms of t^2
+            return Arrays.stream(tSquared)//solves a quadratic in terms of t^2
                     .map(Math::sqrt)//gets t from t^2 (we know t is positive because it is the time after launch, not before)
                     .map(t -> getAngleFromTime(t, distance))//gets the angle from the time.
                     .toArray();//turns it back to an array
