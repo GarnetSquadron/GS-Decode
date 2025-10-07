@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
+import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
 
 import java.util.Arrays;
 
@@ -33,13 +34,28 @@ public class AngleFinder
         }
         else return tSquared;
     }
+    /**
+     * chooses the optimum angle (rn if theres a choice it just chooses the higher one by default because that one is more fun)
+     * @param vel
+     * @param distance
+     * @return one of the angles that works, or -1 if it doesn't exist at this speed.
+     */
     public static double getOptimumAngle(double vel,double distance){
         double[] angles = getAngles(vel,distance);
         if(angles.length==0){
-            return -1;// this means that the angle is impossible.
+            return -1;// this means that the angle is impossible. In this case because the flywheel speed is too low
         }
-        else return angles[1];
+        else if(!isInAngleRange(angles[1])){
+            if(!isInAngleRange(angles[0])){
+                return -1;// angle is impossible because the angle is outside of the
+            }
+            else return angles[0];//if large angle
+        }
+        else return angles[1];//default to the larger angle because it is more fun
     }
+     static boolean isInAngleRange(double angle){
+        return angle<=RobotDimensions.Hood.maxAngle&&angle>=RobotDimensions.Hood.minAngle;
+     }
 
     /**
      *
