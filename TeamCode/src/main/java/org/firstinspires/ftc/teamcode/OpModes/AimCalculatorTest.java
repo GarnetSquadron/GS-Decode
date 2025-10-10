@@ -33,7 +33,10 @@ public class AimCalculatorTest extends OpMode {
         if (gamepad1.a) {
             double[] botPos = new double[] {follower.getPose().getX(), follower.getPose().getY()};
             aimAtGoal(FieldDimensions.goalPositionRed,botPos,6);
-
         }
+        if (gamepad1.y) {
+            launcher.setPower(1);
+        }
+        else {launcher.setPower(0);}
     }
 }
