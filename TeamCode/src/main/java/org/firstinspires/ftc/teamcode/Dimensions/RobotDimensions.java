@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode.Dimensions;
 
+/**
+ * for storing random robot dimensions. I always debate whether to put them here or in the class that corresponds to that part of the bot, but Im sticking with this for now.
+ */
 public class RobotDimensions
 {
     /**
-     * height of the pivot of the outtake from the ground when the vipers are all the way down
+     * no idea what the actual numbers are yet TODO:find the actual values
      */
-    public static double outtakePivotMinimumHeight = 15;
-    public static double minOuttakeLength = 8.375;
-    public static double outtakeClawLength = 3;
-    public static double maxOuttakeLength = minOuttakeLength + outtakeClawLength;
-    public static double wallGrabHeight = 9.75;
-    /**
-     * How high the outtake has to be above the bar when clipping. In other words the length from
-     * the outtake claw pivot to the end of the sample.
-     */
-    public static double AdditionalClippingHeight = 3;
+    public static class Hood
+    {
+        public static final double minAngle = 80;
+        public static final double maxAngle = 110;
+    }
 }

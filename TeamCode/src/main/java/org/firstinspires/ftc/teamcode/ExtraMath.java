@@ -66,8 +66,8 @@ public class ExtraMath
         if(discriminant>=0){
             double sqrtDiscriminant = Math.sqrt(discriminant);
             return new double[]{
-                    (-b + sqrtDiscriminant) / (2 * a),
-                    (-b - sqrtDiscriminant) / (2 * a)
+                    (-b - sqrtDiscriminant) / (2 * a),
+                    (-b + sqrtDiscriminant) / (2 * a)
             };
         }
         else return new double[]{};//easy way to check real roots- if array.length==0
