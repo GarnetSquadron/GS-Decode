@@ -18,7 +18,7 @@ public class launcher {
         angleServo.setPosition(angle * tmpScaleFactor);
     }
 
-    public void setTurretRotation(int rotation) {
+    public void setTurretRotation(double rotation) {
         turretRot.setPower(1);
         turretRot.setTargetPosition(rotation);
     }
