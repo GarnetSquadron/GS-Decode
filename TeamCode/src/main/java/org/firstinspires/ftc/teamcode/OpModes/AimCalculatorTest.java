@@ -2,18 +2,17 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import static org.firstinspires.ftc.teamcode.pathing.pedroPathing.Tuning.follower;
 
-import com.arcrobotics.ftclib.controller.PController;
-import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.AngleFinder;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
-import org.firstinspires.ftc.teamcode.launcher;
+import org.firstinspires.ftc.teamcode.Launcher;
 
 @TeleOp(name = "aimCalc" )
 public class AimCalculatorTest extends OpMode {
-    launcher launcher = new launcher();
+    Launcher launcher;
         public void aimAtGoal(double[] goalPos, double[] botPos, int vel) {
             double distance = Math.toRadians( Math.sqrt(((((goalPos[0] + goalPos[1])*2)+((botPos[0]-botPos[1])*2)))));
             double angle = AngleFinder.getOptimumAngle(vel,distance);
@@ -25,7 +24,7 @@ public class AimCalculatorTest extends OpMode {
 
     @Override
     public void init() {
-
+        launcher = new Launcher(hardwareMap);
     }
 
     @Override
@@ -36,7 +35,6 @@ public class AimCalculatorTest extends OpMode {
         }
         if (gamepad1.y) {
             launcher.setPower(1);
-        }
-        else {launcher.setPower(0);}
+        }else {launcher.setPower(0);}
     }
 }

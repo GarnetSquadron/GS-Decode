@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.MOTOR;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 
-public class launcher {
+public class Launcher {
 
     Servo angleServo;
     RAWMOTOR motor1;
@@ -28,7 +30,7 @@ public class launcher {
         motor1.setPower(power);
     }
 
-    public void init(){
+    public Launcher(HardwareMap hardwareMap){
         angleServo = hardwareMap.get(Servo.class, "angleServo");
         motor1 = new RAWMOTOR(hardwareMap, "launcherMotor1");
         motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
