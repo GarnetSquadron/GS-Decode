@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
 
-@TeleOp(name = "AutoRedAll")
+@TeleOp(name = "AutoBlueAll")
 public class AllBlue extends LinearOpMode
 {
     Follower follower;
