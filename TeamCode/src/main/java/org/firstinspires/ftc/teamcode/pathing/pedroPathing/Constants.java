@@ -32,14 +32,14 @@ public class Constants {
             .leftFrontMotorName("lf")
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .xVelocity(64.332)
             .yVelocity(52.612);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(3)//TODO: Check this and figure out which center it is
-            .strafePodX(0)
+            .strafePodX(-6)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD)
