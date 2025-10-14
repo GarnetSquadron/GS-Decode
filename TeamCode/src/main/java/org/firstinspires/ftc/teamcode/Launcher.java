@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 
 public class Launcher {
 
+    //this variable is called angle servo because it is the position of the servo that launches the ball at an angle
+    /// TODO give better name
     Servo angleServo;
     RAWMOTOR motor1;
     RAWMOTOR motor2;
