@@ -43,13 +43,13 @@ public class testLauncher extends OpMode {
             rightWasPressed = true;
         }
 
-        if (gamepad1.b) power = 1;
+        if (gamepad1.b) power = 0.6;
         else power = 0;
 
         motor1.setPower(power);
         motor2.setPower(power / -1);
 
-        angleServo.setPosition(servoPosition);
+        //angleServo.setPosition(servoPosition);
 
         telemetry.addData("power",power);
 

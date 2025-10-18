@@ -38,4 +38,5 @@ public class Launcher {
         motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
         turretRot = new MOTOR(hardwareMap, "turretRot");
         motor2.reverseMotor();
-    }}
+    }
+}

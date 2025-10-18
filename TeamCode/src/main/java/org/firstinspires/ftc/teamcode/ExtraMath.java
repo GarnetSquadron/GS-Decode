@@ -56,7 +56,6 @@ public class ExtraMath
     {
         return withinRange(val, expectedVal + tolerance, expectedVal - tolerance);
     }
-
     /**
      * applies the quadratic formula to solve ax^2+bx+c=0
      * @return a double array, with the 0th element being the smaller solution and the 1st element being the larger solution

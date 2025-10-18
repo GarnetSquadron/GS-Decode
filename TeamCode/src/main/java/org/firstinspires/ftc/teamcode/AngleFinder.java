@@ -11,7 +11,7 @@ public class AngleFinder
      * needs to be somewhere between minGoalHeight and maxGoalHeight, so why not the average
      */
     final static double targetHeight = (FieldDimensions.maxGoalHeight+FieldDimensions.minGoalHeight)/2.0;
-    final static double g = 9.8;
+    final static double g = 386.09;//9.8 m/s^2=386.09in/s
 
     /**
      * calculate both the angles (in radians of course)
@@ -30,9 +30,9 @@ public class AngleFinder
             return Arrays.stream(tSquared)//solves a quadratic in terms of t^2
                     .map(Math::sqrt)//gets t from t^2 (we know t is positive because it is the time after launch, not before)
                     .map(t -> getAngleFromTime(t, distance))//gets the angle from the time.
-                    .toArray();//turns it back to an array
+                    .toArray();//turns it back to an arrays
         }
-        else return tSquared;
+        else return new double[] {};
     }
     /**
      * chooses the optimum angle (rn if theres a choice it just chooses the higher one by default because that one is more fun)
@@ -54,7 +54,7 @@ public class AngleFinder
         else return angles[1];//default to the larger angle because it is more fun
     }
      static boolean isInAngleRange(double angle){
-        return angle<=RobotDimensions.Hood.maxAngle&&angle>=RobotDimensions.Hood.minAngle;
+        return angle<=Math.toRadians(RobotDimensions.Hood.maxAngle)&&angle>=Math.toRadians(RobotDimensions.Hood.minAngle);
      }
 
     /**
