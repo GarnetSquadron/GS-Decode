@@ -107,6 +107,7 @@ public class AllBlue extends LinearOpMode
         while(follower.isBusy()){
             follower.update();
             telemetry.addData("path", follower.getChainIndex());
+            telemetry.addData("position", follower.getPose());
             telemetry.update();
         }
         //follower.followPath(line2);
