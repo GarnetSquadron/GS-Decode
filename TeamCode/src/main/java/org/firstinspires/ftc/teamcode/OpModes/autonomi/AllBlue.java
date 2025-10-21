@@ -20,7 +20,7 @@ public class AllBlue extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(0,0,Math.toRadians(90)));
+        follower.setStartingPose(new Pose(54,8,Math.toRadians(90)));
         follower.update();
         PathBuilder builder = follower.pathBuilder();
 
@@ -32,17 +32,17 @@ public class AllBlue extends LinearOpMode
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(110))
                 .build();
 
-//        PathChain line2 = builder
-//                .addPath(
-//                        // Path 2, Go to collect closest pattern
-//                        new BezierCurve(
-//                                new Pose(58.000, 20.000),
-//                                new Pose(48.676, 34.479),
-//                                new Pose(15.718, 35.239)
-//                        )
-//                )
-//                .setLinearHeadingInterpolation(Math.toRadians(110), Math.toRadians(180))
-//                .build();
+        PathChain line2 = builder
+                .addPath(
+                        // Path 2, Go to collect closest pattern
+                        new BezierCurve(
+                                new Pose(58.000, 20.000),
+                                new Pose(48.676, 34.479),
+                                new Pose(15.718, 35.239)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(110), Math.toRadians(180))
+                .build();
 //
 //        PathChain line3 = builder
 //                .addPath(
