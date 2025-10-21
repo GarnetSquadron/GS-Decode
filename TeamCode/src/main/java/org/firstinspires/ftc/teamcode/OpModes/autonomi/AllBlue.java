@@ -43,62 +43,62 @@ public class AllBlue extends LinearOpMode
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(110), Math.toRadians(180))
                 .build();
-//
-//        PathChain line3 = builder
-//                .addPath(
-//                        // Path 3, Go to shoot at close position, change ALL Math.toRadians(125) values to adjust the CLOSE shooting horizontal angle
-//                        new BezierCurve(
-//                                new Pose(15.718, 35.239),
-//                                new Pose(59.070, 51.211),
-//                                new Pose(66.000, 78.000)
-//                        )
-//                )
-//                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(125))
-//                .build();
-//
-//        PathChain line4 = builder
-//                .addPath(
-//                        // Path 4, Go to collect middle pattern
-//                        new BezierCurve(
-//                                new Pose(66.000, 78.000),
-//                                new Pose(52.986, 60.085),
-//                                new Pose(16.225, 56.028)
-//                        )
-//                )
-//                .setLinearHeadingInterpolation(Math.toRadians(125), Math.toRadians(180))
-//                .build();
-//
-//        PathChain line5 = builder
-//                .addPath(
-//                        // Path 5, Go to shoot at close position, change ALL Math.toRadians(125) values to adjust the CLOSE shooting horizontal angle
-//                        new BezierCurve(
-//                                new Pose(16.225, 56.028),
-//                                new Pose(52.986, 65.915),
-//                                new Pose(66.000, 78.000)
-//                        )
-//                )
-//                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(125))
-//                        .build();
-//
-//        PathChain line6 = builder
-//                .addPath(
-//                        // Path 6, Go to collect furthest pattern
-//                        new BezierCurve(
-//                                new Pose(66.000, 78.000),
-//                                new Pose(43.859, 83.915),
-//                                new Pose(16.732, 84.423)
-//                        )
-//                )
-//                .setLinearHeadingInterpolation(Math.toRadians(125), Math.toRadians(180))
-//                        .build();
-//
-//        PathChain line7 = builder
-//                .addPath(
-//                        // Path 7, Go to shoot at close position, change ALL Math.toRadians(125) values to adjust the CLOSE shooting horizontal angle
-//                        new BezierLine(new Pose(16.732, 84.423), new Pose(66.000, 78.000))
-//                )
-//                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(125))
-//                .build();
+
+        PathChain line3 = builder
+                .addPath(
+                        // Path 3, Go to shoot at close position, change ALL Math.toRadians(125) values to adjust the CLOSE shooting horizontal angle
+                        new BezierCurve(
+                                new Pose(15.718, 35.239),
+                                new Pose(59.070, 51.211),
+                                new Pose(66.000, 78.000)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(125))
+                .build();
+
+        PathChain line4 = builder
+                .addPath(
+                        // Path 4, Go to collect middle pattern
+                        new BezierCurve(
+                                new Pose(66.000, 78.000),
+                                new Pose(52.986, 60.085),
+                                new Pose(16.225, 56.028)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(125), Math.toRadians(180))
+                .build();
+
+        PathChain line5 = builder
+                .addPath(
+                        // Path 5, Go to shoot at close position, change ALL Math.toRadians(125) values to adjust the CLOSE shooting horizontal angle
+                        new BezierCurve(
+                                new Pose(16.225, 56.028),
+                                new Pose(52.986, 65.915),
+                                new Pose(66.000, 78.000)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(125))
+                        .build();
+
+        PathChain line6 = builder
+                .addPath(
+                        // Path 6, Go to collect furthest pattern
+                        new BezierCurve(
+                                new Pose(66.000, 78.000),
+                                new Pose(43.859, 83.915),
+                                new Pose(16.732, 84.423)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(125), Math.toRadians(180))
+                        .build();
+
+        PathChain line7 = builder
+                .addPath(
+                        // Path 7, Go to shoot at close position, change ALL Math.toRadians(125) values to adjust the CLOSE shooting horizontal angle
+                        new BezierLine(new Pose(16.732, 84.423), new Pose(66.000, 78.000))
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(125))
+                .build();
 
         follower.update();
         waitForStart();
