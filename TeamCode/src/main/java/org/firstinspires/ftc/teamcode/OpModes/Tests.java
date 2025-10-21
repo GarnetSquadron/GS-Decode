@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Intake;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.time.TIME;
@@ -59,6 +60,36 @@ public class Tests extends SelectableOpMode
 //        poseHistory = follower.getPoseHistory();
 //
 //        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+    }
+}
+
+/**
+ * runs the intake (while a is pressed) until the motor is staling, at which point it stops, and waits for you to stop pressing a before allowing you to try again
+ */
+class IntakeStallDetectTest extends OpMode{
+    Intake intake;
+    boolean hasStalled = false;
+    @Override
+    public void init()
+    {
+        intake = new Intake(hardwareMap);
+    }
+
+    @Override
+    public void loop()
+    {
+        if(hasStalled){
+            intake.stopIntake();
+            hasStalled = gamepad1.a;//change has stalled to false if you stop holding a, at which point the code goes back to the else block
+        } else{
+            if(gamepad1.a){
+                intake.motorPower(1);
+                hasStalled = intake.isStalling();//change has stalled to true if it stalls
+            } else{
+                intake.stopIntake();
+            }
+        }
+        telemetry.addData("has stalled", hasStalled);
     }
 }
 class MotorTest extends OpMode

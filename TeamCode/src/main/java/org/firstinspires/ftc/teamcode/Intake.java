@@ -1,20 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
-
 public class Intake {
-    RAWMOTOR intakeMotor;
+    DcMotorEx intakeMotor;
 
     public Intake(HardwareMap hardwareMap) {
-        intakeMotor = new RAWMOTOR(hardwareMap, "intakeMotor");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
     }
 
     public void motorPower(double power) {
         intakeMotor.setPower(power);
     }
+    public boolean isStalling(){
+        return intakeMotor.isOverCurrent();
+    }
     public void stopIntake() {
-        intakeMotor.stop();
+        intakeMotor.setPower(0);
     }
 }
