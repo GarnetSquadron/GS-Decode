@@ -20,7 +20,7 @@ public class AllBlue extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose());
+        follower.setStartingPose(new Pose(0,0,Math.toRadians(90)));
         follower.update();
         PathBuilder builder = follower.pathBuilder();
 
