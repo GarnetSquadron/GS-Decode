@@ -103,12 +103,19 @@ public class AllBlue extends LinearOpMode
         follower.update();
         waitForStart();
         follower.followPath(line1);
+        follower.wait(1000);
         follower.followPath(line2);
+        follower.wait(1000);
         follower.followPath(line3);
+        follower.wait(1000);
         follower.followPath(line4);
+        follower.wait(1000);
         follower.followPath(line5);
+        follower.wait(1000);
         follower.followPath(line6);
+        follower.wait(1000);
         follower.followPath(line6);
+        follower.wait(1000);
 
         while(follower.isBusy()){
             follower.update();
