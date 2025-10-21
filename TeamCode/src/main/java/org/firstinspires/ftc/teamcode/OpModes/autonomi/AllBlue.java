@@ -102,7 +102,14 @@ public class AllBlue extends LinearOpMode
 
         follower.update();
         waitForStart();
-        follower.followPath(line1);//so basically the reason it wasnt working before I think is simply because we were using line4, and it was crashing because line4 only works if its in the right position
+        follower.followPath(line1);
+        follower.followPath(line2);
+        follower.followPath(line3);
+        follower.followPath(line4);
+        follower.followPath(line5);
+        follower.followPath(line6);
+        follower.followPath(line6);
+
         while(follower.isBusy()){
             follower.update();
             telemetry.addData("path", follower.getChainIndex());
