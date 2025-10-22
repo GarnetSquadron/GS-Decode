@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ExtraMath;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 @TeleOp(name = "launcher")
-public class launcher extends OpMode {
+public class testLauncher extends OpMode {
     Servo angleServo;
     RAWMOTOR motor1;
     RAWMOTOR motor2;
@@ -43,13 +43,13 @@ public class launcher extends OpMode {
             rightWasPressed = true;
         }
 
-        if (gamepad1.b) power = 1;
+        if (gamepad1.b) power = 0.6;
         else power = 0;
 
         motor1.setPower(power);
         motor2.setPower(power / -1);
 
-        angleServo.setPosition(servoPosition);
+        //angleServo.setPosition(servoPosition);
 
         telemetry.addData("power",power);
 
