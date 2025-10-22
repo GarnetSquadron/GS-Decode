@@ -15,9 +15,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing.PatternOneBlueSideSixBall;
-import org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing.PatternOneRedSideSixBall;
-import org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing.PatternThreeBlueSideSixBall;
+import org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing.AllBlue;
+import org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing.AllRed;
+import org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing.test;
+
 
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class autonomiSelector extends SelectableOpMode
     @IgnoreConfigurable
     static ArrayList<String> changes = new ArrayList<>();
 
-    static PathChain[] paths = {PatternOneBlueSideSixBall.line1, PatternOneRedSideSixBall.line1, PatternThreeBlueSideSixBall.line1};
+    static PathChain[] paths = {AllBlue.paths, AllRed.paths, test.line1};
 
 
     public autonomiSelector()
