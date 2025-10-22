@@ -3,20 +3,25 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 public class Intake {
-    DcMotorEx intakeMotor;
+    DcMotorEx motor;
 
     public Intake(HardwareMap hardwareMap) {
-        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+        motor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
     }
 
     public void motorPower(double power) {
-        intakeMotor.setPower(power);
+        motor.setPower(power);
     }
     public boolean isStalling(){
-        return intakeMotor.isOverCurrent();
+        return motor.isOverCurrent();
+    }
+    public double getMilliamps(){
+        return motor.getCurrent(CurrentUnit.MILLIAMPS);
     }
     public void stopIntake() {
-        intakeMotor.setPower(0);
+        motor.setPower(0);
     }
 }
