@@ -56,6 +56,21 @@ public class ExtraMath
     {
         return withinRange(val, expectedVal + tolerance, expectedVal - tolerance);
     }
+    /**
+     * applies the quadratic formula to solve ax^2+bx+c=0
+     * @return a double array, with the 0th element being the smaller solution and the 1st element being the larger solution
+     */
+    public static double[] quadraticFormula(double a, double b, double c){
+        double discriminant = b*b-4*a*c;
+        if(discriminant>=0){
+            double sqrtDiscriminant = Math.sqrt(discriminant);
+            return new double[]{
+                    (-b - sqrtDiscriminant) / (2 * a),
+                    (-b + sqrtDiscriminant) / (2 * a)
+            };
+        }
+        else return new double[]{};//easy way to check real roots- if array.length==0
+    }
 
     /**
      * returns input with minimum magnitude
