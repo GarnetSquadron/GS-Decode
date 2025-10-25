@@ -11,7 +11,25 @@ public class Intake {
     public Intake(HardwareMap hardwareMap) {
         motor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
     }
-
+    public int countArtifacts(double current){
+        int artifacts = 0;
+        if(current <2000 && current > 1000){
+        artifacts++;
+    } 
+        else if(current <3800){
+            artifacts = 2;
+    }
+        else{
+        artifacts = 3;
+    }
+        return artifacts;
+    }
+    public boolean hasThreeArtifacts(double current){
+        if(current > 3800){
+            return true;
+        }
+        return false;
+    }
     public void motorPower(double power) {
         motor.setPower(power);
     }
