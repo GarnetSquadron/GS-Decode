@@ -8,18 +8,26 @@ import org.firstinspires.ftc.teamcode.controllers.NullController;
 import org.firstinspires.ftc.teamcode.controllers.PIDCon;
 import org.firstinspires.ftc.teamcode.controllers.PositionController;
 import org.firstinspires.ftc.teamcode.encoders.Encoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class MOTOR extends RAWMOTOR
-{
+public class MOTOR extends RAWMOTOR {
+    private static final Logger log = LoggerFactory.getLogger(MOTOR.class);
     Controller extTorqueController = new NullController();
     PositionController positionController;
 
     public static class builder {
          double maxPower = 1;
-
+         String name = "null name";
+         double tolerance = 1;
+         HardwareMap hardwareMap;
          Controller extTorqueController = new NullController();
          PositionController positionController;
          Encoder encoder;
+
+         public builder(HardwareMap hardwareMap){
+             this.hardwareMap = hardwareMap;
+         }
         public double getTolerance()
         {
             return positionController.getTolerance();
@@ -45,17 +53,26 @@ public class MOTOR extends RAWMOTOR
              }
              this.positionController = positionController;
          }
-
-         public void setTolerance(double tolerance) {
-             positionController.setTolerance(tolerance);
+         public builder setName(String name) {
+            this.name = name;
+            return this;
          }
 
+         public void setTolerance(double tolerance) {
+             this.tolerance = tolerance;
+         }
 
+         public MOTOR build() {
+            return new MOTOR(hardwareMap,name,maxPower,tolerance,extTorqueController,positionController,encoder);
+        }
      }
+
 
     public double getTargetPosition()
     {
         return positionController.getTargetPosition();
+
+
     }
 
 
@@ -90,17 +107,21 @@ public class MOTOR extends RAWMOTOR
         return positionController.targetReached();
     }
 
-    public MOTOR(HardwareMap hardwareMap, String name)
+    public MOTOR(HardwareMap hardwareMap, String name, double maxPower, double tolerance, Controller extTorqueController, PositionController positionController, Encoder encoder)
     {
         super(hardwareMap, name);
-
+        this.maxPower = maxPower;
+        this.setMaxPower(maxPower);
+        this.positionController.setTolerance(tolerance);
+        this.extTorqueController = extTorqueController;
+        this.positionController = positionController;
+        this.encoder = encoder;
     }
 
     public void setNetTorque(double power)
     {
         setPower(power - extTorqueController.calculate());
     }
-
 
 
 

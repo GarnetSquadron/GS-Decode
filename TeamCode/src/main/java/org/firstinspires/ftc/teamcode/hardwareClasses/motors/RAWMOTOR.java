@@ -19,6 +19,10 @@ public class RAWMOTOR
         setEncoderToMotorEncoder();
     }
 
+    public static class builder{
+        public void hi(){}
+    }
+
     public void setPower(double power)
     {
         motor.set(ExtraMath.Clamp(power, maxPower, -maxPower));
