@@ -10,7 +10,7 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.pathing.pedroPathing.TestConstants;
 
 @TeleOp(name = "AutoBlueAll")
 public class AllBlue extends LinearOpMode
@@ -19,7 +19,7 @@ public class AllBlue extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        follower = Constants.createFollower(hardwareMap);
+        follower = TestConstants.createFollower(hardwareMap);
         follower.setStartingPose(new Pose(54,8,Math.toRadians(90)));
         follower.update();
         PathBuilder builder = follower.pathBuilder();

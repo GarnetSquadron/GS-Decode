@@ -14,13 +14,27 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-public class Constants {
+public class CompConstants
+{
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             .translationalPIDFCoefficients(new PIDFCoefficients(0, 0, 0, 0))
             .headingPIDFCoefficients(new PIDFCoefficients(2, 0, 0.1, 0))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0))
-            .mass(5.8)
+            .mass(
+
+                    //take the geometric mean of all our votes to get the true mass
+                    Math.pow(
+                            (
+                                    Math.pow(Math.E,3)//DJ's guess
+                                            +12//Anthony's guess
+                                            +11.2//Charlie's guess
+                                            +9//Kendal's guess
+                                            +0.15//Andrews guess (1.5 moles = 0.15kg apparently)
+                                            +30//James' guess
+                            )
+                            ,0.5)
+            )
             .forwardZeroPowerAcceleration(-45.186)
             .lateralZeroPowerAcceleration(-82.716);
 
@@ -32,7 +46,7 @@ public class Constants {
             .leftFrontMotorName("lf")
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .xVelocity(64.332)
             .yVelocity(52.612);
@@ -60,5 +74,4 @@ public class Constants {
                 .pathConstraints(pathConstraints)
                 .build();
     }
-
 }
