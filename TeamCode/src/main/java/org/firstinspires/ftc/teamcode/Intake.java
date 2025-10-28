@@ -11,7 +11,7 @@ public class Intake {
         intakeMotor = new RAWMOTOR(hardwareMap, "intakeMotor");
     }
 
-    public void motorPower(double power) {
+    public void PowerIntake(double power) {
         intakeMotor.setPower(power);
     }
     public void stopIntake() {
