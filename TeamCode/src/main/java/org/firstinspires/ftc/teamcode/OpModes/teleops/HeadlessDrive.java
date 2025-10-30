@@ -1,27 +1,32 @@
 package org.firstinspires.ftc.teamcode.OpModes.teleops;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.bylazar.configurables.PanelsConfigurables;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
+
 ///import ViperSlidesSubSystem;
 
 @TeleOp(name = "Headless Drive")
-public class HeadlessDrive extends LinearOpMode
+public class HeadlessDrive extends OpMode
 {
     //ViperSlidesSubSystem viperSlidesSubSystem = new ViperSlidesSubSystem();
-    DcMotorEx lf, rf, lb, rb;
+    public static Follower follower;
 
     @Override
-    public void runOpMode() throws InterruptedException
+    public void init()
     {
+        follower = CompConstants.createFollower(hardwareMap);
+        PanelsConfigurables.INSTANCE.refreshClass(this);
 
+        follower.setStartingPose(new Pose());
+    }
+
+    public void loop(){
+        follower.update();
+        follower.setTeleOpDrive(gamepad1.right_stick_x,gamepad1.right_stick_y,gamepad1.left_stick_x,true);
     }
 }
