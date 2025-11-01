@@ -9,6 +9,7 @@ public class Intake {
 
     public Intake(HardwareMap hardwareMap) {
         intakeMotor = new RAWMOTOR(hardwareMap, "intakeMotor");
+        intakeMotor.reverseMotor();
     }
 
     public void motorPower(double power) {
