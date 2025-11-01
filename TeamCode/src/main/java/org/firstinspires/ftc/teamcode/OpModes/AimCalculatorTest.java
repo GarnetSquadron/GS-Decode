@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.AngleFinder;
 import org.firstinspires.ftc.teamcode.Launcher;
-import org.firstinspires.ftc.teamcode.pathing.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.pathing.pedroPathing.TestConstants;
 
 @TeleOp(name = "aimCalc" )
 public class AimCalculatorTest extends OpMode {
@@ -25,10 +25,10 @@ public class AimCalculatorTest extends OpMode {
     @Override
     public void init() {
         if (follower == null) {
-            follower = Constants.createFollower(hardwareMap);
+            follower = TestConstants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = Constants.createFollower(hardwareMap);
+            follower = TestConstants.createFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());
