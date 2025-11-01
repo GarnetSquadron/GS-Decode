@@ -12,10 +12,10 @@ public class Intake {
         intakeMotor.reverseMotor();
     }
 
-    public void PowerIntake(double power) {
+    public void setPower(double power) {
         intakeMotor.setPower(power);
     }
-    public void stopIntake() {
+    public void stop() {
         intakeMotor.stop();
     }
 }

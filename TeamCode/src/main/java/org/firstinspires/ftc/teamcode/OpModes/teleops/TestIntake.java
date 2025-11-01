@@ -13,7 +13,7 @@ public class TestIntake extends OpMode {
 
     @Override
     public void loop() {
-        if (gamepad1.a) {intake.PowerIntake(1);}
-        else {intake.stopIntake();}
+        if (gamepad1.a) {intake.setPower(1);}
+        else {intake.stop();}
     }
 }

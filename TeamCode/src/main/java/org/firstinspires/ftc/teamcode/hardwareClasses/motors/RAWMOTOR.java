@@ -78,5 +78,8 @@ public class RAWMOTOR
     {
         motor.setInverted(!motor.getInverted());
     }
+    public String getMotorType(){
+        return motor.getDeviceType();
+    }
 
 }
