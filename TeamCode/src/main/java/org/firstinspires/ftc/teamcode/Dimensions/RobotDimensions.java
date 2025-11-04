@@ -6,7 +6,7 @@ package org.firstinspires.ftc.teamcode.Dimensions;
 public class RobotDimensions
 {
     /**
-     * no idea what the actual numbers are yet TODO:find the actual values
+     * TODO: get more accurate angles
      */
     public static class Hood
     {
