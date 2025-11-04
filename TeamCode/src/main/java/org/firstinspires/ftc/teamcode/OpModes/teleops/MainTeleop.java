@@ -11,12 +11,11 @@ import org.firstinspires.ftc.teamcode.Intake;
 import org.firstinspires.ftc.teamcode.Launcher;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
-///import ViperSlidesSubSystem;
+
 
 @TeleOp(name = "Main teleop")
 public class MainTeleop extends OpMode
 {
-    //ViperSlidesSubSystem viperSlidesSubSystem = new ViperSlidesSubSystem();
     public static Follower follower;
     Intake intake;
     Launcher launcher;
@@ -26,7 +25,7 @@ public class MainTeleop extends OpMode
     {
 
         intake = new Intake(hardwareMap);
-        launcher=new Launcher(hardwareMap);
+        launcher = new Launcher(hardwareMap);
 
         //set up follower
         follower = CompConstants.createFollower(hardwareMap);
