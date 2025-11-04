@@ -41,11 +41,12 @@ public class autonomiSelector extends SelectableOpMode
     public autonomiSelector()
     {
         super("Autonomous Selector",s -> {
-            s.folder("purely the paths",purePaths ->{
-                for(PathChain path:paths){
-                    purePaths.add(path.toString(),()->new PurelyPathOpMode(path));
-                }
-            });
+//            s.folder("purely the paths",purePaths ->{
+//                for(PathChain path:paths){
+//                    purePaths.add(path.toString(),()->new PurelyPathOpMode(path));
+//                }
+//            });
+
             s.folder("actual autos",a->{
                 a.add("OneBlueSideSix", OneBlueSideSixAuto::new);
             });
