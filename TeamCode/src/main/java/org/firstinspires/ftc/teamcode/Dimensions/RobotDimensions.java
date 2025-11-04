@@ -10,7 +10,7 @@ public class RobotDimensions
      */
     public static class Hood
     {
-        public static final double minAngle = 80;
-        public static final double maxAngle = 110;
+        public static final double minAngle = 40;
+        public static final double maxAngle = 60;
     }
 }
