@@ -80,17 +80,16 @@ class IntakeStallDetectTest extends OpMode{
     public void loop()
     {
         if(hasStalled){
-            intake.stopIntake();
+            intake.stop();
             hasStalled = gamepad1.a;//change has stalled to false if you stop holding a, at which point the code goes back to the else block
         } else{
             if(gamepad1.a){
-                intake.motorPower(-1);
-                hasStalled = intake.isStalling();//change has stalled to true if it stalls
+                intake.setPower(-1);
             } else{
-                intake.stopIntake();
+                intake.stop();
             }
         }
-        telemetry.addData("current", intake.getMilliamps());
+        //telemetry.addData("current", intake.getMilliamps());
         telemetry.addData("has stalled", hasStalled);
     }
 }
