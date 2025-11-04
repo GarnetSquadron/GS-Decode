@@ -10,7 +10,7 @@ public class AngleFinder
     /**
      * needs to be somewhere between minGoalHeight and maxGoalHeight, so why not the average
      */
-    final static double targetHeight = (FieldDimensions.maxGoalHeight+FieldDimensions.minGoalHeight)/2.0;
+    final static double targetHeight = (FieldDimensions.maxGoalHeight+FieldDimensions.minGoalHeight)/2.0-RobotDimensions.Hood.approxBallExitHeight;//The height difference is the height of the goal-the height of the ball as it exits
     final static double g = 386.09;//9.8 m/s^2=386.09in/s
 
     /**

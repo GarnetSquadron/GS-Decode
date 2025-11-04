@@ -12,5 +12,6 @@ public class RobotDimensions
     {
         public static final double minAngle = 40;
         public static final double maxAngle = 60;
+        public static final double approxBallExitHeight = 0.372957;
     }
 }
