@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.OpModes.autonomi;
 
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.autonomiSelector.follower;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutonomiSelector.follower;
 
 import com.bylazar.configurables.PanelsConfigurables;
-import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.telemetry.SelectableOpMode;
-import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -19,26 +15,15 @@ import org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing.AllBlue;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing.AllRed;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.pathing.test;
 
-
-import java.util.ArrayList;
-
 @TeleOp(name = "autonomiSelector")
-public class autonomiSelector extends SelectableOpMode
+public class AutonomiSelector extends SelectableOpMode
 {
     public static Follower follower;
-    @IgnoreConfigurable
-    static PoseHistory poseHistory;
-
-    @IgnoreConfigurable
-    static TelemetryManager telemetryM;
-
-    @IgnoreConfigurable
-    static ArrayList<String> changes = new ArrayList<>();
-
-    static PathChain[] paths = {AllBlue.paths, AllRed.paths, test.line1};
 
 
-    public autonomiSelector()
+    static PathChain[] paths = {AllBlue.paths, AllRed.paths, test.line1};//this is the problem
+    
+    public AutonomiSelector()
     {
         super("Autonomous Selector",s -> {
 //            s.folder("purely the paths",purePaths ->{
@@ -63,10 +48,6 @@ public class autonomiSelector extends SelectableOpMode
         }
 
         follower.setStartingPose(new Pose());
-
-        poseHistory = follower.getPoseHistory();
-
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
     }
 }
 class PurelyPathOpMode extends OpMode
