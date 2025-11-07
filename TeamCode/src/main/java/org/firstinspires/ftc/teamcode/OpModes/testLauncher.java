@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.ExtraMath;
+import org.firstinspires.ftc.teamcode.controllers.PidFliywheel;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 @TeleOp(name = "launcher")
 public class testLauncher extends OpMode {
@@ -27,6 +28,7 @@ public class testLauncher extends OpMode {
     public void loop() {
         ExtraMath.Clamp(servoPosition,1,0);
         //temp
+        /*
         leftWasPressed = false;
         rightWasPressed = false;
         if (gamepad1.dpad_left & !leftWasPressed) {
@@ -55,6 +57,8 @@ public class testLauncher extends OpMode {
 
         telemetry.addData("motor power", motor1.getPower());
         telemetry.addData("servo position", angleServo.getPosition());
+        */
+        motor1.setPower(PidFliywheel.setPid(motor1.getEncoder().getVelocity(),6.504));
 
 
     }
