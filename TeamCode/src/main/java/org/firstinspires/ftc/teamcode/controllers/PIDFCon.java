@@ -5,25 +5,30 @@ import org.firstinspires.ftc.teamcode.SmoothVelocityEncoder;
 import org.firstinspires.ftc.teamcode.ValueAtTimeStamp;
 import org.firstinspires.ftc.teamcode.time.TIME;
 
+import java.util.function.DoubleSupplier;
+
 public class PIDFCon extends PositionController
 {
     double kp, ki, kd, kf;
     ValueAtTimeStamp prevPos;
     double integral;
+    DoubleSupplier velocitySupplier;
 
-    public PIDFCon(double kp, double ki, double kd, double kf)
+    public PIDFCon(double kp, double ki, double kd, double kf, DoubleSupplier velocitySupplier)
     {
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
         this.kf = kf;
+        this.velocitySupplier = velocitySupplier;
         reset();
     }
 
-    public void reset()
-    {
+    public void reset() {
         integral = 0;
-        prevPos = new ValueAtTimeStamp(0, TIME.getTime());
+        double now = TIME.getTime();
+        double currentError = getDistanceToTarget();
+        prevPos = new ValueAtTimeStamp(currentError, now);
     }
 
     @Override
@@ -37,7 +42,7 @@ public class PIDFCon extends PositionController
     }
 
     @Override
-    public double calculate(double aV)
+    public double calculate() // take in lamda
     {
         double error = getDistanceToTarget();
         if (ki != 0) {
@@ -46,13 +51,16 @@ public class PIDFCon extends PositionController
             prevPos = new ValueAtTimeStamp(error, currentTime);
         }
         double velocity;
-        if(encoder.getClass()== SmoothVelocityEncoder.class){
-            velocity = ((SmoothVelocityEncoder)encoder).getAverageVelocity();
-        }
-        else
+        if (velocitySupplier != null) {
+            velocity = velocitySupplier.getAsDouble();
+        } else if (encoder instanceof SmoothVelocityEncoder) {
+            velocity = ((SmoothVelocityEncoder) encoder).getAverageVelocity();
+        } else {
             velocity = encoder.getVelocity();
+        }
 
 
-        return kp * error + ki * integral + kd * velocity + kf *aV;
+
+        return kp * error + ki * integral - kd * velocity + kf * velocitySupplier.getAsDouble();
     }
 }
