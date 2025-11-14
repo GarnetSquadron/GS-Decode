@@ -7,7 +7,8 @@ import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 //commit comment
-public class AllRed {
+public class RAWAllRed
+{
 
     public static PathBuilder builder = follower.pathBuilder();
 
