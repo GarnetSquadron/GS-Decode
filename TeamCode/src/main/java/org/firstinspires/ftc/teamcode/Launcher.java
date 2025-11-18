@@ -20,7 +20,7 @@ public class Launcher {
     double power = 0;
     public double aimServo(double distance,double vel){
         double angle = AngleFinder.getOptimumAngle(vel,distance);
-        setAngle(angle,1);
+        setAngle(angle);
         return angle;
     }
     public double aimTurret(double[] goalPos, double[] botPos,double heading){
@@ -34,8 +34,8 @@ public class Launcher {
         aimTurret(goalPos,botPos,heading);
         return new double[] {angle,distance};
     }
-    public void setAngle(double angle, double tmpScaleFactor){
-        angleServo.setPosition(angle * tmpScaleFactor);
+    public void setAngle(double angle){
+        angleServo.setPosition((angle-Math.toRadians(30))*0.5/ Math.toRadians(20) );
     }
 
     public void setTurretRotation(double rotation) {
@@ -46,6 +46,9 @@ public class Launcher {
     }
     public Encoder getTurretEncoder(){
         return turretRot.getEncoder();
+    }
+    public Encoder getFlywheelEncoder(){
+        return motor1.getEncoder();
     }
     public String getMotorType(){
         return turretRot.getMotorType();
