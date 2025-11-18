@@ -10,13 +10,17 @@ import java.util.Map;
  */
 public class ToggleGamepad extends BetterControllerClass
 {
-    String[] buttonNames = new String[]{"a", "b", "x", "y"};
+    String[] buttonNames;
     public Map<String, Boolean> toggles = new HashMap<>();
     public Map<String,Boolean> prevValues = new HashMap<>();
 
     public ToggleGamepad(Gamepad gamepad)
     {
+        this(gamepad,new String[]{"a", "b", "x", "y","right_bumper","left_bumper"});
+    }
+    public ToggleGamepad(Gamepad gamepad, String[] buttonNames){
         super(gamepad);
+        this.buttonNames = buttonNames;
         for(String buttonName: buttonNames){
             toggles.put(buttonName,false);
             prevValues.put(buttonName,false);
@@ -34,8 +38,8 @@ public class ToggleGamepad extends BetterControllerClass
             try
             {
                 boolean buttonPressed = (Boolean) Gamepad.class.getField(buttonName).get(gamepad);
-                boolean valHasChanged = prevValue^buttonPressed;
-                toggles.put(buttonName,valHasChanged^toggle);
+                boolean valTurnedOn = (prevValue^buttonPressed)&&buttonPressed;
+                toggles.put(buttonName,valTurnedOn^toggle);
                 prevValues.put(buttonName,buttonPressed);
 
 
@@ -43,6 +47,9 @@ public class ToggleGamepad extends BetterControllerClass
             {
             }
         }
+    }
+    public boolean getToggleValue(String buttonName){
+        return Boolean.TRUE.equals(toggles.get(buttonName));
     }
 
 
