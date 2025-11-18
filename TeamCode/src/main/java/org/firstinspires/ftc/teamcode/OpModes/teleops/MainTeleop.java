@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes.teleops;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -23,8 +22,6 @@ public class MainTeleop extends OpMode
     Launcher launcher;
     double velScale = 0.6;
     double servoPos = 0.5;
-    boolean intakeToggle = false;
-    boolean outtakeToggle = false;
     double launcherPower = 0.6;
 
     ToggleGamepad Gpad;
@@ -42,7 +39,7 @@ public class MainTeleop extends OpMode
         follower = CompConstants.createFollower(hardwareMap);
         PanelsConfigurables.INSTANCE.refreshClass(this);
 
-        follower.setStartingPose(new Pose(-50,50,0));
+        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
         follower.startTeleopDrive();
         telemetry.addData("follower",follower);
     }
