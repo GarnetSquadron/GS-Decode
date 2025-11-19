@@ -158,7 +158,7 @@ class ServoTest extends OpMode
 
     public void init()
     {
-        servo = hardwareMap.get(Servo.class, "servo");
+        servo = hardwareMap.get(Servo.class, "angleServo");
     }
     public void loop(){
         if (gamepad1.x) {
