@@ -64,7 +64,7 @@ public class MainTeleop extends OpMode
 //        }
         double distance = Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
         if (Gpad.getToggleValue("x")){
-            launcher.aimServo(distance,launcher.getFlywheelEncoder().getVelocity());
+            launcher.aimServo(distance,launcher.getFlywheelEncoder().getVelocity()*0.05);//I think that the flywheel has about a 5cm radius.
         }
         else{
             servoPos = ExtraMath.Clamp(servoPos,50,30);
