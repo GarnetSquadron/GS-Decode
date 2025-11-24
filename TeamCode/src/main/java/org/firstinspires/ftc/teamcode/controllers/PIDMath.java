@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.controllers;
 
-public class TurretMath {
+public class PIDMath {
     double x, y, xv, yv, xa, ya;
     public double angularVelocity(double deltaX, double deltaY, double xVel, double yVel){
         double aV = (yVel*deltaX-xVel*deltaY)/((deltaY*deltaY)+(deltaX*deltaX));
