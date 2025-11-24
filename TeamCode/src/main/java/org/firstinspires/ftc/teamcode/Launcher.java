@@ -64,6 +64,9 @@ public class Launcher {
         motor1 = new RAWMOTOR(hardwareMap, "launcherMotor1");
         motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
 
+        motor1.getEncoder().setCPR((double) (7 * 3) /2);//motor is a bare motor with 7 cpr, and it outputs into a 40 tooth pulley that belts into a 60 tooth pulley, so its 2/3 that speed
+        motor1.getEncoder().scaleToAngleUnit(AngleUnitV2.RADIANS);
+
         turretRot = new MOTOR(hardwareMap, "turretRot");
         turretRot.setMaxPower(0.5);
         turretRot.getEncoder().setCPR(384.5*4.5);//motor is 435, which has a 384.5 ticks per rotation. The belt is belted at a 4.5:1 ratio

@@ -158,13 +158,12 @@ class ServoTest extends OpMode
 
     public void init()
     {
-        servo = hardwareMap.get(Servo.class, "servo");
+        servo = hardwareMap.get(Servo.class, "servoKicker");
     }
     public void loop(){
         if (gamepad1.x) {
             servo.setPosition(1);//up
         }
-
         if (gamepad1.a) {
             servo.setPosition(0.66666);
         }

@@ -57,14 +57,14 @@ public class MainTeleop extends OpMode
         if(gamepad1.left_trigger==1){
             launcher.zeroTurret();
         }
-//        if(gamepad1.y){
-//            telemetry.addData("target",launcher.aimTurret(FieldDimensions.goalPositionBlue, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading()));
-//        } else {
-//            launcher.setTurretPower(0);
-//        }
+        if(gamepad1.dpad_down){
+            telemetry.addData("target",launcher.aimTurret(FieldDimensions.goalPositionBlue, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading()));
+        } else {
+            launcher.setTurretPower(0);
+        }
         double distance = Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
         if (Gpad.getToggleValue("x")){
-            launcher.aimServo(distance,launcher.getFlywheelEncoder().getVelocity());
+            launcher.aimServo(distance,launcher.getFlywheelEncoder().getVelocity()*0.05);//I think that the flywheel has about a 5cm radius.
         }
         else{
             servoPos = ExtraMath.Clamp(servoPos,50,30);
@@ -81,6 +81,11 @@ public class MainTeleop extends OpMode
         }
         else
             launcherPower = 0.5;
+        if(gamepad1.a){
+            intake.kickBall();
+        } else{
+            intake.unKick();
+        }
         telemetry.addData("rotation",launcher.getTurretEncoder().getPos());
         telemetry.addData("ticks",launcher.getTurretEncoder().getTicks());
         telemetry.addData("CPR",launcher.getTurretEncoder().getCPR());
