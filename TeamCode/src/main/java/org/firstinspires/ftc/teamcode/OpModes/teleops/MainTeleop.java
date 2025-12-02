@@ -57,7 +57,7 @@ public class MainTeleop extends OpMode
         }
         if (gamepad1.b){intake.openGate();}else intake.closeGate();
         //launcher
-        /*
+
         launcher.setPower(Gpad.getToggleValue("left_bumper")?-launcherPower:0);
         if(gamepad1.left_trigger==1){
             launcher.zeroTurret();
@@ -86,7 +86,7 @@ public class MainTeleop extends OpMode
         }
         else
             launcherPower = 0.5;
-        */
+
         if(gamepad1.a){
             intake.kickBall();
         } else{
