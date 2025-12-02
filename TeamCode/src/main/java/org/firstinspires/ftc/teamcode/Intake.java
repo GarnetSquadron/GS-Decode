@@ -22,6 +22,7 @@ public class Intake {
         leftGate.setPosition(0.4); //0.4
         rightGate.setPosition(0.95); //0.9
     }
+    //load ball into the launcher/ basically just launching it
     public void prepareForIntaking(){
         closeGate();
         unKick();
