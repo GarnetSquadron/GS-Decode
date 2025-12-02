@@ -46,13 +46,18 @@ public class MainTeleop extends OpMode
 
     public void loop(){
         follower.update();
+
         follower.setTeleOpDrive(-gamepad1.left_stick_y*Math.abs(gamepad1.left_stick_y), Math.abs(gamepad1.left_stick_x)*gamepad1.left_stick_x, Math.abs(gamepad1.right_stick_x)*gamepad1.right_stick_x, true);
         Gpad.update();
+        //intake
         if(gamepad1.right_trigger==1){
             intake.setPower(-1);
         } else {
             intake.setPower(Gpad.getToggleValue("right_bumper") ?1:0);
         }
+        if (gamepad1.b){intake.openGate();}else intake.closeGate();
+        //launcher
+        /*
         launcher.setPower(Gpad.getToggleValue("left_bumper")?-launcherPower:0);
         if(gamepad1.left_trigger==1){
             launcher.zeroTurret();
@@ -81,11 +86,18 @@ public class MainTeleop extends OpMode
         }
         else
             launcherPower = 0.5;
+        */
         if(gamepad1.a){
             intake.kickBall();
         } else{
             intake.unKick();
         }
+        telemetry.addData("left gate position",intake.getGatePositions()[0]);
+        telemetry.addData("right gate position",intake.getGatePositions()[1]);
+        telemetry.addData("left stick x",gamepad1.left_stick_x);
+        telemetry.addData("left stick y",gamepad1.left_stick_y);
+        telemetry.addData("right stick x",gamepad1.right_stick_x);
+        telemetry.addData("right stick y",gamepad1.right_stick_y);
         telemetry.addData("rotation",launcher.getTurretEncoder().getPos());
         telemetry.addData("ticks",launcher.getTurretEncoder().getTicks());
         telemetry.addData("CPR",launcher.getTurretEncoder().getCPR());
@@ -95,7 +107,7 @@ public class MainTeleop extends OpMode
         telemetry.addData("position",follower.getPose());
         telemetry.addData("goal x",FieldDimensions.goalPositionBlue[0]);
         telemetry.addData("goal y",FieldDimensions.goalPositionBlue[1]);
-        telemetry.addData("distance", distance);
+//        telemetry.addData("distance", distance);
         telemetry.addData("velScale",velScale);
         telemetry.addData("servoPos", servoPos);
         telemetry.addData("launcherPower", launcherPower);

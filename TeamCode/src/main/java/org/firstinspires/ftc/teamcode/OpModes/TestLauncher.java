@@ -101,6 +101,11 @@ public class TestLauncher extends OpMode {
 //                }
 //            }else {scale = 0; target += 0.1;}
 //        }
+
+        telemetry.addData("left stick x",gamepad1.left_stick_x);
+        telemetry.addData("left stick y",gamepad1.left_stick_y);
+        telemetry.addData("right stick x",gamepad1.right_stick_x);
+        telemetry.addData("right stick y",gamepad1.right_stick_y);
         telemetry.addData("differance ",returnedVal[1]);
         telemetry.addData("returned value ",returnedVal[0]);
         telemetry.addData("power ",motorPower);
