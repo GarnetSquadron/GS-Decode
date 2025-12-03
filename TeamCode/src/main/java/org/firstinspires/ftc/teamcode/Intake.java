@@ -18,25 +18,31 @@ public class Intake {
         rightGate = hardwareMap.get(Servo.class, "rightGate");
         intakeMotor.reverseMotor();
     }
-    public void openGate(){
+    public boolean openGate(){
         leftGate.setPosition(0.4); //0.4
-        rightGate.setPosition(0.95); //0.9
+        rightGate.setPosition(0.95); //0.95
+        if (leftGate.getPosition() ==0.4&rightGate.getPosition()==0.95){return true;}else return false;
     }
-    //load ball into the launcher/ basically just launching it
+        //spin up intake and close the launcher gate
     public void prepareForIntaking(){
         closeGate();
         unKick();
         setPower(1);
     }
+    public void unprepareIntake(){
+        setPower(0);
+    }
+    //load ball into the launcher/ basically just launching it
     public void loadBall(){
         openGate();
         kickBall();
         closeGate();
         unKick();
     }
-    public void closeGate(){
+    public boolean closeGate(){
         leftGate.setPosition(0);
         rightGate.setPosition(0);
+        if (leftGate.getPosition() ==0&rightGate.getPosition()==0){return true;}else return false;
     }
     public double[] getGatePositions(){
         return new double[]{leftGate.getPosition(), rightGate.getPosition()};
@@ -48,10 +54,12 @@ public class Intake {
     public void stop() {
         intakeMotor.stop();
     }
-    public void kickBall(){
+    public boolean kickBall(){
         servoKicker.setPosition(0.64);
+        if (servoKicker.getPosition() ==0.64){return true;}else return false;
     }
-    public void unKick(){
+    public boolean unKick(){
         servoKicker.setPosition(0.2);
+        if (servoKicker.getPosition() ==0.2){return true;}else return false;
     }
 }
