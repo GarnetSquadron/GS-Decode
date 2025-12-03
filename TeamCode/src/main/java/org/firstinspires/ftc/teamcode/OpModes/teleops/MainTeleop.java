@@ -55,7 +55,11 @@ public class MainTeleop extends OpMode
         } else {
             intake.setPower(Gpad.getToggleValue("right_bumper") ?1:0);
         }
-        if (gamepad1.b){intake.openGate();}else intake.closeGate();
+        if (gamepad1.b){intake.loadBall();};
+
+        if (gamepad1.a){
+            intake.prepareForIntaking();
+        } else intake.unprepareIntake();
         //launcher
 
         launcher.setPower(Gpad.getToggleValue("left_bumper")?-launcherPower:0);
@@ -86,12 +90,6 @@ public class MainTeleop extends OpMode
         }
         else
             launcherPower = 0.5;
-
-        if(gamepad1.a){
-            intake.kickBall();
-        } else{
-            intake.unKick();
-        }
         telemetry.addData("left gate position",intake.getGatePositions()[0]);
         telemetry.addData("right gate position",intake.getGatePositions()[1]);
         telemetry.addData("left stick x",gamepad1.left_stick_x);
