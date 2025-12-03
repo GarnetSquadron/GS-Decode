@@ -16,7 +16,7 @@ public class ToggleGamepad extends BetterControllerClass
 
     public ToggleGamepad(Gamepad gamepad)
     {
-        this(gamepad,new String[]{"a", "b", "x", "y","right_bumper","left_bumper"});
+        this(gamepad,new String[]{"a", "b", "x", "y","right_bumper","left_bumper","left_trigger","right_trigger"});
     }
     public ToggleGamepad(Gamepad gamepad, String[] buttonNames){
         super(gamepad);
@@ -35,6 +35,14 @@ public class ToggleGamepad extends BetterControllerClass
         for(String buttonName:buttonNames){
             boolean toggle = Boolean.TRUE.equals(toggles.get(buttonName));
             boolean prevValue = Boolean.TRUE.equals(prevValues.get(buttonName));
+            if(buttonName.contains("trigger")){
+                try
+                {
+                    boolean buttonPressed = ((Integer) Gamepad.class.getField(buttonName).get(gamepad))==1;
+                    boolean valTurnedOn = (prevValue^buttonPressed)&&buttonPressed;
+                    toggles.put(buttonName,buttonPressed);
+                } catch (NoSuchFieldException | IllegalAccessException ignored){}
+            }
             try
             {
                 boolean buttonPressed = (Boolean) Gamepad.class.getField(buttonName).get(gamepad);

@@ -50,7 +50,7 @@ public class MainTeleop extends OpMode
         follower.setTeleOpDrive(-gamepad1.left_stick_y*Math.abs(gamepad1.left_stick_y), Math.abs(gamepad1.left_stick_x)*gamepad1.left_stick_x, Math.abs(gamepad1.right_stick_x)*gamepad1.right_stick_x, true);
         Gpad.update();
         //intake
-        if(gamepad1.right_trigger==1){
+        if(Gpad.getToggleValue("right_trigger")){
             intake.setPower(-1);
         } else {
             intake.setPower(Gpad.getToggleValue("right_bumper") ?1:0);
@@ -81,11 +81,11 @@ public class MainTeleop extends OpMode
         if (gamepad1.bWasPressed()){
             servoPos-=3;
         }
-        if(Gpad.getToggleValue("y")){
-            launcherPower = 0.7;
+        if(Gpad.getToggleValue("left_trigger")){
+            launcherPower = 1;
         }
         else
-            launcherPower = 0.5;
+            launcherPower = 0.7;
 
         if(gamepad1.a){
             intake.kickBall();
