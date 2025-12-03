@@ -38,7 +38,7 @@ public class ToggleGamepad extends BetterControllerClass
             if(buttonName.contains("trigger")){
                 try
                 {
-                    boolean buttonPressed = ((Integer) Gamepad.class.getField(buttonName).get(gamepad))==1;
+                    boolean buttonPressed = ((Float) Gamepad.class.getField(buttonName).get(gamepad))==1;
                     boolean valTurnedOn = (prevValue^buttonPressed)&&buttonPressed;
                     toggles.put(buttonName,buttonPressed);
                 } catch (NoSuchFieldException | IllegalAccessException ignored){}

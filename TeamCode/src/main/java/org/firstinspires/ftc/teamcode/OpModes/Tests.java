@@ -233,3 +233,15 @@ class SensorDelayTest extends OpMode{
         telemetry.update();
     }
 }
+class RandomFunctionsTest extends OpMode{
+    @Override
+    public void init(){
+
+    }
+
+    @Override
+    public void loop()
+    {
+
+    }
+}
