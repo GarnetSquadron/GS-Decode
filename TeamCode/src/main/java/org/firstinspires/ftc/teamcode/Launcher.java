@@ -17,6 +17,8 @@ public class Launcher {
     RAWMOTOR motor1;
     RAWMOTOR motor2;
     MOTOR turretRot;
+    final double TURRET_MIN = -Math.toRadians(90);
+    final double TURRET_MAX =  Math.toRadians(90);
     double power = 0;
     public double aimServo(double distance,double vel){
         double angle = AngleFinder.getOptimumAngle(vel,distance);
@@ -33,13 +35,18 @@ public class Launcher {
         double angle = aimServo(distance,vel);
         aimTurret(goalPos,botPos,heading);
         return new double[] {angle,distance};
-    }
-    public void setAngle(double angle){
+    }    public void setAngle(double angle){
         angleServo.setPosition((angle-Math.toRadians(30))*0.5/ Math.toRadians(20) );
     }
 
     public void setTurretRotation(double rotation) {
         turretRot.runToPos(rotation);
+    }
+    public void setTurretRotationLimited(double rotation) {
+
+        double limtedRot = Math.max(TURRET_MIN, Math.min(rotation, TURRET_MAX));
+
+        turretRot.runToPos(limtedRot);
     }
     public void setTurretPower(double power) {
         turretRot.setPower(power);
