@@ -42,6 +42,7 @@ public class ToggleGamepad extends BetterControllerClass
                     boolean valTurnedOn = (prevValue^buttonPressed)&&buttonPressed;
                     toggles.put(buttonName,buttonPressed);
                 } catch (NoSuchFieldException | IllegalAccessException ignored){}
+                break;
             }
             try
             {
