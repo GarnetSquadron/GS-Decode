@@ -12,7 +12,7 @@ public class Intake {
     Servo rightGate;
 
     public Intake(HardwareMap hardwareMap) {
-        intakeMotor = new RAWMOTOR(hardwareMap, "intakeMotor");
+        intakeMotor = new RAWMOTOR(hardwareMap, "intakeMotor"/*"lf"*/);
         servoKicker = hardwareMap.get(Servo.class, "servoKicker");
         leftGate = hardwareMap.get(Servo.class, "leftGate");
         rightGate = hardwareMap.get(Servo.class, "rightGate");
@@ -34,10 +34,13 @@ public class Intake {
     }
     //load ball into the launcher/ basically just launching it
     public void loadBall(){
-        openGate();
-        kickBall();
-        closeGate();
-        unKick();
+        if (openGate()){
+            if (kickBall()){
+                closeGate();
+                unKick();
+            }
+        }
+
     }
     public boolean closeGate(){
         leftGate.setPosition(0);

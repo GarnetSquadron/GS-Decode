@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.enums.AngleUnitV2;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.MOTOR;
@@ -34,8 +35,15 @@ public class Launcher {
         aimTurret(goalPos,botPos,heading);
         return new double[] {angle,distance};
     }
+//    public void setAngle(double angle, Telemetry telemetry){
+//       setAngle(angle);
+//        telemetry.addData()
+//    }
     public void setAngle(double angle){
         angleServo.setPosition((angle-Math.toRadians(30))*0.5/ Math.toRadians(20) );
+    }
+    public double getHoodPos(){
+        return angleServo.getPosition();
     }
 
     public void setTurretRotation(double rotation) {
