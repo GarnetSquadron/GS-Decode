@@ -21,20 +21,7 @@ public class CompConstants
             .translationalPIDFCoefficients(new PIDFCoefficients(0, 0, 0, 0))
             .headingPIDFCoefficients(new PIDFCoefficients(2, 0, 0.1, 0))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0))
-            .mass(
-
-                    //take the geometric mean of all our votes to get the true mass
-                    Math.pow(
-                            (
-                                    Math.pow(Math.E,3)//DJ's guess
-                                            +12//Anthony's guess
-                                            +11.2//Charlie's guess
-                                            +9//Kendal's guess
-                                            +0.15//Andrews guess (1.5 moles = 0.15kg apparently)
-                                            +30//James' guess
-                            )
-                            ,0.5)
-            )
+            .mass(13.245)//29.2lb = 735 moles (of water) = 58.4 moles(North American) = 13.245kg
             .forwardZeroPowerAcceleration(-45.186)
             .lateralZeroPowerAcceleration(-82.716);
 
