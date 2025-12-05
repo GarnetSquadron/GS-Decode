@@ -2,82 +2,71 @@ package org.firstinspires.ftc.teamcode.GamepadClasses;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BetterControllerClass
 {
     Gamepad gamepad;
-
-    public BetterControllerClass(Gamepad gamepad)
+    String[] buttonNames;
+    public Map<String,Boolean> prevValues = new HashMap<>();
+    public Map<String,Boolean> risingEdges = new HashMap<>();
+    public Map<String,Boolean> fallingEdges = new HashMap<>();
+    public Map<String, Boolean> toggles = new HashMap<>();
+    public BetterControllerClass(Gamepad gamepad, String[] buttonNames)
     {
         this.gamepad = gamepad;
+        this.buttonNames = buttonNames;
+        for(String buttonName: buttonNames){
+            prevValues.put(buttonName,false);
+        }
+    }
+    public BetterControllerClass(Gamepad gamepad)
+    {
+        this(gamepad,new String[]{"a", "b", "x", "y","right_bumper","left_bumper","left_trigger","right_trigger"});
     }
 
-    public boolean A()
-    {
-        return gamepad.a;
+    /**
+     * updates just a specific button. I originally intended this as a way to make the other update
+     * function a little more compartmentalized, and to make it easier to extend the function.
+     * @param buttonName the name of said specific button
+     */
+    public void update(String buttonName){
+        boolean prevValue = Boolean.TRUE.equals(prevValues.get(buttonName));
+        boolean toggle = Boolean.TRUE.equals(toggles.get(buttonName));
+        try
+        {
+            boolean buttonPressed = buttonName.contains("trigger")?
+                    ((Float) Gamepad.class.getField(buttonName).get(gamepad))==1:
+                    (Boolean) Gamepad.class.getField(buttonName).get(gamepad);
+            boolean valChanged = prevValue^buttonPressed;
+            prevValues.put(buttonName,buttonPressed);
+            risingEdges.put(buttonName,valChanged&&buttonPressed);
+            fallingEdges.put(buttonName,valChanged&&!buttonPressed);
+            toggles.put(buttonName,buttonPressed^toggle);
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {}
     }
 
-    public boolean B()
-    {
-        return gamepad.b;
-    }
+    /**
+     * updates all the buttons
+     */
 
-    public boolean X()
+    public void update()
     {
-        return gamepad.x;
+        for(String buttonName:buttonNames){
+            update(buttonName);
+        }
     }
-
-    public boolean Y()
-    {
-        return gamepad.y;
+    public boolean getCurrentValue(String buttonName){
+        return Boolean.TRUE.equals(prevValues.get(buttonName));
     }
-
-    public boolean RightBumper()
-    {
-        return gamepad.right_bumper;
+    public boolean getRisingEdge(String buttonName){
+        return Boolean.TRUE.equals(risingEdges.get(buttonName));
     }
-
-    public boolean LeftBumper()
-    {
-        return gamepad.left_bumper;
+    public boolean getFallingEdge(String buttonName){
+        return Boolean.TRUE.equals(fallingEdges.get(buttonName));
     }
-
-    public boolean LeftTrigger()
-    {
-        return gamepad.left_trigger > 0.1;
-    }
-
-    public boolean RightTrigger()
-    {
-        return gamepad.right_trigger > 0.1;
-    }
-
-    public boolean DpadLeft()
-    {
-        return gamepad.dpad_left;
-    }
-
-    public boolean DpadRight()
-    {
-        return gamepad.dpad_right;
-    }
-
-    public boolean DpadUp()
-    {
-        return gamepad.dpad_up;
-    }
-
-    public boolean DpadDown()
-    {
-        return gamepad.dpad_down;
-    }
-
-    public boolean leftStickDown()
-    {
-        return gamepad.left_stick_button;
-    }
-
-    public boolean rightStickDown()
-    {
-        return gamepad.right_stick_button;
+    public boolean getToggleValue(String buttonName){
+        return Boolean.TRUE.equals(toggles.get(buttonName));
     }
 }
