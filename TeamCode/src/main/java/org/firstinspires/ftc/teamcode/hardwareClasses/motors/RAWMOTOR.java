@@ -2,13 +2,16 @@ package org.firstinspires.ftc.teamcode.hardwareClasses.motors;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.ExtraMath;
 import org.firstinspires.ftc.teamcode.encoders.Encoder;
 
 public class RAWMOTOR
 {
+    DcMotorEx currentGettter;
     MotorEx motor;
     Encoder encoder;
     double maxPower = 1;
@@ -16,6 +19,7 @@ public class RAWMOTOR
     public RAWMOTOR(HardwareMap hardwareMap, String name)
     {
         motor = new MotorEx(hardwareMap, name);
+        currentGettter = hardwareMap.get(DcMotorEx.class, name);
         setEncoderToMotorEncoder();
     }
 
@@ -81,5 +85,8 @@ public class RAWMOTOR
     public String getMotorType(){
         return motor.getDeviceType();
     }
+
+    public double getCurrentMilliamps(){return currentGettter.getCurrent(CurrentUnit.MILLIAMPS);}
+    public double getCurrentAmps(){return currentGettter.getCurrent(CurrentUnit.AMPS);}
 
 }

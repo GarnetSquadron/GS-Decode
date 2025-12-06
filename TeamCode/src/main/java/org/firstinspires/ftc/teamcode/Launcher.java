@@ -9,9 +9,12 @@ import org.firstinspires.ftc.teamcode.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.enums.AngleUnitV2;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.MOTOR;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
+import org.firstinspires.ftc.teamcode.time.TIME;
 
 public class Launcher {
+    double maxCurrent = 0;
 
+    double timeWhenFlywheel;
     //this variable is called angle servo because it is the position of the servo that launches the ball at an angle
     /// TODO give better name
     Servo angleServo;
@@ -19,6 +22,10 @@ public class Launcher {
     RAWMOTOR motor2;
     MOTOR turretRot;
     double power = 0;
+
+    public double getCurrent(){
+        return (motor1.getCurrentMilliamps()+motor2.getCurrentMilliamps())/2;
+    }
     public double aimServo(double distance,double vel){
         double angle = AngleFinder.getOptimumAngle(vel,distance);
         setAngle(angle);
@@ -65,6 +72,13 @@ public class Launcher {
     public void setPower(double power) {
         motor2.setPower(power);
         motor1.setPower(power);
+    }
+    public int wasBallShot(double current){
+        if (current>maxCurrent+650 && Intake.artifacts == 0 && current >4100){
+            maxCurrent=current;
+            Intake.artifacts --;
+        }
+        return Intake.artifacts;
     }
 
     public Launcher(HardwareMap hardwareMap){
