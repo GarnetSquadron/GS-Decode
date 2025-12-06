@@ -43,8 +43,9 @@ public class BetterControllerClass
             prevValues.put(buttonName,buttonPressed);
             risingEdges.put(buttonName,valChanged&&buttonPressed);
             fallingEdges.put(buttonName,valChanged&&!buttonPressed);
-            toggles.put(buttonName,buttonPressed^toggle);
+            toggles.put(buttonName, (valChanged&&buttonPressed) ^ toggle);
         } catch (NoSuchFieldException | IllegalAccessException ignored) {}
+
     }
 
     /**

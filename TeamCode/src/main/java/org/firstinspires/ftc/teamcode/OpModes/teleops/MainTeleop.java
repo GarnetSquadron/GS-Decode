@@ -70,6 +70,9 @@ public class MainTeleop extends OpMode
         } else {
             launcher.setTurretPower(0);
         }
+        if(gamepad1.y){
+            launcher.zeroTurret();
+        }
 //        if (Gpad.getRisingEdge("y")){
 //            servoPos+=10;
 //        }
@@ -105,8 +108,11 @@ public class MainTeleop extends OpMode
         telemetry.addData("velScale",velScale);
         telemetry.addData("servoPos but better", (servoPos-Math.toRadians(30))*0.5/ Math.toRadians(20));
         telemetry.addData("launcherPower", launcherPower);
-        telemetry.addData("a toggle",Gpad.getToggleValue("a"));
-        telemetry.addData("hoodPos",launcher.getHoodPos());
+        telemetry.addData("lbump toggle",Gpad.getToggleValue("left_bumper"));
+        //telemetry.addData("hoodPos",launcher.getHoodPos());
+        telemetry.addData("lbump val",Gpad.getCurrentValue("left_bumper"));
+        telemetry.addData("lbump redge",Gpad.getRisingEdge("left_bumper"));
+        //telemetry.addData("lbump changed",Gpad.getCurrentValue("left_bumper"));
         telemetry.update();
 
     }

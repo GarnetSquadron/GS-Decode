@@ -234,6 +234,7 @@ class SensorDelayTest extends OpMode{
     }
 }
 class RandomFunctionsTest extends OpMode{
+
     @Override
     public void init(){
 

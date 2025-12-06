@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.enums.AngleUnitV2;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.MOTOR;
@@ -18,6 +17,7 @@ public class Launcher {
     RAWMOTOR motor1;
     RAWMOTOR motor2;
     MOTOR turretRot;
+    final double[] turretRange = {75,75};
     double power = 0;
     public double aimServo(double distance,double vel){
         double angle = AngleFinder.getOptimumAngle(vel,distance);
@@ -47,7 +47,13 @@ public class Launcher {
     }
 
     public void setTurretRotation(double rotation) {
-        turretRot.runToPos(rotation);
+        double rangeSize = turretRange[0]+ turretRange[1];
+        rotation = Math.toDegrees(rotation+ turretRange[0])%360- turretRange[0];//rotation goes until it reaches 360-angleRange[0] at which point it goes to -angleRange[0]
+        if(rotation< turretRange[1]){
+            turretRot.runToPos(Math.toRadians(rotation));
+        }else {
+            turretRot.runToPos(Math.toRadians(360/rangeSize-1)*(rangeSize-rotation+turretRange[0]));
+        }
     }
     public void setTurretPower(double power) {
         turretRot.setPower(power);
