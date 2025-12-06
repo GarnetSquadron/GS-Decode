@@ -257,6 +257,7 @@ class IntakeTests extends OpMode{
     {
         intake = new Intake(hardwareMap);
         launcher = new Launcher(hardwareMap);
+        intake.closeGate();
     }
 
     @Override
