@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Intake;
+import org.firstinspires.ftc.teamcode.Launcher;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.time.TIME;
@@ -44,6 +45,7 @@ public class Tests extends SelectableOpMode
             s.add("motor test",MotorTest::new);
             s.add("servo test",ServoTest::new);
             s.add("DistanceSensorDelayTest", SensorDelayTest::new);
+            s.add("intake Tests", IntakeTests::new);
         });
     }
 
@@ -244,5 +246,38 @@ class RandomFunctionsTest extends OpMode{
     public void loop()
     {
 
+    }
+}
+
+class IntakeTests extends OpMode{
+    Intake intake;
+    Launcher launcher;
+    @Override
+    public void init()
+    {
+        intake = new Intake(hardwareMap);
+        launcher = new Launcher(hardwareMap);
+        intake.closeGate();
+    }
+
+    @Override
+    public void loop()
+    {
+        if (gamepad1.left_bumper){
+            intake.timeWhenIntake = TIME.getTime();
+            intake.setPower(1);
+        }
+        if (gamepad1.right_bumper){
+            launcher.setPower(-1);
+        }
+        if (gamepad1.a){
+            intake.loadBall();
+        }
+        double current = intake.getCurrent();
+        telemetry.addData("intake current",current);
+        telemetry.addData("ball count", intake.countArtifacts(intake.getCurrent()));
+        telemetry.addData("intake time with diff", TIME.getTime()-intake.timeWhenIntake);
+        telemetry.addData("time",TIME.getTime());
+        telemetry.addData("launcher current", launcher.getCurrent());
     }
 }

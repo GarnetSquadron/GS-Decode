@@ -3,9 +3,17 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
+import org.firstinspires.ftc.teamcode.time.TIME;
+
+import java.sql.Time;
 
 public class Intake {
+    public double timeWhenIntake;
+    double delay = 2;
+    double maxCurrent = 0;
+    static int artifacts = 0;
     Servo servoKicker;
     RAWMOTOR intakeMotor;
     Servo leftGate;
@@ -35,10 +43,12 @@ public class Intake {
     //load ball into the launcher/ basically just launching it
     public void loadBall(){
         if (openGate()){
-            if (kickBall()){
-                closeGate();
-                unKick();
-            }
+            if (artifacts == 1){
+                if (kickBall()){
+                    closeGate();
+                    unKick();
+                }
+            }else closeGate();
         }
 
     }
@@ -46,6 +56,30 @@ public class Intake {
         leftGate.setPosition(0);
         rightGate.setPosition(0);
         if (leftGate.getPosition() ==0&rightGate.getPosition()==0){return true;}else return false;
+    }
+    public double getCurrent(){
+        return intakeMotor.getCurrentMilliamps();
+    }
+    public int countArtifacts(double current){
+        if (current>maxCurrent+650 && artifacts == 0 && current >4100 && TIME.getTime()-timeWhenIntake > delay){
+            maxCurrent=current;
+            artifacts = 1;
+        }
+        else if (current>maxCurrent+650 && artifacts == 1 && current > 6000 && TIME.getTime()-timeWhenIntake > delay){
+            maxCurrent=current;
+            artifacts=2;
+        }
+        else if (current>maxCurrent+650 && artifacts == 2 && current > 6700 && TIME.getTime()-timeWhenIntake > delay){
+            maxCurrent=current;
+            artifacts=3;
+        }
+        return artifacts;
+    }
+    public boolean hasThreeArtifacts(double current){
+        if(current > 3800){
+            return true;
+        }
+        return false;
     }
     public double[] getGatePositions(){
         return new double[]{leftGate.getPosition(), rightGate.getPosition()};
@@ -65,4 +99,6 @@ public class Intake {
         servoKicker.setPosition(0.2);
         if (servoKicker.getPosition() ==0.2){return true;}else return false;
     }
+
+
 }
