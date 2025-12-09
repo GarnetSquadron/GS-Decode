@@ -29,7 +29,7 @@ public class Intake {
     public boolean openGate(){
         leftGate.setPosition(0.4); //0.4
         rightGate.setPosition(0.95); //0.95
-        if (leftGate.getPosition() ==0.4&rightGate.getPosition()==0.95){return true;}else return false;
+        if (leftGate.getPosition() > 0.38 && leftGate.getPosition()<0.42  && rightGate.getPosition()>0.86&& rightGate.getPosition()<1.4){return true;}else return false;
     }
         //spin up intake and close the launcher gate
     public void prepareForIntaking(){
@@ -50,12 +50,11 @@ public class Intake {
                 }
             }else closeGate();
         }
-
     }
     public boolean closeGate(){
         leftGate.setPosition(0);
         rightGate.setPosition(0);
-        if (leftGate.getPosition() ==0&rightGate.getPosition()==0){return true;}else return false;
+        if (leftGate.getPosition() >-0.1&& leftGate.getPosition() <0.1 && rightGate.getPosition()>-0.1 && rightGate.getPosition()<0.1){return true;}else return false;
     }
     public double getCurrent(){
         return intakeMotor.getCurrentMilliamps();
