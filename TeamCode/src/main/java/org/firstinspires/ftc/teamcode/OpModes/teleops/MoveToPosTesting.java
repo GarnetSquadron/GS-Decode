@@ -31,7 +31,7 @@ public class MoveToPosTesting extends OpMode
         Gpad = new BetterControllerClass(gamepad1);
 
         follower = CompConstants.createFollower(hardwareMap);
-        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
+        follower.setStartingPose(new Pose(130, 110));
         follower.startTeleopDrive();
         telemetry.addData("follower",follower);
     }
