@@ -89,7 +89,7 @@ public class MainTeleop extends OpMode
 //        } else{
 //            intake.unKick();
 //        }
-        telemetry.addData("fliewheel current", )
+        telemetry.addData("flywheel current", launcher.getCurrent());
         telemetry.addData("left gate position",intake.getGatePositions()[0]);
         telemetry.addData("right gate position",intake.getGatePositions()[1]);
         telemetry.addData("left stick x",gamepad1.left_stick_x);

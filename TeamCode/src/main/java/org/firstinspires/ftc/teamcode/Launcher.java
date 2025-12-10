@@ -49,6 +49,12 @@ public class Launcher {
     public void setAngle(double angle){
         angleServo.setPosition((angle-Math.toRadians(30))*0.5/ Math.toRadians(20) );
     }
+//    public void shoot3(){
+//        intake.openGate();
+//        launcher.setPower(1);
+//        int
+//        while(Time.getTime())
+//    }
     public double getHoodPos(){
         return angleServo.getPosition();
     }
@@ -79,13 +85,24 @@ public class Launcher {
         motor2.setPower(power);
         motor1.setPower(power);
     }
-    public int wasBallShot(double current){
-        if (current>maxCurrent+650 && Intake.artifacts == 0 && current >4100){
-            maxCurrent=current;
-            Intake.artifacts --;
-        }
-        return Intake.artifacts;
-    }
+//    public int wasBallShot(double current){
+//        if(flyWheelTime>lastShotBallTime) {
+//            lastShotBallTime = flyWheelTime;
+//        }
+//        if (lastShotBallTime > 1500){
+//            shootBall = true;
+//            lastShotBallTime=0;
+//        }
+//        if (current>1800 && flyWheelTime > 1500 && shootBall){
+//
+//            //create int lastShotBallTime
+//            // create boolean shootBall
+//            //create flywheel time
+//            Intake.artifacts --;
+//            shootBall = false;
+//        }
+//        return Intake.artifacts;
+//    }
 
     public Launcher(HardwareMap hardwareMap){
         angleServo = hardwareMap.get(Servo.class, "angleServo");

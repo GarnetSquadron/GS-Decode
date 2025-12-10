@@ -250,7 +250,9 @@ class RandomFunctionsTest extends OpMode{
 }
 
 class IntakeTests extends OpMode{
+    boolean gateOpen;
     Intake intake;
+    boolean wasAPressed = false;
     Launcher launcher;
     @Override
     public void init()
@@ -258,11 +260,15 @@ class IntakeTests extends OpMode{
         intake = new Intake(hardwareMap);
         launcher = new Launcher(hardwareMap);
         intake.closeGate();
+        intake.unKick();
     }
 
     @Override
     public void loop()
     {
+        if (intake.openGate()){
+            gateOpen = true;
+        }
         if (gamepad1.left_bumper){
             intake.timeWhenIntake = TIME.getTime();
             intake.setPower(1);
@@ -270,10 +276,19 @@ class IntakeTests extends OpMode{
         if (gamepad1.right_bumper){
             launcher.setPower(-1);
         }
-        if (gamepad1.a){
+        if (gamepad1.a && !wasAPressed){
+            wasAPressed = true;
             intake.loadBall();
+//            wasAPressed  =false;
         }
+        if (gamepad1.y){
+            intake.openGate();
+        }
+        if (gamepad1.b){
+            intake.kickBall();
+        }else intake.unKick();
         double current = intake.getCurrent();
+        telemetry.addData("is gate open",gateOpen);
         telemetry.addData("intake current",current);
         telemetry.addData("ball count", intake.countArtifacts(intake.getCurrent()));
         telemetry.addData("intake time with diff", TIME.getTime()-intake.timeWhenIntake);
