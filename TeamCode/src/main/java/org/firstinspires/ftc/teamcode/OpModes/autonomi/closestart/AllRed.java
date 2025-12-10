@@ -10,9 +10,8 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.TestConstants;
-import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
-import org.firstinspires.ftc.teamcode.Intake;
-import org.firstinspires.ftc.teamcode.Launcher;
+import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
+import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 
 
 @TeleOp(name = "AutoRedAll")

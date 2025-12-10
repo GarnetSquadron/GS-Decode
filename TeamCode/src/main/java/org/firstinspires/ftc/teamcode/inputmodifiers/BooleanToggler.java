@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.inputmodifiers;
 
-import org.firstinspires.ftc.teamcode.time.TTimer;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
 import java.util.function.BooleanSupplier;
 

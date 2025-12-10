@@ -11,11 +11,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Intake;
-import org.firstinspires.ftc.teamcode.Launcher;
+import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
+import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
-import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
-import org.firstinspires.ftc.teamcode.time.TIME;
+import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 
 import java.util.List;
 

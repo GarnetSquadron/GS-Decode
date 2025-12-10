@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-import org.firstinspires.ftc.teamcode.time.TIME;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 
 @TeleOp(name = "delayTest")
 public class TouchSensorDelayTest2 extends OpMode

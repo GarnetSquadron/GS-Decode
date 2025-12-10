@@ -14,10 +14,10 @@ an instance of this and
 [MecanumDrive](pathing/roadrunner/drives/MecanumDrive.java)
 the mecanum drive code, implements roadrunner
 
-[TeleOpActionScheduler](OpmodeActionSceduling/TeleOpActionScheduler.java)
+[TeleOpActionScheduler](randomStuffWeArentUsingATM/OpmodeActionSceduling/TeleOpActionScheduler.java)
 Adds action supports for non autonomous
 
-[TeleOpAction](OpmodeActionSceduling/TeleOpAction.java)
+[TeleOpAction](randomStuffWeArentUsingATM/OpmodeActionSceduling/TeleOpAction.java)
 Used by teleop action scheduler, hotels information
 
 [MotorEx](com/arcrobotics/ftclib/hardware/motors/MotorEx.java)
