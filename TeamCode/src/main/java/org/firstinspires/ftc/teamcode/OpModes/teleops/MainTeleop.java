@@ -5,9 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
+import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
-import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
-import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
 
@@ -15,8 +14,7 @@ import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 public class MainTeleop extends OpMode
 {
     public static Follower follower;
-    Intake intake;
-    Launcher launcher;
+    Bot bot;
     double velScale = 0.6;
     double servoPos = 0.5;
     double launcherPower = 0.6;
@@ -26,8 +24,7 @@ public class MainTeleop extends OpMode
     @Override
     public void init()
     {
-        intake = new Intake(hardwareMap);
-        launcher = new Launcher(hardwareMap);
+        bot = new Bot(hardwareMap);
 
         Gpad = new BetterControllerClass(gamepad1);
 
@@ -38,6 +35,7 @@ public class MainTeleop extends OpMode
         follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
         follower.startTeleopDrive();
         telemetry.addData("follower",follower);
+        bot.intake.closeGate();
     }
 
     public void loop(){
@@ -50,8 +48,9 @@ public class MainTeleop extends OpMode
         //==============================INPUTS====================================\\
         boolean kickInput = Gpad.getCurrentValue("right_trigger");
         boolean intakeToggle = Gpad.getToggleValue("right_bumper");
-        boolean launcherToggle = Gpad.getToggleValue("left_bumper");
-        boolean launcherEdge = Gpad.getRisingEdge("left_bumper");
+//        boolean launcherToggle = Gpad.getToggleValue("left_bumper");
+        boolean spinUpFlywheelInput = Gpad.getCurrentValue("left_bumper");
+        boolean releaseTheBallsInput = Gpad.getFallingEdge("left_bumper");
         boolean turretZeroInput = gamepad1.x;
         boolean autoAimOn = gamepad1.b;
         boolean openGateInput = gamepad1.a;
@@ -76,28 +75,36 @@ public class MainTeleop extends OpMode
         //launcher
 
         //launcher.setPower(launcherToggle?-launcherPower:0);
-        if(launcherEdge){
-            intake.startShoot3();
+        if(releaseTheBallsInput){
+            bot.launchHandler.initLaunch();
         }
-        if(launcherToggle){
-            telemetry.addData("spinningup",launcher.spinUpFlywheel());
-            if(launcher.spinUpFlywheel()){
-
-                intake.shoot3();
-            }
-        } else{launcher.setPower(0);}
+        if(spinUpFlywheelInput){
+            telemetry.addData("speed",bot.launcher.spinUpFlywheel(0.5));
+            bot.intake.closeGate();
+        }else{
+            if(intakeToggle){
+                bot.intake.setPower(1);
+            }else bot.intake.stop();
+        }
+//        if(launcherToggle){
+//            telemetry.addData("spinningup",bot.launcher.spinUpFlywheel());
+//            if(launcher.spinUpFlywheel()){
+//
+//                intake.shoot3();
+//            }
+//        } else{launcher.setPower(0);}
         if(turretZeroInput){
-            launcher.zeroTurret();
+            bot.launcher.zeroTurret();
         }
         if(autoAimOn){
-            telemetry.addData("target",launcher.aimTurret(FieldDimensions.goalPositionBlue, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading()));
+            telemetry.addData("target",bot.launcher.aimTurret(FieldDimensions.goalPositionBlue, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading()));
         } else {
-            launcher.setTurretPower(0);
+            bot.launcher.setTurretPower(0);
         }
         if(turretZeroInput){
-            launcher.zeroTurret();
+            bot.launcher.zeroTurret();
         }
-        launcher.setAngle(servoPos);
+        bot.launcher.setAngle(servoPos);
 //        if(openGateInput){
 //            intake.openGate();
 //        }
@@ -115,6 +122,8 @@ public class MainTeleop extends OpMode
 //        } else{
 //            intake.unKick();
 //        }
+        telemetry.addData("time since start",bot.update());
+        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
 //        telemetry.addData("left gate position",intake.getGatePositions()[0]);
@@ -123,11 +132,11 @@ public class MainTeleop extends OpMode
 //        telemetry.addData("left stick y",gamepad1.left_stick_y);
 //        telemetry.addData("right stick x",gamepad1.right_stick_x);
 //        telemetry.addData("right stick y",gamepad1.right_stick_y);
-        telemetry.addData("rotation",launcher.getTurretEncoder().getPos());
-        telemetry.addData("ticks",launcher.getTurretEncoder().getTicks());
-        telemetry.addData("CPR",launcher.getTurretEncoder().getCPR());
-        telemetry.addData("scale",launcher.getTurretEncoder().getScale());
-        telemetry.addData("motor type", launcher.getMotorType());
+        telemetry.addData("rotation",bot.launcher.getTurretEncoder().getPos());
+        telemetry.addData("ticks",bot.launcher.getTurretEncoder().getTicks());
+        telemetry.addData("CPR",bot.launcher.getTurretEncoder().getCPR());
+        telemetry.addData("scale",bot.launcher.getTurretEncoder().getScale());
+        telemetry.addData("motor type", bot.launcher.getMotorType());
         telemetry.addLine("---------Position-------");
         telemetry.addData("position",follower.getPose());//TODO: check this, I think that the position is not getting updated, its possible the pinpoint isn't connected well or something
         telemetry.addData("goal x",FieldDimensions.goalPositionBlue[0]);

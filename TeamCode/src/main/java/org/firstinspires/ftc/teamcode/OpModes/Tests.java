@@ -285,7 +285,7 @@ class IntakeTests extends OpMode{
         if(gamepad1.y){
             intake.startShoot3();
         }
-        intake.shoot3();
+//        intake.shoot3();
         double current = intake.getCurrent();
         telemetry.addData("is gate open",gateOpen);
         telemetry.addData("intake current",current);

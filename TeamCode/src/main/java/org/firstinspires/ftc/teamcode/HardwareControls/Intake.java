@@ -42,25 +42,6 @@ public class Intake {
     public void startShoot3(){
         startingshooting3 = true;
     }
-    public boolean shoot3(){
-
-        if (startingshooting3) {
-            shootTime = TIME.getTime();
-            openGate();
-            setPower(1);
-        }
-        startingshooting3= false;
-        if (TIME.getTime()-shootTime> 1.5){
-            if (TIME.getTime()-shootTime> 4){
-                closeGate();
-                unKick();
-                setPower(0);
-                //return true;
-
-            }else kickBall();
-        }
-        return TIME.getTime()-shootTime>2;
-    }
 
     //load ball into the launcher/ basically just launching it
 //    public void loadBall(){

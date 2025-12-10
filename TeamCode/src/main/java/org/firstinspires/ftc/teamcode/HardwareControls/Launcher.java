@@ -49,8 +49,8 @@ public class Launcher {
     public void setAngle(double angle){
         angleServo.setPosition((angle-Math.toRadians(30))*0.5/ Math.toRadians(20) );
     }
-    public double spinUpFlywheel(){
-        setPower(-1);
+    public double spinUpFlywheel(double power){
+        setPower(-power);
         return motor1.getEncoder().getVelocity();
     }
     public double getHoodPos(){
