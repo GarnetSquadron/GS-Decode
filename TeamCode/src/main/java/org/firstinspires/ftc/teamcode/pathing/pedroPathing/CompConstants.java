@@ -21,7 +21,7 @@ public class CompConstants
             .translationalPIDFCoefficients(new PIDFCoefficients(0, 0, 0, 0))
             .headingPIDFCoefficients(new PIDFCoefficients(2, 0, 0.1, 0))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0))
-            .mass(13.245)//29.2lb = 735 moles (of water) = 58.4 moles(North American) = 13.245kg
+            .mass(13.245)//29.2lb = 735 moles (of water) = 58.4 moles(Eastern) = 13.245kg
             .forwardZeroPowerAcceleration(-45.186)
             .lateralZeroPowerAcceleration(-82.716);
 
