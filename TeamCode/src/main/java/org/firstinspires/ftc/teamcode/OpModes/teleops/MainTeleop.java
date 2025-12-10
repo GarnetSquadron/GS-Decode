@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.teleops;
 
+import android.graphics.Gainmap;
+
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -52,6 +54,7 @@ public class MainTeleop extends OpMode
         boolean kickInput = Gpad.getCurrentValue("right_trigger");
         boolean intakeToggle = Gpad.getToggleValue("right_bumper");
         boolean launcherToggle = Gpad.getToggleValue("left_bumper");
+        boolean launcherEdge = Gpad.getRisingEdge("left_bumper");
         boolean turretZeroInput = gamepad1.x;
         boolean autoAimOn = gamepad1.b;
         boolean openGateInput = gamepad1.a;
@@ -66,7 +69,7 @@ public class MainTeleop extends OpMode
 //        if(gamepad1.x){
 //            intake.setPower(-1);
 //        } else {
-        intake.setPower(intakeToggle ?1:0);
+        //intake.setPower(intakeToggle ?1:0);
 //        }
         //if (gamepad1.b){intake.loadBall();};
 
@@ -75,7 +78,17 @@ public class MainTeleop extends OpMode
 //        } else intake.unprepareIntake();
         //launcher
 
-        launcher.setPower(launcherToggle?-launcherPower:0);
+        //launcher.setPower(launcherToggle?-launcherPower:0);
+        if(launcherEdge){
+            intake.startShoot3();
+        }
+        if(launcherToggle){
+            telemetry.addData("spinningup",launcher.spinUpFlywheel());
+            if(launcher.spinUpFlywheel()){
+
+                intake.shoot3();
+            }
+        } else{launcher.setPower(0);}
         if(turretZeroInput){
             launcher.zeroTurret();
         }
@@ -87,23 +100,24 @@ public class MainTeleop extends OpMode
         if(turretZeroInput){
             launcher.zeroTurret();
         }
-        if(openGateInput){
-            intake.openGate();
-        }
-        else {
-            intake.closeGate();
-        }
+        launcher.setAngle(servoPos);
+//        if(openGateInput){
+//            intake.openGate();
+//        }
+//        else {
+//            intake.closeGate();
+//        }
         double distance = Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
 
         //manualOrAutoAimHood(gamepad1.b,distance);
         //toggleLaunchPower(Gpad.getToggleValue("gamepad1.rightTrigger"));// there are too many buttons in use rn so I am taking this away for now
         launcherPower = 0.9;
 
-        if(kickInput){
-            intake.kickBall();
-        } else{
-            intake.unKick();
-        }
+//        if(kickInput){
+//            intake.kickBall();
+//        } else{
+//            intake.unKick();
+//        }
 
         //========================TELEMETRY===========================\\
 //        telemetry.addData("left gate position",intake.getGatePositions()[0]);
@@ -123,6 +137,7 @@ public class MainTeleop extends OpMode
         telemetry.addData("goal y",FieldDimensions.goalPositionBlue[1]);
         telemetry.addData("distance", distance);
         telemetry.addData("velScale",velScale);
+        telemetry.addData("TOGGLER",Gpad.getToggleValue("left_bumper"));
 //        telemetry.addData("servoPos but better", (servoPos-Math.toRadians(30))*0.5/ Math.toRadians(20));
 //        telemetry.addData("launcherPower", launcherPower);
 //        telemetry.addData("lbump toggle",Gpad.getToggleValue("left_bumper"));

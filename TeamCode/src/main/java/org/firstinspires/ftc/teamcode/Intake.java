@@ -3,11 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.time.TIME;
-
-import java.sql.Time;
 
 public class Intake {
     public double timeWhenIntake;
@@ -18,6 +15,8 @@ public class Intake {
     RAWMOTOR intakeMotor;
     Servo leftGate;
     Servo rightGate;
+    double shootTime= -1;
+    public boolean startingshooting3 = false;
 
     public Intake(HardwareMap hardwareMap) {
         intakeMotor = new RAWMOTOR(hardwareMap, "intakeMotor"/*"lf"*/);
@@ -40,20 +39,43 @@ public class Intake {
     public void unprepareIntake(){
         setPower(0);
     }
-    //load ball into the launcher/ basically just launching it
-    public void loadBall(){
-        if (openGate()){
-            if (artifacts == 1){
-                if (kickBall()){
-                    closeGate();
-                    unKick();
-                }
-            }else closeGate();
-        }
+    public void startShoot3(){
+        startingshooting3 = true;
     }
+    public boolean shoot3(){
+
+        if (startingshooting3) {
+            shootTime = TIME.getTime();
+            openGate();
+            setPower(1);
+        }
+        startingshooting3= false;
+        if (TIME.getTime()-shootTime> 1.5){
+            if (TIME.getTime()-shootTime> 4){
+                closeGate();
+                unKick();
+                setPower(0);
+                //return true;
+
+            }else kickBall();
+        }
+        return TIME.getTime()-shootTime>2;
+    }
+
+    //load ball into the launcher/ basically just launching it
+//    public void loadBall(){
+//        if (openGate()){
+//            if (artifacts == 1){
+//                if (kickBall()){
+//                    closeGate();
+//                    unKick();
+//                }
+//            }else closeGate();
+//        }
+//    }
     public boolean closeGate(){
-        leftGate.setPosition(0);
-        rightGate.setPosition(0);
+        leftGate.setPosition(0.05);
+        rightGate.setPosition(0.6);
         if (leftGate.getPosition() >-0.1&& leftGate.getPosition() <0.1 && rightGate.getPosition()>-0.1 && rightGate.getPosition()<0.1){return true;}else return false;
     }
     public double getCurrent(){

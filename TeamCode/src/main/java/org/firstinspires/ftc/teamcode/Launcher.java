@@ -49,12 +49,10 @@ public class Launcher {
     public void setAngle(double angle){
         angleServo.setPosition((angle-Math.toRadians(30))*0.5/ Math.toRadians(20) );
     }
-//    public void shoot3(){
-//        intake.openGate();
-//        launcher.setPower(1);
-//        int
-//        while(Time.getTime())
-//    }
+    public boolean spinUpFlywheel(){
+        setPower(-1);
+        return motor1.getEncoder().getVelocity()>50;
+    }
     public double getHoodPos(){
         return angleServo.getPosition();
     }
