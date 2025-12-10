@@ -154,4 +154,18 @@ public class ExtraMath
         return (val1.getValue() - val2.getValue()) / (val1.getTimeStamp() - val2.getTimeStamp());
     }
 
+    /**
+     * WTF WHY IS (-1)%10=-1?!?!? IT SHOULD BE 9!!!! OTHERWISE THE PROPERTY n%m=(n+m)%m IS NOT PRESERVED
+     * @param a
+     * @param b
+     * @return
+     */
+    public static double theRealMod(double a,double b){
+        double ret = a%b;
+        if(ret<0){
+            ret+=b;
+        }
+        return ret;
+    }
+
 }
