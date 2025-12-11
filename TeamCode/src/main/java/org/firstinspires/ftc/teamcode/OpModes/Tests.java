@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
 import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
+import org.firstinspires.ftc.teamcode.HardwareControls.Turret;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
@@ -46,6 +48,7 @@ public class Tests extends SelectableOpMode
             s.add("servo test",ServoTest::new);
             s.add("DistanceSensorDelayTest", SensorDelayTest::new);
             s.add("intake Tests", IntakeTests::new);
+            s.add("turret math", TurretMathTest::new);
         });
     }
 
@@ -294,5 +297,31 @@ class IntakeTests extends OpMode{
         telemetry.addData("time",TIME.getTime());
         telemetry.addData("launcher current", launcher.getCurrent());
         telemetry.addData("launching",launching);
+    }
+}
+class TurretMathTest extends OpMode{
+    Turret turret;
+    double inputAngle = 0;
+    BetterControllerClass Gpad;
+    @Override
+    public void init()
+    {
+        Gpad = new BetterControllerClass(gamepad1);
+        turret = new Turret(hardwareMap);
+    }
+
+    @Override
+    public void loop()
+    {
+        Gpad.update();
+        if(Gpad.getRisingEdge("a")){
+            inputAngle+=0.1;
+        }
+        if (Gpad.getRisingEdge("b")){
+            inputAngle-=0.1;
+        }
+        telemetry.addData("input angle (rads)",inputAngle);
+        telemetry.addData("output angle (rads)",turret.getRotation(inputAngle));
+        telemetry.update();
     }
 }

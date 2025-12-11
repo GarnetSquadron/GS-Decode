@@ -46,11 +46,11 @@ public class MoveToPosTesting extends OpMode
             intake.setPower(0);
         }
 
-        if(gamepad1.right_bumper){
-            launcher.setTurretPower(1);
-        } else {
-            launcher.setTurretPower(0);
-        }
+//        if(gamepad1.right_bumper){
+//            launcher.setTurretPower(1);
+//        } else {
+//            launcher.setTurretPower(0);
+//        }
 
         if (gamepad1.left_bumper){
             BezierLine ShotOnRed = new BezierLine(

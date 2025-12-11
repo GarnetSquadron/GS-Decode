@@ -8,11 +8,13 @@ public class Bot
 {
     public Launcher launcher;
     public Intake intake;
+    public Turret turret;
     public LaunchHandler launchHandler;
     public Bot(HardwareMap hardwareMap){
         launcher = new Launcher(hardwareMap);
         intake = new Intake(hardwareMap);
         launchHandler = new LaunchHandler();
+        turret = launcher.turret;
     }
     public void init(){
 
@@ -48,6 +50,7 @@ public class Bot
                         if(TIME.getTime()-releaseStartTime>2){
                             intake.unKick();
                             intake.stop();
+                            intake.closeGate();
                             launcher.setPower(0);
                             launchingBalls = false;
                             releaseBalls = false;
