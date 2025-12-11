@@ -45,7 +45,8 @@ public class CompConstants
             .hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+            .yawScalar(-1);//not sure why but the pinpoint heading is reversed.
 
     public static PathConstraints pathConstraints = new PathConstraints(
             0.995,
