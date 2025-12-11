@@ -6,9 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
@@ -43,8 +40,6 @@ public class MainTeleop extends OpMode
         follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
         follower.startTeleopDrive();
         telemetry.addData("follower",follower);
-        pinpointDriver = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-        pinpointDriver.setPosition(new Pose2D(DistanceUnit.METER,0,0, AngleUnit.RADIANS,0));
         bot.intake.closeGate();
 
 
@@ -55,18 +50,18 @@ public class MainTeleop extends OpMode
     public void loop(){
         follower.update();
 
-        follower.setTeleOpDrive(-gamepad1.left_stick_y*Math.abs(gamepad1.left_stick_y), Math.abs(gamepad1.left_stick_x)*gamepad1.left_stick_x, Math.abs(gamepad1.right_stick_x)*gamepad1.right_stick_x, false);
+        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, Math.abs(gamepad1.right_stick_x)*gamepad1.right_stick_x, false);
         Gpad.update();
 
         //I wanted to find a better way, but this seems like the best option for organizing the button inputs
         //==============================INPUTS====================================\\
-        boolean kickInput = Gpad.getCurrentValue("right_trigger");
+        //boolean kickInput = Gpad.getCurrentValue("right_trigger");
         boolean intakeToggle = Gpad.getToggleValue("right_bumper");
 //        boolean launcherToggle = Gpad.getToggleValue("left_bumper");
         boolean spinUpFlywheelInput = Gpad.getCurrentValue("left_bumper");
         boolean releaseTheBallsInput = Gpad.getFallingEdge("left_bumper");
         boolean turretZeroInput = gamepad1.x;
-        boolean autoAimOn = Gpad.getToggleValue("b");
+        boolean autoAimOn = Gpad.getCurrentValue("right_trigger");
         boolean openGateInput = gamepad1.a;
 
         servoPos = gamepad1.left_trigger*20+30;
@@ -112,7 +107,7 @@ public class MainTeleop extends OpMode
         }
         if(autoAimOn){
             //(rotation - turretRange[0])%(Math.PI)+ turretRange[0]%(Math.PI)-Math.PI
-            rotation = bot.turret.aimTowardsGoal(FieldDimensions.goalPositionBlue, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading() /*Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw())*/);
+            rotation = bot.turret.aimTowardsGoal(FieldDimensions.goalPositionRed, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading() /*Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw())*/);
 
         } else {
             bot.turret.setPower(0);
@@ -139,16 +134,27 @@ public class MainTeleop extends OpMode
         telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
+        double deltaX = FieldDimensions.goalPositionRed[0]-follower.getPose().getX();
+        double deltaY = FieldDimensions.goalPositionRed[1]-follower.getPose().getY();
+        double tan = Math.atan(deltaY/deltaX);
         telemetry.addLine();
+        telemetry.addData("bot heading",  follower.getPose().getHeading());
+        telemetry.addData("tan",  tan);
         telemetry.addLine("radians:");
-        telemetry.addData("input angle",  -Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw()));
-        telemetry.addData("supposed output angle", bot.turret.getRotation(-Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw())));
-        telemetry.addData("actual output angle", bot.turret.turretRot.getTargetPosition());
+        telemetry.addData("input angle",  tan-follower.getPose().getHeading()+Math.PI);
+        telemetry.addData("supposed output angle", bot.turret.getRotation(tan-follower.getPose().getHeading()+Math.PI));
+        //telemetry.addData("actual output angle", bot.turret.turretRot.getTargetPosition());
         telemetry.addLine();
         telemetry.addLine("degrees:");
-        telemetry.addData("input angle",  -imu.getRobotYawPitchRollAngles().getYaw());
-        telemetry.addData("supposed output angle",Math.toDegrees(bot.turret.getRotation(-Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw()))));
-        telemetry.addData("actual output angle", Math.toDegrees(bot.turret.turretRot.getTargetPosition()));
+        telemetry.addData("input angle",  Math.toDegrees(tan-follower.getPose().getHeading()+180));
+        telemetry.addData("supposed output angle",Math.toDegrees(bot.turret.getRotation(tan-follower.getPose().getHeading()+Math.PI)));
+        //telemetry.addData("actual output angle", Math.toDegrees(bot.turret.turretRot.getTargetPosition()));
+        telemetry.addLine();
+        telemetry.addData("real angle", rotation);
+        telemetry.addData("deltaX", deltaX);
+        telemetry.addData("deltaY", deltaY);
+        telemetry.addData("deltaY/deltaX",deltaY/deltaX);
+        telemetry.addData("atangent", tan);
         telemetry.addLine();
 
 

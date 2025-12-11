@@ -18,6 +18,7 @@ public class Turret
         turretRot.getEncoder().scaleToAngleUnit(AngleUnitV2.RADIANS);
         turretRot.reverseMotor();
         turretRot.setPID(7,0,0);
+        zero();
     }
 
     public void setPower(double power) {
@@ -55,8 +56,16 @@ public class Turret
      * @return
      */
     public double aimTowardsGoal(double[] goalPos, double[] botPos, double heading){
-        double rotAngle = Math.atan((goalPos[1] - botPos[1]) /(goalPos[0]-botPos[0]))-heading;
+        double rotAngle = Math.atan((goalPos[1] - botPos[1]) /(goalPos[0] - botPos[0]))-heading+Math.PI;
         setRotation(rotAngle);
+//        telemetry.addLine("funcVals:");
+//        telemetry.addData("atangent",Math.atan((goalPos[1] - botPos[1]) /(goalPos[0] - botPos[0])));
+//        telemetry.addData("heading",heading);
+//        telemetry.addData("GoalX",goalPos[0]);
+//        telemetry.addData("botX", botPos[0]);
+//        telemetry.addData("deltaX", goalPos[0] - botPos[0]);
+//        telemetry.addData("deltaY",goalPos[1] - botPos[1]);
+//        telemetry.addData("deltaY/deltaX",(goalPos[1] - botPos[1]) /(goalPos[0] - botPos[0]));
         return rotAngle;
     }
     public void zero(){

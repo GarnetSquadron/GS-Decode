@@ -39,14 +39,14 @@ public class CompConstants
             .yVelocity(52.612);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(4.5)//TODO: Check this and figure out which center it is
+            .forwardPodY(-4.5)//TODO: Check this and figure out which center it is
             .strafePodX(0)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
-            .yawScalar(-1);//not sure why but the pinpoint heading is reversed.
+            .yawScalar(1);//I input -1 before, and then for some reason it stayed reversed even when I commented out this line, so I had to put this line to change it back. I will keep it like this for now I guess.
 
     public static PathConstraints pathConstraints = new PathConstraints(
             0.995,
