@@ -96,7 +96,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //I wanted to find a better way, but this seems like the best option for organizing the button inputs
         //==============================INPUTS====================================\\
         //boolean kickInput = Gpad.getCurrentValue("right_trigger");
-        boolean intakeToggle = Gpad.getToggleValue("right_bumper");
+        boolean intakeToggle = Gpad.getCurrentValue("right_bumper");
 //        boolean launcherToggle = Gpad.getToggleValue("left_bumper");
         boolean spinUpFlywheelInput = Gpad.getCurrentValue("left_bumper");
         boolean releaseTheBallsInput = Gpad.getFallingEdge("left_bumper");
