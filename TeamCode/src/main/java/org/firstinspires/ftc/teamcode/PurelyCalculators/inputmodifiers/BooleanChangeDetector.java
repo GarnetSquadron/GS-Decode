@@ -1,21 +1,21 @@
-package org.firstinspires.ftc.teamcode.inputmodifiers;
+package org.firstinspires.ftc.teamcode.PurelyCalculators.inputmodifiers;
 
 import java.util.function.BooleanSupplier;
 
-public class risingEdgeDetector
+public class BooleanChangeDetector
 {
     BooleanSupplier bool;
-    boolean State;
     boolean prevVal;
+    boolean State = false;
 
-    public risingEdgeDetector(BooleanSupplier bool)
+    public BooleanChangeDetector(BooleanSupplier bool)
     {
         this.bool = bool;
     }
 
     public void update()
     {
-        State = !prevVal && bool.getAsBoolean();
+        State = prevVal != bool.getAsBoolean();
         prevVal = bool.getAsBoolean();
     }
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.inputmodifiers;
+package org.firstinspires.ftc.teamcode.PurelyCalculators.inputmodifiers;
 
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 

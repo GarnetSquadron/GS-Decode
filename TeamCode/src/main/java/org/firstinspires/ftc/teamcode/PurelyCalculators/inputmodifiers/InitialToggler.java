@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.inputmodifiers;
+package org.firstinspires.ftc.teamcode.PurelyCalculators.inputmodifiers;
 
 import java.util.function.BooleanSupplier;
 
