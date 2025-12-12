@@ -39,6 +39,11 @@ public class Launcher {
 //       setAngle(angle);
 //        telemetry.addData()
 //    }
+
+    /**
+     * sets the hood angle
+     * @param angle the angle relative to horizontal that the ball comes out at (in radians of course)
+     */
     public void setAngle(double angle){
         angleServo.setPosition((angle-Math.toRadians(30))*0.5/ Math.toRadians(20) );
     }

@@ -24,20 +24,22 @@ public class Bot
     }
     public class LaunchHandler
     {
+        double power = 1;
         double releaseStartTime;
         boolean launchingBalls = false;
         boolean releaseBalls = false;
         public LaunchHandler(){
             releaseStartTime = -1;
         }
-        public void initLaunch(){
+        public void initLaunch(double power){
             launchingBalls = true;
             releaseBalls = false;
+            this.power = power;
             intake.closeGate();
         }
         public double update(){
             if(launchingBalls){
-                if(launcher.spinUpFlywheel(0.5)>-1&&!releaseBalls){
+                if(launcher.spinUpFlywheel(power)>-1&&!releaseBalls){
                     releaseBalls = true;
                     releaseStartTime = TIME.getTime();
                     intake.setPower(1);
@@ -46,8 +48,9 @@ public class Bot
                 else{
                     intake.setPower(1);
                     intake.openGate();
-                    if(TIME.getTime()-releaseStartTime>1){
-                        if(TIME.getTime()-releaseStartTime>2){
+                    double timeFor3rdBallToGetUnStuck = 2;
+                    if(TIME.getTime()-releaseStartTime>timeFor3rdBallToGetUnStuck){
+                        if(TIME.getTime()-releaseStartTime>timeFor3rdBallToGetUnStuck+1){
                             intake.unKick();
                             intake.stop();
                             intake.closeGate();

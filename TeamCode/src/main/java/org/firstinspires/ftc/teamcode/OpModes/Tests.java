@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.getAngles;
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.targetHeight;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.telemetry.SelectableOpMode;
 import com.qualcomm.hardware.maxbotix.MaxSonarI2CXL;
@@ -14,10 +17,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
 import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 import org.firstinspires.ftc.teamcode.HardwareControls.Turret;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
-import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
+import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 
 import java.util.List;
 
@@ -49,6 +54,7 @@ public class Tests extends SelectableOpMode
             s.add("DistanceSensorDelayTest", SensorDelayTest::new);
             s.add("intake Tests", IntakeTests::new);
             s.add("turret math", TurretMathTest::new);
+            s.add("hood test",HoodTest::new);
         });
     }
 
@@ -322,6 +328,55 @@ class TurretMathTest extends OpMode{
         }
         telemetry.addData("input angle (rads)",inputAngle);
         telemetry.addData("output angle (rads)",turret.getRotation(inputAngle));
+        telemetry.update();
+    }
+}
+class HoodTest extends OpMode{
+    Launcher launcher;
+    double distance = 48;
+    double vel = 273;
+    @Override
+    public void init()
+    {
+        launcher = new Launcher(hardwareMap);
+    }
+
+    @Override
+    public void loop()
+    {
+        if (gamepad1.aWasReleased()) {
+            distance +=1;
+        }
+        if(gamepad1.bWasPressed()){
+            distance -=1;
+        }
+        if (gamepad1.xWasReleased()) {
+            vel +=1;
+        }
+        if(gamepad1.yWasPressed()){
+            vel -=1;
+        }
+
+        //launcher.setAngle(Math.toRadians(angle));
+        launcher.aimServo(distance,vel);
+        telemetry.addData("distance", distance);
+        telemetry.addData("vel",vel);
+        telemetry.addData("angle",Math.toDegrees( AngleFinder.getOptimumAngle(vel,distance)));
+        double a = 386.09*386.09/4;
+        double b = 386.09*targetHeight-vel*vel;
+        double c = distance*distance+targetHeight*targetHeight;
+        double[] tSquared = ExtraMath.quadraticFormula(a,b,c);
+        double[] angles = getAngles(vel,distance);
+        telemetry.addData("a", a);
+        telemetry.addData("b", b);
+        telemetry.addData("c", c);
+        telemetry.addData("discriminant",b*b-4*a*c);
+        telemetry.addData("t^2 solution #1", tSquared.length==0?-1:tSquared[0]);
+        telemetry.addData("t^2 solution #2", tSquared.length<2?-1:tSquared[1]);
+        telemetry.addData("length",angles.length);
+        for(int i=0;i<angles.length;i++){
+            telemetry.addData("angle "+String.valueOf(i),Math.toDegrees(angles[i]));
+        }
         telemetry.update();
     }
 }

@@ -5,7 +5,7 @@ import com.pedropathing.geometry.Pose;
 public class FieldDimensions
 {
     public static double minGoalHeight = 38.75;//0.9645 meters
-    public static double maxGoalHeight = 15;// 1.3655 meters
+    public static double maxGoalHeight = 53.7598425;// 1.3655 meters
 
     //update later with real positions
     public static double[] fieldCenter = {72,72};//(0,0) is the corner of the field

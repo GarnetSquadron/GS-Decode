@@ -1,6 +1,11 @@
 package org.firstinspires.ftc.teamcode.OpModes.teleops;
 
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.g;
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.getAngles;
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.targetHeight;
+
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -11,6 +16,8 @@ import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
+import java.util.function.DoubleUnaryOperator;
+
 import kotlin.Pair;
 
 
@@ -19,11 +26,24 @@ public class MainTeleop extends SettingSelectorOpMode
 {
     public static Follower follower;
     Bot bot;
-    double velScale = 0.6;
     double rotation = 0;
     double servoPos = 0.5;
     double launcherPower = 0.6;
     double[] targetGoalPos;
+    double distance = 100;
+    double vel = 400;
+    double velScale = 311;
+    double velToDistRatio = 4;
+    double a = 386.09*386.09/4;
+    double launchAngle = 40;
+    //double b = 386.09*targetHeight-vel*vel;
+    double c = distance*distance+targetHeight*targetHeight;
+    DoubleUnaryOperator distToVel =  (dist)-> {
+        double tsquare = 2 * (dist*Math.tan(Math.toRadians(launchAngle))- targetHeight)/g;
+        return Math.sqrt(
+                a*tsquare+c/tsquare+g*targetHeight
+        );
+    };//Math.sqrt(g*(AngleFinder.targetHeight+0.1+Math.sqrt((AngleFinder.targetHeight+0.1)*(AngleFinder.targetHeight+0.1)+dist*dist)))+20;//(dist*dist/10) * velToDistRatio;
     GoBildaPinpointDriver pinpointDriver;
     IMU imu;
 
@@ -36,7 +56,7 @@ public class MainTeleop extends SettingSelectorOpMode
                         new String[]{"red","blue"},"color"
                 ),
                 new Pair(
-                        new String[]{"goal","tiny triangle"},"position"
+                        new String[]{"goal","tiny triangle","testing pos"},"position"
                 )
         });
     }
@@ -68,20 +88,33 @@ public class MainTeleop extends SettingSelectorOpMode
     @Override
     public void start(){
         super.start();
-        if(selections.get("color")=="red"){
-            targetGoalPos = FieldDimensions.goalPositionRed;
-            if(selections.get("position")=="goal"){
-                follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
-            } else{
-                follower.setStartingPose(FieldDimensions.botOnTinyTriangleRedSide);
+        {
+            if (selections.get("color") == "red")
+            {
+                targetGoalPos = FieldDimensions.goalPositionRed;
+                if (selections.get("position") == "goal")
+                {
+                    follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
+                }
+                else if(selections.get("position") == "tiny triangle")
+                {
+                    follower.setStartingPose(FieldDimensions.botOnTinyTriangleRedSide);
+                }
+                else{
+                    follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0],0,0));
+                }
             }
-        }
-        else {
-            targetGoalPos = FieldDimensions.goalPositionBlue;
-            if(selections.get("position")=="goal"){
-                follower.setStartingPose(FieldDimensions.botTouchingBlueGoal);
-            } else{
-                follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
+            else
+            {
+                targetGoalPos = FieldDimensions.goalPositionBlue;
+                if (selections.get("position") == "goal")
+                {
+                    follower.setStartingPose(FieldDimensions.botTouchingBlueGoal);
+                }
+                else
+                {
+                    follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
+                }
             }
         }
         follower.startTeleopDrive();
@@ -102,9 +135,17 @@ public class MainTeleop extends SettingSelectorOpMode
         boolean releaseTheBallsInput = Gpad.getFallingEdge("left_bumper");
         boolean turretZeroInput = gamepad1.x;
         boolean autoAimOn = Gpad.getCurrentValue("right_trigger");
-        boolean openGateInput = gamepad1.a;
+        //boolean openGateInput = gamepad1.a;
+        //boolean extraSpinUpInput = Gpad.getCurrentValue("left_trigger");
+        boolean autoHood = Gpad.getCurrentValue("left_trigger");
 
-        servoPos = gamepad1.left_trigger*20+30;
+        distance=/*gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0);*/ Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
+        vel = distToVel.applyAsDouble(distance);
+        velScale+=gamepad1.dpadRightWasPressed()?1:(gamepad1.dpadLeftWasPressed()?-1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
+        launchAngle+=gamepad1.aWasPressed()?1:(gamepad1.yWasPressed()?-1:0);
+
+        double[] angles = getAngles(vel,distance);
+        //servoPos = gamepad1.left_trigger*20+30;
 
         //==============================OUTPUTS===================================\\
 
@@ -125,15 +166,22 @@ public class MainTeleop extends SettingSelectorOpMode
 
         //launcher.setPower(launcherToggle?-launcherPower:0);
         if(releaseTheBallsInput){
-            bot.launchHandler.initLaunch();
+            bot.launchHandler.initLaunch(vel/velScale);
         }
         if(spinUpFlywheelInput){
-            telemetry.addData("speed",bot.launcher.spinUpFlywheel(0.5));
+            telemetry.addData("speed",bot.launcher.spinUpFlywheel(vel/velScale));
             bot.intake.closeGate();
         }else{
             if(intakeToggle){
                 bot.intake.setPower(1);
             }else bot.intake.stop();
+//            if(openGateInput){
+//                bot.intake.openGate();
+//            }
+//            else bot.intake.closeGate();
+//            if(extraSpinUpInput){
+//                bot.launcher.spinUpFlywheel(1);
+//            }else bot.launcher.setPower(0);
         }
 //        if(launcherToggle){
 //            telemetry.addData("spinningup",bot.launcher.spinUpFlywheel());
@@ -152,15 +200,16 @@ public class MainTeleop extends SettingSelectorOpMode
         } else {
             bot.turret.setPower(0);
         }
-        bot.launcher.setAngle(servoPos);
+        //bot.launcher.setAngle(servoPos);
 //        if(openGateInput){
 //            intake.openGate();
 //        }
 //        else {
 //            intake.closeGate();
 //        }
-        double distance = Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
 
+        //bot.launcher.aimServo(distance,vel);
+        bot.launcher.setAngle(launchAngle);
         //manualOrAutoAimHood(gamepad1.b,distance);
         //toggleLaunchPower(Gpad.getToggleValue("gamepad1.rightTrigger"));// there are too many buttons in use rn so I am taking this away for now
         launcherPower = 0.9;
@@ -171,12 +220,21 @@ public class MainTeleop extends SettingSelectorOpMode
 //            intake.unKick();
 //        }
         telemetry.addData("time since start",bot.update());
-        telemetry.addData("starting iteration", releaseTheBallsInput);
+//        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
+        telemetry.addData("distance",distance);
+        telemetry.addData("velocity",vel);
+        telemetry.addData("velScale",velScale);
+        telemetry.addData("power",vel/velScale);
+        telemetry.addData("length",angles.length);
+        for(int i=0;i<angles.length;i++){
+            telemetry.addData("angle "+String.valueOf(i),Math.toDegrees(angles[i]));
+        }
+        //telemetry.addData("acual power", bot.launcher.g);
         telemetry.addData("targetGoalX",targetGoalPos[0]);
         telemetry.addData("targetGoalY",targetGoalPos[1]);
-
+//
         double deltaX = FieldDimensions.goalPositionRed[0]-follower.getPose().getX();
         double deltaY = FieldDimensions.goalPositionRed[1]-follower.getPose().getY();
         double tan = Math.atan(deltaY/deltaX);
