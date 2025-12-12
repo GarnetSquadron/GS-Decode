@@ -2,18 +2,20 @@ package org.firstinspires.ftc.teamcode.OpModes.teleops;
 
 import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
+import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
+import kotlin.Pair;
+
 
 @TeleOp(name = "Main teleop")
-public class MainTeleop extends OpMode
+public class MainTeleop extends SettingSelectorOpMode
 {
     public static Follower follower;
     Bot bot;
@@ -21,10 +23,23 @@ public class MainTeleop extends OpMode
     double rotation = 0;
     double servoPos = 0.5;
     double launcherPower = 0.6;
+    double[] targetGoalPos;
     GoBildaPinpointDriver pinpointDriver;
     IMU imu;
 
     BetterControllerClass Gpad;
+
+    public MainTeleop()
+    {
+        super(new Pair[]{
+                new Pair(
+                        new String[]{"red","blue"},"color"
+                ),
+                new Pair(
+                        new String[]{"goal","tiny triangle"},"position"
+                )
+        });
+    }
 
     @Override
     public void init()
@@ -37,14 +52,39 @@ public class MainTeleop extends OpMode
         follower = CompConstants.createFollower(hardwareMap);
 //        PanelsConfigurables.INSTANCE.refreshClass(this);
 
-        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
-        follower.startTeleopDrive();
-        telemetry.addData("follower",follower);
+        //follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
         bot.intake.closeGate();
 
 
         imu = hardwareMap.get(IMU.class, "imu");
         imu.resetYaw();
+    }
+    @Override
+    public void init_loop(){
+        telemetry.addLine("REMEMBER TO POINT THE TURRET STRAIGHT");
+        telemetry.addLine();
+        super.init_loop();
+    }
+    @Override
+    public void start(){
+        super.start();
+        if(selections.get("color")=="red"){
+            targetGoalPos = FieldDimensions.goalPositionRed;
+            if(selections.get("position")=="goal"){
+                follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
+            } else{
+                follower.setStartingPose(FieldDimensions.botOnTinyTriangleRedSide);
+            }
+        }
+        else {
+            targetGoalPos = FieldDimensions.goalPositionBlue;
+            if(selections.get("position")=="goal"){
+                follower.setStartingPose(FieldDimensions.botTouchingBlueGoal);
+            } else{
+                follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
+            }
+        }
+        follower.startTeleopDrive();
     }
 
     public void loop(){
@@ -134,6 +174,9 @@ public class MainTeleop extends OpMode
         telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
+        telemetry.addData("targetGoalX",targetGoalPos[0]);
+        telemetry.addData("targetGoalY",targetGoalPos[1]);
+
         double deltaX = FieldDimensions.goalPositionRed[0]-follower.getPose().getX();
         double deltaY = FieldDimensions.goalPositionRed[1]-follower.getPose().getY();
         double tan = Math.atan(deltaY/deltaX);

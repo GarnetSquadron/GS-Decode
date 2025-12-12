@@ -9,7 +9,22 @@ public class FieldDimensions
 
     //update later with real positions
     public static double[] fieldCenter = {72,72};//(0,0) is the corner of the field
-    public static double[] goalPositionRed = {135,135};
-    public static double[] goalPositionBlue = {15,135};
-    public static Pose botTouchingRedGoal = new Pose(123,123,Math.toRadians(180+36));//The position when the back of the robot is contacting the side of the goal. Good starting position for tests I think
+    public static double[] goalPositionRed = {132,135};
+    public static double[] goalPositionBlue = {12,135};
+    /**
+     * The position when the back of the robot is contacting the side of the red goal. Good starting position for tests I think
+     */
+    public static Pose botTouchingRedGoal = new Pose(123,123,Math.toRadians(180+36));
+    /**
+     * The position when the back of the robot is contacting the side of the blue goal.
+     */
+    public static Pose botTouchingBlueGoal = new Pose(21,123,Math.toRadians(-36));
+    /**
+     * red side of the triangle
+     */
+    public static Pose botOnTinyTriangleRedSide = new Pose(64,9);
+    /**
+     * blue side of the triangle
+     */
+    public static Pose botOnTinyTriangleBlueSide = new Pose(80,9);
 }
