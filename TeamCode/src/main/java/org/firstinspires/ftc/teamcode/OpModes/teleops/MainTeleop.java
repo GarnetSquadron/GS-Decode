@@ -16,7 +16,10 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.function.DoubleUnaryOperator;
 
 import kotlin.Pair;
@@ -25,6 +28,7 @@ import kotlin.Pair;
 @TeleOp(name = "Main teleop")
 public class MainTeleop extends SettingSelectorOpMode
 {
+    private static final Logger log = LoggerFactory.getLogger(MainTeleop.class);
     public static Follower follower;
     Bot bot;
     double rotation = 0;
@@ -68,6 +72,7 @@ public class MainTeleop extends SettingSelectorOpMode
     @Override
     public void init()
     {
+
         bot = new Bot(hardwareMap);
 
         Gpad = new BetterControllerClass(gamepad1);
@@ -255,6 +260,9 @@ public class MainTeleop extends SettingSelectorOpMode
         double deltaX = FieldDimensions.goalPositionRed[0]-follower.getPose().getX();
         double deltaY = FieldDimensions.goalPositionRed[1]-follower.getPose().getY();
         double tan = Math.atan(deltaY/deltaX);
+
+
+
         telemetry.addLine();
         telemetry.addData("bot heading",  follower.getPose().getHeading());
         telemetry.addData("tan",  tan);
