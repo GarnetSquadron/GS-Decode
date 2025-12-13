@@ -55,8 +55,8 @@ public class Intake {
 //        }
 //    }
     public boolean closeGate(){
-        leftGate.setPosition(0.15);
-        rightGate.setPosition(0.65);
+        leftGate.setPosition(0/*0.10*/);
+        rightGate.setPosition(0/*0.60*/);
         if (leftGate.getPosition() >-0.1&& leftGate.getPosition() <0.1 && rightGate.getPosition()>-0.1 && rightGate.getPosition()<0.1){return true;}else return false;
     }
     public double getCurrent(){
