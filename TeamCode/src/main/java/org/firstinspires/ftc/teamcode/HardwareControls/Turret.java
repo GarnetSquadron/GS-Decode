@@ -36,11 +36,14 @@ public class Turret
     public void setRotation(double rotation) {
         turretRot.runToPos(getRotation(rotation));
     }
+    public double angleMod(double rotation){
+        return ExtraMath.theRealMod((rotation - turretRange[0]),ExtraMath.Tau)+ ExtraMath.theRealMod(turretRange[0],ExtraMath.Tau)-ExtraMath.Tau;
+    }
     public double getRotation(double rotation) {
         double rangeSize =  turretRange[1]-turretRange[0];
 
         // theta
-        rotation =ExtraMath.theRealMod((rotation - turretRange[0]),ExtraMath.Tau)+ ExtraMath.theRealMod(turretRange[0],ExtraMath.Tau)-ExtraMath.Tau;//rotation goes until it reaches 360-angleRange[0] at which point it goes to -angleRange[0]
+        rotation = angleMod(rotation);
         if(rotation< turretRange[1]){
             return rotation;
         }else {

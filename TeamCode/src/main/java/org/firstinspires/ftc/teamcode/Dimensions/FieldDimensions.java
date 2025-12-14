@@ -18,7 +18,10 @@ public class FieldDimensions
     /**
      * The position when the back of the robot is contacting the side of the blue goal.
      */
-    public static Pose botTouchingBlueGoal = new Pose(21,123,Math.toRadians(-36));
+    //TODO: this angle doesnt make sense to me, it should be -36 since the red one should be the
+    // reflection of it across the y axis. However these angles worked and -36 didnt I think this is due to the tangent swapping sign on
+    // different sides of the feild or something. I need to fix this
+    public static Pose botTouchingBlueGoal = new Pose(21,123,Math.toRadians(180-36));
     /**
      * red side of the triangle
      */

@@ -9,8 +9,10 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
@@ -19,7 +21,6 @@ import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.function.DoubleUnaryOperator;
 
 import kotlin.Pair;
@@ -30,6 +31,7 @@ public class MainTeleop extends SettingSelectorOpMode
 {
     private static final Logger log = LoggerFactory.getLogger(MainTeleop.class);
     public static Follower follower;
+    public DcMotorEx lf,rf,lb,rb,intakeMotor;
     Bot bot;
     double rotation = 0;
     double servoPos = 0.5;
@@ -38,7 +40,7 @@ public class MainTeleop extends SettingSelectorOpMode
     double distance = 100;
     double vel = 400;
     boolean inRange = true;
-    double velScale = 311;
+    double velScale = 321;//311;
     double velToDistRatio = 4;
     double a = 386.09*386.09/4;
     double launchAngle = 40;
@@ -59,6 +61,7 @@ public class MainTeleop extends SettingSelectorOpMode
 
     public MainTeleop()
     {
+        //settings
         super(new Pair[]{
                 new Pair(
                         new String[]{"red","blue"},"color"
@@ -87,7 +90,14 @@ public class MainTeleop extends SettingSelectorOpMode
 
         imu = hardwareMap.get(IMU.class, "imu");
         imu.resetYaw();
-        sensor = hardwareMap.get(ColorSensor.class, "sensor");
+        //sensor = hardwareMap.get(ColorSensor.class, "sensor");
+        lf = hardwareMap.get(DcMotorEx.class,"lf");
+        rf = hardwareMap.get(DcMotorEx.class,"rf");
+        lb = hardwareMap.get(DcMotorEx.class,"lb");
+        rb = hardwareMap.get(DcMotorEx.class,"rb");
+        intakeMotor = hardwareMap.get(DcMotorEx.class,"intakeMotor");
+        //FlywheelMotor1 = hardwareMap.get(DcMotorEx.class, "launcherMotor1");
+        //FlywheelMotor2 = hardwareMap.get( DcMotorEx.class, "launcherMotor2");
     }
     @Override
     public void init_loop(){
@@ -144,8 +154,8 @@ public class MainTeleop extends SettingSelectorOpMode
         //boolean kickInput = Gpad.getCurrentValue("right_trigger");
         boolean intakeToggle = Gpad.getCurrentValue("right_bumper");
 //        boolean launcherToggle = Gpad.getToggleValue("left_bumper");
-        boolean spinUpFlywheelInput = Gpad.getCurrentValue("left_bumper")&&inRange;
-        boolean releaseTheBallsInput = Gpad.getFallingEdge("left_bumper")&&inRange;
+        boolean spinUpFlywheelInput = Gpad.getCurrentValue("left_bumper");
+        boolean releaseTheBallsInput = Gpad.getFallingEdge("left_bumper");
         boolean turretZeroInput = gamepad1.x;
         boolean autoAimOn = Gpad.getCurrentValue("right_trigger");
         //boolean openGateInput = gamepad1.a;
@@ -183,11 +193,12 @@ public class MainTeleop extends SettingSelectorOpMode
 
         //launcher.setPower(launcherToggle?-launcherPower:0);
         if(releaseTheBallsInput){
-            bot.launchHandler.initLaunch(vel/velScale);
+            bot.launchHandler.initLaunch(inRange?vel / velScale:0.9);
         }
         if(spinUpFlywheelInput){
-            telemetry.addData("speed",bot.launcher.spinUpFlywheel(vel/velScale));
+            telemetry.addData("speed", bot.launcher.spinUpFlywheel(inRange?vel / velScale:0.9));
             bot.intake.closeGate();
+
         }else{
             if(intakeToggle){
                 bot.intake.setPower(1);
@@ -212,7 +223,7 @@ public class MainTeleop extends SettingSelectorOpMode
         }
         if(autoAimOn){
             //(rotation - turretRange[0])%(Math.PI)+ turretRange[0]%(Math.PI)-Math.PI
-            rotation = bot.turret.aimTowardsGoal(FieldDimensions.goalPositionRed, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading() /*Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw())*/);
+            rotation = bot.turret.aimTowardsGoal(targetGoalPos, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading() /*Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw())*/);
 
         } else {
             bot.turret.setPower(0);
@@ -225,7 +236,11 @@ public class MainTeleop extends SettingSelectorOpMode
 //            intake.closeGate();
 //        }
 
-        bot.launcher.aimServo(distance,vel);
+        if(inRange){
+            bot.launcher.aimServo(distance, vel);
+        }else {
+            bot.launcher.setAngle(49);
+        }
         //bot.launcher.setAngle(launchAngle);
         //manualOrAutoAimHood(gamepad1.b,distance);
         //toggleLaunchPower(Gpad.getToggleValue("gamepad1.rightTrigger"));// there are too many buttons in use rn so I am taking this away for now
@@ -248,7 +263,7 @@ public class MainTeleop extends SettingSelectorOpMode
         telemetry.addData("launchAngle",launchAngle);
         telemetry.addData("in range", inRange);
         telemetry.addData("length",angles.length);
-        telemetry.addData("sensor color", sensor.argb());
+        //telemetry.addData("sensor color", sensor.argb());
 
         for(int i=0;i<angles.length;i++){
             telemetry.addData("angle "+String.valueOf(i),Math.toDegrees(angles[i]));
@@ -257,8 +272,8 @@ public class MainTeleop extends SettingSelectorOpMode
         telemetry.addData("targetGoalX",targetGoalPos[0]);
         telemetry.addData("targetGoalY",targetGoalPos[1]);
 //
-        double deltaX = FieldDimensions.goalPositionRed[0]-follower.getPose().getX();
-        double deltaY = FieldDimensions.goalPositionRed[1]-follower.getPose().getY();
+        double deltaX = targetGoalPos[0]-follower.getPose().getX();
+        double deltaY = targetGoalPos[1]-follower.getPose().getY();
         double tan = Math.atan(deltaY/deltaX);
 
 
@@ -272,7 +287,8 @@ public class MainTeleop extends SettingSelectorOpMode
         //telemetry.addData("actual output angle", bot.turret.turretRot.getTargetPosition());
         telemetry.addLine();
         telemetry.addLine("degrees:");
-        telemetry.addData("input angle",  Math.toDegrees(tan-follower.getPose().getHeading()+180));
+        telemetry.addData("input angle",  Math.toDegrees(tan-follower.getPose().getHeading())+180);
+        telemetry.addData("modded input", Math.toDegrees(bot.turret.angleMod(tan-follower.getPose().getHeading()+Math.PI)));
         telemetry.addData("supposed output angle",Math.toDegrees(bot.turret.getRotation(tan-follower.getPose().getHeading()+Math.PI)));
         //telemetry.addData("actual output angle", Math.toDegrees(bot.turret.turretRot.getTargetPosition()));
         telemetry.addLine();
@@ -282,6 +298,12 @@ public class MainTeleop extends SettingSelectorOpMode
         telemetry.addData("deltaY/deltaX",deltaY/deltaX);
         telemetry.addData("atangent", tan);
         telemetry.addLine();
+        telemetry.addLine("------------current draw in milliamps----------");
+        telemetry.addData("lf",lf.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("rf",rf.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("lb",lb.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("rb",rb.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("intake",intakeMotor.getCurrent(CurrentUnit.MILLIAMPS));
 
 
 
@@ -307,6 +329,8 @@ public class MainTeleop extends SettingSelectorOpMode
 //        telemetry.addData("scale",bot.turret.getEncoder().getScale());
 //        telemetry.addData("motor type", bot.turret.getMotorType());
 //        telemetry.addLine("---------Position-------");
+        telemetry.addData("target goal pos x",targetGoalPos[0]);
+        telemetry.addData("target goal pos y",targetGoalPos[1]);
         telemetry.addData("position",follower.getPose());//TODO: check this, I think that the position is not getting updated, its possible the pinpoint isn't connected well or something
 //        telemetry.addData("goal x",FieldDimensions.goalPositionBlue[0]);
 //        telemetry.addData("goal y",FieldDimensions.goalPositionBlue[1]);
