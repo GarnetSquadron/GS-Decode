@@ -57,9 +57,10 @@ public class TestLauncher extends OpMode {
 
         if (gamepad1.a) {target +=0.1;}
         if (gamepad1.b) {target -=0.1;}
-        telemetry.addData("damp",dampforce);
-        telemetry.addData("target",target);
-        telemetry.addData("give", give);
+        telemetry.addData("timer ", timer);
+        telemetry.addData("damp ",dampforce);
+        telemetry.addData("target ",target);
+        telemetry.addData("give ", give);
 
         telemetry.update();
     }
