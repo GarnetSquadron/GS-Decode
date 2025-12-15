@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.HardwareControls;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.Encoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;

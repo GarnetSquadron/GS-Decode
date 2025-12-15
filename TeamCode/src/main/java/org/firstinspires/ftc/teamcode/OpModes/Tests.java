@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Turret;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 

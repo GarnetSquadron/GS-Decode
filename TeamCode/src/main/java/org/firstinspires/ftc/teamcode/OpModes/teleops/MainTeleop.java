@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

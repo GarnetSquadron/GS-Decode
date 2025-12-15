@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.PurelyCalculators.controllers;
 
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.Encoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 
 public abstract class Controller
 {

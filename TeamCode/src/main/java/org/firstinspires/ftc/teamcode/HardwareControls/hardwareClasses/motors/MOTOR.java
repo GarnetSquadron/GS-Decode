@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.MaxSpeedCont
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.NullController;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.PIDCon;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.PositionController;
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.Encoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 
 public class MOTOR extends RAWMOTOR
 {

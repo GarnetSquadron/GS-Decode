@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.Encoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 
 public class RAWMOTOR
 {
