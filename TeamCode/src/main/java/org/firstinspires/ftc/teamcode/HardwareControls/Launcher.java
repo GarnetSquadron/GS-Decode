@@ -86,9 +86,8 @@ public class Launcher {
         motor1 = new RAWMOTOR(hardwareMap, "launcherMotor1");
         motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
         turret = new Turret(hardwareMap);
-
-        motor1.getEncoder().setCPR((double) (7 * 3) /2);//motor is a bare motor with 7 cpr, and it outputs into a 40 tooth pulley that belts into a 60 tooth pulley, so its 2/3 that speed
-        motor1.getEncoder().scaleToAngleUnit(AngleUnitV2.RADIANS);
+        //motor is a bare motor with 7 cpr, and it outputs into a 40 tooth pulley that belts into a 60 tooth pulley, so its 2/3 that speed (somehow this was 1/4 what I wanted so idk it works now)
+        motor1.getEncoder().setCPR((double) (7 * 3) *2);        motor1.getEncoder().scaleToAngleUnit(AngleUnitV2.RADIANS);
         motor2.reverseMotor();
     }
 }

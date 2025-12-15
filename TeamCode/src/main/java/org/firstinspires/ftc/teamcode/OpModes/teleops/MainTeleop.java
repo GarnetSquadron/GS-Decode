@@ -16,12 +16,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.function.DoubleUnaryOperator;
+import java.util.HashMap;
 
 import kotlin.Pair;
 
@@ -40,18 +41,30 @@ public class MainTeleop extends SettingSelectorOpMode
     double distance = 100;
     double vel = 400;
     boolean inRange = true;
-    double velScale = 321;//311;
+    double velToPowerRatio = 321;//311;
+    double radPerSecToVelRatio = 1;
     double velToDistRatio = 4;
     double a = 386.09*386.09/4;
     double launchAngle = 40;
+    boolean headlessDriveOn;
+    String intakeButtonName,launchButtonName,aimButtonName;
+    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","DJ");put("position","testing");}};
+
+    double startWheelAngle;
     //double b = 386.09*targetHeight-vel*vel;
 
     ColorSensor sensor;
 
-    DoubleUnaryOperator distToVelSquared = (dist)-> {
+    /**
+     * gets the velocity given an angle
+     * @param dist
+     * @param launchAngle
+     * @return
+     */
+    public double distToVelSquared (double dist,double launchAngle) {
         double c = dist*dist+targetHeight*targetHeight;
-        double tsquare = 2 * (dist*Math.tan(Math.toRadians(launchAngle))- targetHeight)/g;
-        return a*tsquare+c/tsquare+g*targetHeight;
+        double tSquare = 2 * (dist*Math.tan(Math.toRadians(launchAngle))- targetHeight)/g;
+        return a*tSquare+c/tSquare+g*targetHeight;
     };
     //DoubleUnaryOperator distToVel =  (dist)-> Math.sqrt(distToVelSquared.applyAsDouble(dist));//Math.sqrt(g*(AngleFinder.targetHeight+0.1+Math.sqrt((AngleFinder.targetHeight+0.1)*(AngleFinder.targetHeight+0.1)+dist*dist)))+20;//(dist*dist/10) * velToDistRatio;
     GoBildaPinpointDriver pinpointDriver;
@@ -67,9 +80,13 @@ public class MainTeleop extends SettingSelectorOpMode
                         new String[]{"red","blue"},"color"
                 ),
                 new Pair(
-                        new String[]{"goal","tiny triangle","testing pos"},"position"
+                        new String[]{"goal","tiny triangle","testing"},"position"
+                ),
+                new Pair(
+                        new String[]{"James","Nathan","Charlie","DJ"}, "personal config"
                 )
-        });
+        }, selections
+        );
     }
 
     @Override
@@ -108,67 +125,114 @@ public class MainTeleop extends SettingSelectorOpMode
     @Override
     public void start(){
         super.start();
+        selections = super.selections;// now we update the static field
+
+        //controls:
+
+        switch (selections.get("personal config")){
+            case "James":
+                intakeButtonName = "right_bumper";
+                launchButtonName = "left_bumper";
+                aimButtonName = "left_trigger";
+                headlessDriveOn = false;
+                break;
+            case "Nathan":
+                intakeButtonName = "right_bumper";
+                launchButtonName = "right_trigger";
+                aimButtonName = "left_trigger";
+                headlessDriveOn = true;
+                break;
+            case "Charlie":
+                intakeButtonName = "right_bumper";
+                launchButtonName = "launch_trigger";
+                aimButtonName = "left_trigger";
+                headlessDriveOn = true;
+                break;
+            case "DJ":
+                intakeButtonName = "right_bumper";
+                //idk I think it would be cool to put the aiming and the launching on one hand
+                launchButtonName = "left_bumper";
+                aimButtonName = "left_trigger";
+                headlessDriveOn = true;
+                break;
+            default:
+                intakeButtonName = "right_bumper";
+                launchButtonName = "left_bumper";
+                aimButtonName = "left_trigger";
+                headlessDriveOn = false;
+        }
+
+
+        switch (selections.get("color"))
         {
-            if (selections.get("color") == "red")
+            case "red":
             {
                 targetGoalPos = FieldDimensions.goalPositionRed;
-                if (selections.get("position") == "goal")
+                switch (selections.get("position"))
                 {
-                    follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
-                }
-                else if(selections.get("position") == "tiny triangle")
-                {
-                    follower.setStartingPose(FieldDimensions.botOnTinyTriangleRedSide);
-                }
-                else{
-                    follower.setStartingPose(new Pose(targetGoalPos[0],0,0));
+                    case "goal":
+                        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
+                        break;
+                    case "tiny triangle":
+                        follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
+                        break;
+                    case "testing pos":
+                        follower.setStartingPose(new Pose(targetGoalPos[0], 0, 0));
+                        break;
                 }
             }
-            else
+            case "blue":
             {
                 targetGoalPos = FieldDimensions.goalPositionBlue;
-                if (selections.get("position") == "goal")
+                switch (selections.get("position"))
                 {
-                    follower.setStartingPose(FieldDimensions.botTouchingBlueGoal);
-                }
-                else if(selections.get("position") == "tiny triangle")
-                {
-                    follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
-                }
-                else{
-                    follower.setStartingPose(new Pose(targetGoalPos[0],0,0));
+                    case "goal":
+                        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
+                        break;
+                    case "tiny triangle":
+                        follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
+                        break;
+                    case "testing pos":
+                        follower.setStartingPose(new Pose(targetGoalPos[0], 0, 0));
+                        break;
                 }
             }
+            startWheelAngle = Math.toDegrees(bot.launcher.getFlywheelEncoder().getPos());
         }
+
         follower.startTeleopDrive();
     }
-
+    @Override
     public void loop(){
         follower.update();
 
-        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, Math.abs(gamepad1.right_stick_x)*gamepad1.right_stick_x, true);
+        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, Math.abs(gamepad1.right_stick_x)*gamepad1.right_stick_x, !headlessDriveOn);
         Gpad.update();
 
         //I wanted to find a better way, but this seems like the best option for organizing the button inputs
         //==============================INPUTS====================================\\
         //boolean kickInput = Gpad.getCurrentValue("right_trigger");
-        boolean intakeToggle = Gpad.getCurrentValue("right_bumper");
+        boolean intakeToggle = Gpad.getCurrentValue(intakeButtonName);
 //        boolean launcherToggle = Gpad.getToggleValue("left_bumper");
-        boolean spinUpFlywheelInput = Gpad.getCurrentValue("left_bumper");
-        boolean releaseTheBallsInput = Gpad.getFallingEdge("left_bumper");
+        boolean spinUpFlywheelInput = Gpad.getCurrentValue(launchButtonName);
+        boolean releaseTheBallsInput = Gpad.getFallingEdge(launchButtonName);
         boolean turretZeroInput = gamepad1.x;
-        boolean autoAimOn = Gpad.getCurrentValue("right_trigger");
+        boolean autoAimOn = Gpad.getCurrentValue(aimButtonName);
         //boolean openGateInput = gamepad1.a;
         //boolean extraSpinUpInput = Gpad.getCurrentValue("left_trigger");
-        boolean autoHood = Gpad.getCurrentValue("left_trigger");
+        //boolean autoHood = Gpad.getCurrentValue("left_trigger");
 
-        distance=/*gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0);*/ Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
-        double velSquared = distToVelSquared.applyAsDouble(distance);
-        inRange = velSquared>=0;//if vel squared is negative, tha required velocity is imaginary
-        if(inRange){
-            vel = Math.min(Math.sqrt(velSquared),velScale);
+        distance+=/*gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0);*/ Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
+        double velSquared = distToVelSquared(distance,launchAngle);
+        if(velSquared>=0){
+            vel = Math.min(Math.sqrt(velSquared), velToPowerRatio);
         }
-        velScale+=gamepad1.dpadRightWasPressed()?1:(gamepad1.dpadLeftWasPressed()?-1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
+        else{
+            velSquared = distToVelSquared(distance,49);
+            if(velSquared>=0){vel = Math.sqrt(velSquared);}
+        }
+        inRange = velSquared>=0;
+        velToPowerRatio +=gamepad1.dpadRightWasPressed()?1:(gamepad1.dpadLeftWasPressed()?-1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
         launchAngle+=gamepad1.aWasPressed()?1:(gamepad1.yWasPressed()?-1:0);
 
         double[] angles = getAngles(vel,distance);
@@ -192,11 +256,11 @@ public class MainTeleop extends SettingSelectorOpMode
         //launcher
 
         //launcher.setPower(launcherToggle?-launcherPower:0);
-        if(releaseTheBallsInput){
-            bot.launchHandler.initLaunch(inRange?vel / velScale:0.9);
+        if(releaseTheBallsInput&&inRange){
+            bot.launchHandler.initLaunch(vel / velToPowerRatio,vel* radPerSecToVelRatio);
         }
-        if(spinUpFlywheelInput){
-            telemetry.addData("speed", bot.launcher.spinUpFlywheel(inRange?vel / velScale:0.9));
+        if(spinUpFlywheelInput&&inRange){
+            telemetry.addData("speed", bot.launcher.spinUpFlywheel(vel / velToPowerRatio));
             bot.intake.closeGate();
 
         }else{
@@ -239,7 +303,7 @@ public class MainTeleop extends SettingSelectorOpMode
         if(inRange){
             bot.launcher.aimServo(distance, vel);
         }else {
-            bot.launcher.setAngle(49);
+            bot.launcher.setAngle(Math.toRadians(49));// seems like a solid angle ngl
         }
         //bot.launcher.setAngle(launchAngle);
         //manualOrAutoAimHood(gamepad1.b,distance);
@@ -255,14 +319,21 @@ public class MainTeleop extends SettingSelectorOpMode
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
+        telemetry.addData("launching balls",bot.launchHandler.launchingBalls);
+        telemetry.addData("launching balls",bot.launchHandler.releaseBalls);
+        telemetry.addData("flywheel position(degrees)", Math.toDegrees(bot.launcher.getFlywheelEncoder().getPos())-startWheelAngle);
+        telemetry.addData("rad/sec",bot.launcher.getFlywheelEncoder().getVelocity());
+        telemetry.addData("RPM",(bot.launcher.getFlywheelEncoder().getVelocity()/ ExtraMath.Tau)*60);
         telemetry.addData("distance",distance);
         telemetry.addData("velocity",vel);
         telemetry.addData("velSquared",velSquared);
-        telemetry.addData("velScale",velScale);
-        telemetry.addData("power",vel/velScale);
+        telemetry.addData("velScale", velToPowerRatio);
+        telemetry.addData("power",vel/ velToPowerRatio);
         telemetry.addData("launchAngle",launchAngle);
         telemetry.addData("in range", inRange);
         telemetry.addData("length",angles.length);
+        telemetry.addData("in range", inRange);
+        telemetry.addData("tgtvel",vel* radPerSecToVelRatio);
         //telemetry.addData("sensor color", sensor.argb());
 
         for(int i=0;i<angles.length;i++){
