@@ -10,14 +10,14 @@ import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 @TeleOp(name = "launcher")
 public class TestLauncher extends OpMode {
     double returned;
-    double i = 0;
-    float j = 0;
     double dampforce = 0;
     Servo angleServo;
     RAWMOTOR motor1;
     RAWMOTOR motor2;
+    double give = 0;
     double power = 0;
     double target = 0;
+    double timer = 0;
     double servoPosition = 0;
     //temp
     boolean leftWasPressed = false;
@@ -35,10 +35,23 @@ public class TestLauncher extends OpMode {
 
         ExtraMath.Clamp(servoPosition,1,0);
         //launcher pid tuning
-        if(i != 1){
-            if(j != 0.06){
 
-            }else {i += 0.1; }
+        if(target != 1){
+            if(dampforce != 0.06){
+                if(give != 1){
+                    returned = LauncherPid.setPid(motor1.getEncoder().getVelocity(), target, give, dampforce);
+                    motor1.setPower(returned);
+                    motor2.setPower(returned);
+                    if(returned == target){
+                        timer += 0.1;
+                    }
+                    if(timer == 2){
+                        give+= 0.1;
+                        motor1.setPower(0);
+                        motor1.stop();
+                    }
+                }else {dampforce += 0.01;}
+            }else {target += 0.1; }
         }
         telemetry.addData("power ",motor1.getPower());
         telemetry.addData("velocity ",motor1.getEncoder().getVelocity());
