@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 public class LauncherPid {
-    static double steadyForceConst = 0.5;
-    public static double setPid(double velocity, double targetVel, double give) {
+
+    public static double setPid(double velocity, double targetVel, double give, double forceDamp) {
         double force = 0;
       if (velocity < targetVel+give){
         force = 1;
       }else if (velocity > targetVel-give) {
           force = -1;
-      }else {force =  targetVel* steadyForceConst;}
-//      force = force * (velocity-targetVel);
+      }else {force =  targetVel* forceDamp;}
+      force = force * (velocity-targetVel);
       return force;
 
     }

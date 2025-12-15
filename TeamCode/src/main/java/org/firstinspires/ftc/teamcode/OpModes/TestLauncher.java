@@ -9,6 +9,10 @@ import org.firstinspires.ftc.teamcode.LauncherPid;
 import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
 @TeleOp(name = "launcher")
 public class TestLauncher extends OpMode {
+    double returned;
+    double i = 0;
+    float j = 0;
+    double dampforce = 0;
     Servo angleServo;
     RAWMOTOR motor1;
     RAWMOTOR motor2;
@@ -24,41 +28,18 @@ public class TestLauncher extends OpMode {
         angleServo = hardwareMap.get(Servo.class, "angleServo");
         motor1 = new RAWMOTOR(hardwareMap, "launcherMotor1");
         motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
+
     }
     public void loop() {
+        returned = LauncherPid.setPid(motor1.getEncoder().getVelocity(),target,0.5,dampforce);
 
         ExtraMath.Clamp(servoPosition,1,0);
-        //temp
-        /*
-        leftWasPressed = false;
-        rightWasPressed = false;
-        if (gamepad1.dpad_left & !leftWasPressed) {
-            servoPosition += 0.1;
-            telemetry.addData("left dPad presssed",servoPosition);
-            ExtraMath.Clamp(servoPosition,1,0);
-            leftWasPressed = true;
+        //launcher pid tuning
+        if(i != 1){
+            if(j != 0.06){
 
+            }else {i += 0.1; }
         }
-        if (gamepad1.dpad_right & !rightWasPressed){
-            servoPosition -= 0.1;
-            telemetry.addData("right dPad presssed",servoPosition);
-            ExtraMath.Clamp(servoPosition,1,0);
-            rightWasPressed = true;
-        }
-
-        if (gamepad1.b) power = 0.6;
-        else power = 0;
-
-        motor1.setPower(power);
-        motor2.setPower(power / -1);
-
-        //angleServo.setPosition(servoPosition);
-
-        telemetry.addData("power",power);
-
-        telemetry.addData("motor power", motor1.getPower());
-        telemetry.addData("servo position", angleServo.getPosition());
-        */
         telemetry.addData("power ",motor1.getPower());
         telemetry.addData("velocity ",motor1.getEncoder().getVelocity());
 
@@ -66,7 +47,7 @@ public class TestLauncher extends OpMode {
         if (gamepad1.b) {target -=0.1;}
         telemetry.addData("target",target);
         telemetry.addData("a pressed",true);
-        motor1.setPower(LauncherPid.setPid(motor1.getEncoder().getVelocity(),target,0.5));
+        motor1.setPower(returned);
         telemetry.addData("y stick",gamepad2.left_stick_y);
 
         telemetry.update();
