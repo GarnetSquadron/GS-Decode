@@ -131,9 +131,9 @@ public class MainTeleop extends SettingSelectorOpMode
 
         switch (selections.get("personal config")){
             case "James":
-                intakeButtonName = "right_bumper";
-                launchButtonName = "left_bumper";
-                aimButtonName = "left_trigger";
+                intakeButtonName = "left_bumper";
+                launchButtonName = "right_trigger";
+                aimButtonName = "right_bumper";
                 headlessDriveOn = false;
                 break;
             case "Nathan":
