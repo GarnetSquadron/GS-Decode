@@ -84,6 +84,9 @@ public class MainTeleop extends SettingSelectorOpMode
                 ),
                 new Pair(
                         new String[]{"James","Nathan","Charlie","DJ"}, "personal config"
+                ),
+                new Pair(
+                        new String[]{"on","off"},"telemetry"
                 )
         }, selections
         );
@@ -319,64 +322,63 @@ public class MainTeleop extends SettingSelectorOpMode
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
-        telemetry.addData("launching balls",bot.launchHandler.launchingBalls);
-        telemetry.addData("launching balls",bot.launchHandler.releaseBalls);
-        telemetry.addData("flywheel position(degrees)", Math.toDegrees(bot.launcher.getFlywheelEncoder().getPos())-startWheelAngle);
-        telemetry.addData("rad/sec",bot.launcher.getFlywheelEncoder().getVelocity());
-        telemetry.addData("RPM",(bot.launcher.getFlywheelEncoder().getVelocity()/ ExtraMath.Tau)*60);
-        telemetry.addData("distance",distance);
-        telemetry.addData("velocity",vel);
-        telemetry.addData("velSquared",velSquared);
-        telemetry.addData("velScale", velToPowerRatio);
-        telemetry.addData("power",vel/ velToPowerRatio);
-        telemetry.addData("launchAngle",launchAngle);
-        telemetry.addData("in range", inRange);
-        telemetry.addData("length",angles.length);
-        telemetry.addData("in range", inRange);
-        telemetry.addData("tgtvel",vel* radPerSecToVelRatio);
-        //telemetry.addData("sensor color", sensor.argb());
+        if(selections.get("telemetry")=="on"){
+            telemetry.addData("launching balls", bot.launchHandler.launchingBalls);
+            telemetry.addData("launching balls", bot.launchHandler.releaseBalls);
+            telemetry.addData("flywheel position(degrees)", Math.toDegrees(bot.launcher.getFlywheelEncoder().getPos()) - startWheelAngle);
+            telemetry.addData("rad/sec", bot.launcher.getFlywheelEncoder().getVelocity());
+            telemetry.addData("RPM", (bot.launcher.getFlywheelEncoder().getVelocity() / ExtraMath.Tau) * 60);
+            telemetry.addData("distance", distance);
+            telemetry.addData("velocity", vel);
+            telemetry.addData("velSquared", velSquared);
+            telemetry.addData("velScale", velToPowerRatio);
+            telemetry.addData("power", vel / velToPowerRatio);
+            telemetry.addData("launchAngle", launchAngle);
+            telemetry.addData("in range", inRange);
+            telemetry.addData("length", angles.length);
+            telemetry.addData("in range", inRange);
+            telemetry.addData("tgtvel", vel * radPerSecToVelRatio);
+            //telemetry.addData("sensor color", sensor.argb());
 
-        for(int i=0;i<angles.length;i++){
-            telemetry.addData("angle "+String.valueOf(i),Math.toDegrees(angles[i]));
-        }
-        //telemetry.addData("acual power", bot.launcher.g);
-        telemetry.addData("targetGoalX",targetGoalPos[0]);
-        telemetry.addData("targetGoalY",targetGoalPos[1]);
+            for (int i = 0; i < angles.length; i++)
+            {
+                telemetry.addData("angle " + String.valueOf(i), Math.toDegrees(angles[i]));
+            }
+            //telemetry.addData("acual power", bot.launcher.g);
+            telemetry.addData("targetGoalX", targetGoalPos[0]);
+            telemetry.addData("targetGoalY", targetGoalPos[1]);
 //
-        double deltaX = targetGoalPos[0]-follower.getPose().getX();
-        double deltaY = targetGoalPos[1]-follower.getPose().getY();
-        double tan = Math.atan(deltaY/deltaX);
+            double deltaX = targetGoalPos[0] - follower.getPose().getX();
+            double deltaY = targetGoalPos[1] - follower.getPose().getY();
+            double tan = Math.atan(deltaY / deltaX);
 
 
-
-        telemetry.addLine();
-        telemetry.addData("bot heading",  follower.getPose().getHeading());
-        telemetry.addData("tan",  tan);
-        telemetry.addLine("radians:");
-        telemetry.addData("input angle",  tan-follower.getPose().getHeading()+Math.PI);
-        telemetry.addData("supposed output angle", bot.turret.getRotation(tan-follower.getPose().getHeading()+Math.PI));
-        //telemetry.addData("actual output angle", bot.turret.turretRot.getTargetPosition());
-        telemetry.addLine();
-        telemetry.addLine("degrees:");
-        telemetry.addData("input angle",  Math.toDegrees(tan-follower.getPose().getHeading())+180);
-        telemetry.addData("modded input", Math.toDegrees(bot.turret.angleMod(tan-follower.getPose().getHeading()+Math.PI)));
-        telemetry.addData("supposed output angle",Math.toDegrees(bot.turret.getRotation(tan-follower.getPose().getHeading()+Math.PI)));
-        //telemetry.addData("actual output angle", Math.toDegrees(bot.turret.turretRot.getTargetPosition()));
-        telemetry.addLine();
-        telemetry.addData("real angle", rotation);
-        telemetry.addData("deltaX", deltaX);
-        telemetry.addData("deltaY", deltaY);
-        telemetry.addData("deltaY/deltaX",deltaY/deltaX);
-        telemetry.addData("atangent", tan);
-        telemetry.addLine();
-        telemetry.addLine("------------current draw in milliamps----------");
-        telemetry.addData("lf",lf.getCurrent(CurrentUnit.MILLIAMPS));
-        telemetry.addData("rf",rf.getCurrent(CurrentUnit.MILLIAMPS));
-        telemetry.addData("lb",lb.getCurrent(CurrentUnit.MILLIAMPS));
-        telemetry.addData("rb",rb.getCurrent(CurrentUnit.MILLIAMPS));
-        telemetry.addData("intake",intakeMotor.getCurrent(CurrentUnit.MILLIAMPS));
-
-
+            telemetry.addLine();
+            telemetry.addData("bot heading", follower.getPose().getHeading());
+            telemetry.addData("tan", tan);
+            telemetry.addLine("radians:");
+            telemetry.addData("input angle", tan - follower.getPose().getHeading() + Math.PI);
+            telemetry.addData("supposed output angle", bot.turret.getRotation(tan - follower.getPose().getHeading() + Math.PI));
+            //telemetry.addData("actual output angle", bot.turret.turretRot.getTargetPosition());
+            telemetry.addLine();
+            telemetry.addLine("degrees:");
+            telemetry.addData("input angle", Math.toDegrees(tan - follower.getPose().getHeading()) + 180);
+            telemetry.addData("modded input", Math.toDegrees(bot.turret.angleMod(tan - follower.getPose().getHeading() + Math.PI)));
+            telemetry.addData("supposed output angle", Math.toDegrees(bot.turret.getRotation(tan - follower.getPose().getHeading() + Math.PI)));
+            //telemetry.addData("actual output angle", Math.toDegrees(bot.turret.turretRot.getTargetPosition()));
+            telemetry.addLine();
+            telemetry.addData("real angle", rotation);
+            telemetry.addData("deltaX", deltaX);
+            telemetry.addData("deltaY", deltaY);
+            telemetry.addData("deltaY/deltaX", deltaY / deltaX);
+            telemetry.addData("atangent", tan);
+            telemetry.addLine();
+            telemetry.addLine("------------current draw in milliamps----------");
+            telemetry.addData("lf", lf.getCurrent(CurrentUnit.MILLIAMPS));
+            telemetry.addData("rf", rf.getCurrent(CurrentUnit.MILLIAMPS));
+            telemetry.addData("lb", lb.getCurrent(CurrentUnit.MILLIAMPS));
+            telemetry.addData("rb", rb.getCurrent(CurrentUnit.MILLIAMPS));
+            telemetry.addData("intake", intakeMotor.getCurrent(CurrentUnit.MILLIAMPS));
 
 
 //        telemetry.addData("left gate position",intake.getGatePositions()[0]);
@@ -400,9 +402,9 @@ public class MainTeleop extends SettingSelectorOpMode
 //        telemetry.addData("scale",bot.turret.getEncoder().getScale());
 //        telemetry.addData("motor type", bot.turret.getMotorType());
 //        telemetry.addLine("---------Position-------");
-        telemetry.addData("target goal pos x",targetGoalPos[0]);
-        telemetry.addData("target goal pos y",targetGoalPos[1]);
-        telemetry.addData("position",follower.getPose());//TODO: check this, I think that the position is not getting updated, its possible the pinpoint isn't connected well or something
+            telemetry.addData("target goal pos x", targetGoalPos[0]);
+            telemetry.addData("target goal pos y", targetGoalPos[1]);
+            telemetry.addData("position", follower.getPose());//TODO: check this, I think that the position is not getting updated, its possible the pinpoint isn't connected well or something
 //        telemetry.addData("goal x",FieldDimensions.goalPositionBlue[0]);
 //        telemetry.addData("goal y",FieldDimensions.goalPositionBlue[1]);
 //        telemetry.addData("distance", distance);
@@ -417,7 +419,15 @@ public class MainTeleop extends SettingSelectorOpMode
 //        //telemetry.addData("hoodPos",launcher.getHoodPos());
 //        telemetry.addData("lbump val",Gpad.getCurrentValue("left_bumper"));
 //        telemetry.addData("lbump redge",Gpad.getRisingEdge("left_bumper"));
-        //telemetry.addData("lbump changed",Gpad.getCurrentValue("left_bumper"));
+            //telemetry.addData("lbump changed",Gpad.getCurrentValue("left_bumper"));
+        }
+        else{
+            telemetry.addLine("press "+intakeButtonName+" to intake");
+            telemetry.addLine("hold "+aimButtonName+" when you want to aim the turret");
+            telemetry.addLine("hold "+launchButtonName+" to spin up the flywheel");
+            telemetry.addLine("and release it once you want to release the balls");
+            telemetry.addLine("if the turret isnt aiming right, try turning");
+        }
         telemetry.update();
 
     }
