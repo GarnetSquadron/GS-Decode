@@ -18,8 +18,6 @@ public class TestLauncher extends OpMode {
     double returned;
     double dampforce = 0;
     Servo angleServo;
-    RAWMOTOR motor1;
-    RAWMOTOR motor2;
     double give = 0;
     double power = 0;
     double target = 0.1;
@@ -50,8 +48,7 @@ public class TestLauncher extends OpMode {
                     }
                     if(timer == 2){
                         give+= 0.1;
-                        motor1.setPower(0);
-                        motor1.stop();
+                        launcher.setPower(0);
                     }
                 }else {dampforce += 0.01;}
             }else {target += 0.1; }

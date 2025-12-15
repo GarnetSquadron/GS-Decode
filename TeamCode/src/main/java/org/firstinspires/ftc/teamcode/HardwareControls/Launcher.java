@@ -59,7 +59,7 @@ public class Launcher {
     }
 
     public void setPower(double power) {
-        motor2.setPower(power);
+//        motor2.setPower(power);
         motor1.setPower(power);
     }
 //    public int wasBallShot(double current){
