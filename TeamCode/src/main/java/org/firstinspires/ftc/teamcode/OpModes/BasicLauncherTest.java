@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.Launcher;
+import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 
 @TeleOp(name = "Basic Launcher test")
 public class BasicLauncherTest extends OpMode {

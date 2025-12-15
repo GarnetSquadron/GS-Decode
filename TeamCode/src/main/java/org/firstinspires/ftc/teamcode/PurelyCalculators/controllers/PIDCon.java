@@ -1,0 +1,55 @@
+package org.firstinspires.ftc.teamcode.PurelyCalculators.controllers;
+
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.SmoothVelocityEncoder;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ValueAtTimeStamp;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
+
+public class PIDCon extends PositionController
+{
+    double kp, ki, kd;
+    ValueAtTimeStamp prevPos;
+    double integral;
+
+    public PIDCon(double kp, double ki, double kd)
+    {
+        this.kp = kp;
+        this.ki = ki;
+        this.kd = kd;
+        reset();
+    }
+
+    public void reset()
+    {
+        integral = 0;
+        prevPos = new ValueAtTimeStamp(0, TIME.getTime());
+    }
+
+    @Override
+    public void setTargetPosition(double targetPosition)
+    {
+        this.targetPosition = targetPosition;
+        reset();
+    }
+    public double getIntegral(){
+        return integral;
+    }
+
+    @Override
+    public double calculate()
+    {
+        double error = getDistanceToTarget();
+        if (ki != 0) {
+            double currentTime = TIME.getTime();
+            integral += ExtraMath.integration.trapazoid(prevPos, new ValueAtTimeStamp(error, currentTime));
+            prevPos = new ValueAtTimeStamp(error, currentTime);
+        }
+        double velocity;
+        if(encoder.getClass()== SmoothVelocityEncoder.class){
+            velocity = ((SmoothVelocityEncoder)encoder).getAverageVelocity();
+        }
+        else
+            velocity = encoder.getVelocity();
+        return kp * error + ki * integral + kd * velocity;
+    }
+}

@@ -21,20 +21,7 @@ public class CompConstants
             .translationalPIDFCoefficients(new PIDFCoefficients(0, 0, 0, 0))
             .headingPIDFCoefficients(new PIDFCoefficients(2, 0, 0.1, 0))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0))
-            .mass(
-
-                    //take the geometric mean of all our votes to get the true mass
-                    Math.pow(
-                            (
-                                    Math.pow(Math.E,3)//DJ's guess
-                                            +12//Anthony's guess
-                                            +11.2//Charlie's guess
-                                            +9//Kendal's guess
-                                            +0.15//Andrews guess (1.5 moles = 0.15kg apparently)
-                                            +30//James' guess
-                            )
-                            ,0.5)
-            )
+            .mass(13.245)//29.2lb = 735 moles (of water) = 58.4 moles(Eastern) = 13.245kg
             .forwardZeroPowerAcceleration(-45.186)
             .lateralZeroPowerAcceleration(-82.716);
 
@@ -52,13 +39,14 @@ public class CompConstants
             .yVelocity(52.612);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(3)//TODO: Check this and figure out which center it is
-            .strafePodX(-6)
+            .forwardPodY(-4.5)//TODO: Check this and figure out which center it is
+            .strafePodX(0)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
-            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD)
+            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+            .yawScalar(1);//I input -1 before, and then for some reason it stayed reversed even when I commented out this line, so I had to put this line to change it back. I will keep it like this for now I guess.
 
     public static PathConstraints pathConstraints = new PathConstraints(
             0.995,

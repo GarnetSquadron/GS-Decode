@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.getAngles;
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.targetHeight;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.telemetry.SelectableOpMode;
 import com.qualcomm.hardware.maxbotix.MaxSonarI2CXL;
@@ -11,10 +14,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Intake;
+import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
+import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
+import org.firstinspires.ftc.teamcode.HardwareControls.Turret;
+import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
-import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
-import org.firstinspires.ftc.teamcode.time.TIME;
 
 import java.util.List;
 
@@ -44,6 +52,9 @@ public class Tests extends SelectableOpMode
             s.add("motor test",MotorTest::new);
             s.add("servo test",ServoTest::new);
             s.add("DistanceSensorDelayTest", SensorDelayTest::new);
+            s.add("intake Tests", IntakeTests::new);
+            s.add("turret math", TurretMathTest::new);
+            s.add("hood test",HoodTest::new);
         });
     }
 
@@ -158,13 +169,12 @@ class ServoTest extends OpMode
 
     public void init()
     {
-        servo = hardwareMap.get(Servo.class, "servo");
+        servo = hardwareMap.get(Servo.class, "servoKicker");
     }
     public void loop(){
         if (gamepad1.x) {
             servo.setPosition(1);//up
         }
-
         if (gamepad1.a) {
             servo.setPosition(0.66666);
         }
@@ -231,6 +241,145 @@ class SensorDelayTest extends OpMode{
 
         deltaTime = TIME.getTime()-loopStartTime;
         telemetry.addData("loopTime",deltaTime);
+        telemetry.update();
+    }
+}
+class RandomFunctionsTest extends OpMode{
+
+    @Override
+    public void init(){
+
+    }
+
+    @Override
+    public void loop()
+    {
+
+    }
+}
+
+class IntakeTests extends OpMode{
+    boolean launching = false;
+    boolean gateOpen;
+    Intake intake;
+    boolean wasYPressed = false;
+    Launcher launcher;
+    @Override
+    public void init()
+    {
+        intake = new Intake(hardwareMap);
+        launcher = new Launcher(hardwareMap);
+        intake.closeGate();
+        intake.unKick();
+    }
+
+    @Override
+    public void loop()
+    {
+
+        if (gamepad1.left_bumper){
+            intake.timeWhenIntake = TIME.getTime();
+            intake.setPower(1);
+        }
+        if (gamepad1.right_bumper){
+            launcher.setPower(-1);
+        }
+//        if (launching){
+//            telemetry.addData("time since launch",intake.shoot3());
+//            launching = !(intake.shoot3()>7);
+//        }else {
+//            intake.setPower(0);
+//            launching = gamepad1.y;
+//        }
+        if(gamepad1.y){
+            intake.startShoot3();
+        }
+//        intake.shoot3();
+        double current = intake.getCurrent();
+        telemetry.addData("is gate open",gateOpen);
+        telemetry.addData("intake current",current);
+        telemetry.addData("ball count", intake.countArtifacts(intake.getCurrent()));
+        telemetry.addData("intake time with diff", TIME.getTime()-intake.timeWhenIntake);
+        telemetry.addData("time",TIME.getTime());
+        telemetry.addData("launcher current", launcher.getCurrent());
+        telemetry.addData("launching",launching);
+    }
+}
+class TurretMathTest extends OpMode{
+    Turret turret;
+    double inputAngle = 0;
+    BetterControllerClass Gpad;
+    @Override
+    public void init()
+    {
+        Gpad = new BetterControllerClass(gamepad1);
+        turret = new Turret(hardwareMap);
+    }
+
+    @Override
+    public void loop()
+    {
+        Gpad.update();
+        if(Gpad.getRisingEdge("a")){
+            inputAngle+=0.1;
+        }
+        if (Gpad.getRisingEdge("b")){
+            inputAngle-=0.1;
+        }
+        telemetry.addData("input angle (rads)",inputAngle);
+        telemetry.addData("output angle (rads)",turret.getRotation(inputAngle));
+        telemetry.update();
+    }
+}
+class HoodTest extends OpMode{
+    Launcher launcher;
+    ColorSensor colorSensor;
+    double distance = 48;
+    double vel = 273;
+    @Override
+    public void init()
+    {
+        launcher = new Launcher(hardwareMap);
+        colorSensor = hardwareMap.get(ColorSensor.class,"sensor");
+    }
+
+    @Override
+    public void loop()
+    {
+        if (gamepad1.aWasReleased()) {
+            distance +=1;
+        }
+        if(gamepad1.bWasPressed()){
+            distance -=1;
+        }
+        if (gamepad1.xWasReleased()) {
+            vel +=1;
+        }
+        if(gamepad1.yWasPressed()){
+            vel -=1;
+        }
+
+        //launcher.setAngle(Math.toRadians(angle));
+        launcher.aimServo(distance,vel);
+        telemetry.addData("distance", distance);
+        telemetry.addData("vel",vel);
+        telemetry.addData("angle",Math.toDegrees( AngleFinder.getOptimumAngle(vel,distance)));
+        double a = 386.09*386.09/4;
+        double b = 386.09*targetHeight-vel*vel;
+        double c = distance*distance+targetHeight*targetHeight;
+        double[] tSquared = ExtraMath.quadraticFormula(a,b,c);
+        double[] angles = getAngles(vel,distance);
+        telemetry.addData("a", a);
+        telemetry.addData("b", b);
+        telemetry.addData("c", c);
+        telemetry.addData("discriminant",b*b-4*a*c);
+        telemetry.addData("t^2 solution #1", tSquared.length==0?-1:tSquared[0]);
+        telemetry.addData("t^2 solution #2", tSquared.length<2?-1:tSquared[1]);
+        telemetry.addData("length",angles.length);
+        telemetry.addData("color", colorSensor.argb());
+        for(int i=0;i<angles.length;i++){
+            telemetry.addData("angle "+String.valueOf(i),Math.toDegrees(angles[i]));
+        }
         telemetry.update();
     }
 }

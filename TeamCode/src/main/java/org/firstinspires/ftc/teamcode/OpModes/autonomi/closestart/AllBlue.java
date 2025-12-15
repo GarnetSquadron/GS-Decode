@@ -7,12 +7,12 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.TestConstants;
 
-@TeleOp(name = "AutoBlueAll")
+@Autonomous(name = "AutoBlueAll")
 public class AllBlue extends LinearOpMode
 {
     Follower follower;
