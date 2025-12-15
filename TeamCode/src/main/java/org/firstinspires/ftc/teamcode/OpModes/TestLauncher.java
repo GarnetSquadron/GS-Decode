@@ -4,9 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.ExtraMath;
-import org.firstinspires.ftc.teamcode.LauncherPid;
-import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
+
+import org.firstinspires.ftc.teamcode.HardwareControls.LauncherPid;
+import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
+
 @TeleOp(name = "launcher")
 public class TestLauncher extends OpMode {
     double returned;
