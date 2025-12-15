@@ -56,8 +56,7 @@ public class TestLauncher extends OpMode {
                 }else {dampforce += 0.01;}
             }else {target += 0.1; }
         }
-        telemetry.addData("power ",motor1.getPower());
-        telemetry.addData("velocity ",motor1.getEncoder().getVelocity());
+        telemetry.addData("velocity ",launcher.getFlywheelEncoder().getVelocity());
 
         if (gamepad1.a) {target +=0.1;}
         if (gamepad1.b) {target -=0.1;}
