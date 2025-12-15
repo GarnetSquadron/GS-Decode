@@ -22,7 +22,7 @@ public class TestLauncher extends OpMode {
     RAWMOTOR motor2;
     double give = 0;
     double power = 0;
-    double target = 0;
+    double target = 0.1;
     double timer = 0;
     double servoPosition = 0;
     //temp
@@ -60,9 +60,8 @@ public class TestLauncher extends OpMode {
 
         if (gamepad1.a) {target +=0.1;}
         if (gamepad1.b) {target -=0.1;}
+        telemetry.addData("damp",dampforce);
         telemetry.addData("target",target);
-        telemetry.addData("a pressed",true);
-        telemetry.addData("y stick",gamepad2.left_stick_y);
 
         telemetry.update();
     }
