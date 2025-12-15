@@ -48,7 +48,7 @@ public class MainTeleop extends SettingSelectorOpMode
     double launchAngle = 40;
     boolean headlessDriveOn;
     String intakeButtonName,launchButtonName,aimButtonName;
-    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","DJ");put("position","testing");}};
+    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","testing");}};
 
     double startWheelAngle;
     //double b = 386.09*targetHeight-vel*vel;
@@ -57,8 +57,8 @@ public class MainTeleop extends SettingSelectorOpMode
 
     /**
      * gets the velocity given an angle
-     * @param dist
-     * @param launchAngle
+     * @param dist distance between robot and goal in inches
+     * @param launchAngle angle of the initial velocity vector that the ball comes out of the launcher with with respect to the horizontal
      * @return
      */
     public double distToVelSquared (double dist,double launchAngle) {
@@ -149,10 +149,10 @@ public class MainTeleop extends SettingSelectorOpMode
                 headlessDriveOn = true;
                 break;
             case "DJ":
-                intakeButtonName = "right_bumper";
+                intakeButtonName = "left_bumper";
                 //idk I think it would be cool to put the aiming and the launching on one hand
-                launchButtonName = "left_bumper";
-                aimButtonName = "left_trigger";
+                launchButtonName = "right_trigger";
+                aimButtonName = "right_bumper";
                 headlessDriveOn = true;
                 break;
             default:
