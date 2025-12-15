@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 public class TestLauncher extends OpMode {
     Launcher launcher;
     double returned;
-    double dampforce = 0;
+    double dampforce = 0.01;
     Servo angleServo;
     double give = 0;
     double power = 0;
@@ -39,7 +39,7 @@ public class TestLauncher extends OpMode {
         //launcher pid tuning
 
         if(target != 1){
-            if(dampforce != 0.06){
+            if(dampforce != 0.1){
                 if(give != 1){
                     returned = LauncherPid.setPid(launcher.getFlywheelEncoder().getVelocity(), target, give, dampforce);
                     launcher.spinUpFlywheel(returned);
@@ -61,6 +61,7 @@ public class TestLauncher extends OpMode {
         telemetry.addData("damp ",dampforce);
         telemetry.addData("target ",target);
         telemetry.addData("give ", give);
+        telemetry.addData("returned ", returned);
 
         telemetry.update();
     }
