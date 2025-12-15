@@ -2,15 +2,19 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ClassUtil;
 
 
+import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 import org.firstinspires.ftc.teamcode.HardwareControls.LauncherPid;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 
-@TeleOp(name = "launcher")
+@TeleOp(name = "test launcher")
 public class TestLauncher extends OpMode {
+    Launcher launcher;
     double returned;
     double dampforce = 0;
     Servo angleServo;
@@ -26,24 +30,21 @@ public class TestLauncher extends OpMode {
     boolean rightWasPressed = false;
     @Override
     public void init() {
-
+        launcher = new Launcher(hardwareMap);
         angleServo = hardwareMap.get(Servo.class, "angleServo");
-        motor1 = new RAWMOTOR(hardwareMap, "launcherMotor1");
-        motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
+//        motor1 = new RAWMOTOR(hardwareMap, "launcherMotor1");
+//        motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");
 
     }
     public void loop() {
-        returned = LauncherPid.setPid(motor1.getEncoder().getVelocity(),target,0.5,dampforce);
-
         ExtraMath.Clamp(servoPosition,1,0);
         //launcher pid tuning
 
         if(target != 1){
             if(dampforce != 0.06){
                 if(give != 1){
-                    returned = LauncherPid.setPid(motor1.getEncoder().getVelocity(), target, give, dampforce);
-                    motor1.setPower(returned);
-                    motor2.setPower(returned);
+                    returned = LauncherPid.setPid(launcher.getFlywheelEncoder().getVelocity(), target, give, dampforce);
+                    launcher.spinUpFlywheel(returned);
                     if(returned == target){
                         timer += 0.1;
                     }
@@ -62,7 +63,6 @@ public class TestLauncher extends OpMode {
         if (gamepad1.b) {target -=0.1;}
         telemetry.addData("target",target);
         telemetry.addData("a pressed",true);
-        motor1.setPower(returned);
         telemetry.addData("y stick",gamepad2.left_stick_y);
 
         telemetry.update();
