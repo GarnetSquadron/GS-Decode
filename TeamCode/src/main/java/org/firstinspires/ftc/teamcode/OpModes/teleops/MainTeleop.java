@@ -276,8 +276,11 @@ public class MainTeleop extends SettingSelectorOpMode
             bot.turret.setPower(0);
         }
 
-        vel = bot.launcher.getFlywheelEncoder().getVelocity();// in rad/sec
-        double launchAngle = bot.launcher.aimServo(distance, vel);//we get the servo position based on the velocity we see, not the velocity we want
+        // this should be the initial speed of the ball as exits the launcher
+        vel = bot.launcher.getFlywheelEncoder().getVelocity()/radPerSecToVelRatio;
+
+        //we get the servo position based on the velocity we see, not the velocity we want
+        double launchAngle = bot.launcher.aimServo(distance, vel);
         launcherPower = 0.9;
 
         telemetry.addData("time since start",bot.update(velBounds[0],velBounds[1]));
