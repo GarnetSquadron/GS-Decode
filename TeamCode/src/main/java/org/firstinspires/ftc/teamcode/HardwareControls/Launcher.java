@@ -19,6 +19,7 @@ public class Launcher {
     RAWMOTOR motor1;
     RAWMOTOR motor2;
     Turret turret;
+    public double maxPossibleVel = 321;
     double power = 0;
 
     public double getCurrent(){
@@ -50,6 +51,15 @@ public class Launcher {
     public double spinUpFlywheel(double power){
         setPower(-power);
         return motor1.getEncoder().getVelocity();
+    }
+    public boolean spinFlyWheelWithinRange(double minVel,double maxVel){
+        //spin up the flywheel to get it within the provided range
+        //if its in the range return true otherwise
+
+        //temporary flywheel code, just guesses the velocity.
+        spinUpFlywheel((minVel+maxVel)/(2*maxPossibleVel));
+
+        return minVel < getFlywheelEncoder().getVelocity() && getFlywheelEncoder().getVelocity() > maxVel;
     }
     public double getHoodPos(){
         return angleServo.getPosition();

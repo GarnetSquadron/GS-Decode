@@ -19,8 +19,8 @@ public class Bot
     public void init(){
 
     }
-    public double update(){
-        return launchHandler.update();
+    public double update(double minVel,double maxVel){
+        return launchHandler.update(minVel,maxVel);
     }
     public class LaunchHandler
     {
@@ -32,16 +32,14 @@ public class Bot
         public LaunchHandler(){
             releaseStartTime = -1;
         }
-        public void initLaunch(double power,double velocity){
+        public void initLaunch(){
             launchingBalls = true;
             releaseBalls = false;
-            this.power = power;
-            this.targetVel = velocity;
             intake.closeGate();
         }
-        public double update(){
+        public double update(double minVel,double maxVel){
             if(launchingBalls){
-                if(Math.abs(launcher.spinUpFlywheel(power))>targetVel){
+                if(launcher.spinFlyWheelWithinRange(minVel,maxVel)){
                     if (!releaseBalls)
                     {//I thought I might as well take the absolute value in case its reversed
                         releaseBalls = true;

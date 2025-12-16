@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.teleops;
 
 import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.g;
-import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.getAngles;
 import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.targetHeight;
 
 import com.pedropathing.follower.Follower;
@@ -14,8 +13,10 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
+import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
@@ -41,11 +42,11 @@ public class MainTeleop extends SettingSelectorOpMode
     double distance = 100;
     double vel = 400;
     boolean inRange = true;
-    double velToPowerRatio = 321;//311;
+    //so far it seems that the inches per second match up pretty well with the rad per second. what a miracle
     double radPerSecToVelRatio = 1;
     double velToDistRatio = 4;
     double a = 386.09*386.09/4;
-    double launchAngle = 40;
+    //double launchAngle = 40;
     boolean headlessDriveOn;
     String intakeButtonName,launchButtonName,aimButtonName;
     static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","testing");}};
@@ -61,11 +62,21 @@ public class MainTeleop extends SettingSelectorOpMode
      * @param launchAngle angle of the initial velocity vector that the ball comes out of the launcher with with respect to the horizontal
      * @return
      */
-    public double distToVelSquared (double dist,double launchAngle) {
+    public double getVelSquared(double dist, double launchAngle) {
         double c = dist*dist+targetHeight*targetHeight;
         double tSquare = 2 * (dist*Math.tan(Math.toRadians(launchAngle))- targetHeight)/g;
         return a*tSquare+c/tSquare+g*targetHeight;
     };
+    public double getMinVelSquared(double x,double y){
+        return g*(y+Math.sqrt(y*y+x*x));
+    }
+    public double[] getVelBoundsFromVelSquaredBounds(double minAngleVelSquared,double maxAngleVelSquared){
+        if(maxAngleVelSquared<0){ maxAngleVelSquared = bot.launcher.maxPossibleVel;}
+        if(minAngleVelSquared<0){ minAngleVelSquared = getMinVelSquared(distance,targetHeight);}
+        //make sure max isn't too fast
+        maxAngleVelSquared = Math.min(maxAngleVelSquared, bot.launcher.maxPossibleVel);
+        return new double[]{Math.sqrt(maxAngleVelSquared), Math.sqrt(minAngleVelSquared)};
+    }
     //DoubleUnaryOperator distToVel =  (dist)-> Math.sqrt(distToVelSquared.applyAsDouble(dist));//Math.sqrt(g*(AngleFinder.targetHeight+0.1+Math.sqrt((AngleFinder.targetHeight+0.1)*(AngleFinder.targetHeight+0.1)+dist*dist)))+20;//(dist*dist/10) * velToDistRatio;
     GoBildaPinpointDriver pinpointDriver;
     IMU imu;
@@ -225,126 +236,75 @@ public class MainTeleop extends SettingSelectorOpMode
         //boolean extraSpinUpInput = Gpad.getCurrentValue("left_trigger");
         //boolean autoHood = Gpad.getCurrentValue("left_trigger");
 
-        distance+=/*gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0);*/ Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
-        double velSquared = distToVelSquared(distance,launchAngle);
-        if(velSquared>=0){
-            vel = Math.min(Math.sqrt(velSquared), velToPowerRatio);
-        }
-        else{
-            velSquared = distToVelSquared(distance,49);
-            if(velSquared>=0){vel = Math.sqrt(velSquared);}
-        }
-        inRange = velSquared>=0;
-        velToPowerRatio +=gamepad1.dpadRightWasPressed()?1:(gamepad1.dpadLeftWasPressed()?-1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
-        launchAngle+=gamepad1.aWasPressed()?1:(gamepad1.yWasPressed()?-1:0);
+        distance=Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
+        //distance +=gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0);
+        double minVelSquared = getVelSquared(distance, RobotDimensions.Hood.minAngle);
+        double maxVelSquared = getVelSquared(distance, RobotDimensions.Hood.maxAngle);
+        double[] velBounds = getVelBoundsFromVelSquaredBounds(minVelSquared,maxVelSquared);
+        //inRange = velSquared>=0;
+        bot.launcher.maxPossibleVel +=gamepad1.dpadRightWasPressed()?1:(gamepad1.dpadLeftWasPressed()?-1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
+        //launchAngle+=gamepad1.aWasPressed()?1:(gamepad1.yWasPressed()?-1:0);
 
-        double[] angles = getAngles(vel,distance);
+
         //servoPos = gamepad1.left_trigger*20+30;
 
         //==============================OUTPUTS===================================\\
 
         //welcome to the now slightly contained mess
 
-        //intake
-//        if(gamepad1.x){
-//            intake.setPower(-1);
-//        } else {
-        //intake.setPower(intakeToggle ?1:0);
-//        }
-        //if (gamepad1.b){intake.loadBall();};
-
-//        if (gamepad1.x){
-//            intake.prepareForIntaking();
-//        } else intake.unprepareIntake();
-        //launcher
-
-        //launcher.setPower(launcherToggle?-launcherPower:0);
-        if(releaseTheBallsInput&&inRange){
-            bot.launchHandler.initLaunch(vel / velToPowerRatio,vel* radPerSecToVelRatio);
+        if(releaseTheBallsInput){
+            bot.launchHandler.initLaunch();
         }
-        if(spinUpFlywheelInput&&inRange){
-            telemetry.addData("speed", bot.launcher.spinUpFlywheel(vel / velToPowerRatio));
+
+        if(spinUpFlywheelInput){
+            telemetry.addData("speed", bot.launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]));
             bot.intake.closeGate();
-
-        }else{
-            if(intakeToggle){
-                bot.intake.setPower(1);
-            }else bot.intake.stop();
-//            if(openGateInput){
-//                bot.intake.openGate();
-//            }
-//            else bot.intake.closeGate();
-//            if(extraSpinUpInput){
-//                bot.launcher.spinUpFlywheel(1);
-//            }else bot.launcher.setPower(0);
         }
-//        if(launcherToggle){
-//            telemetry.addData("spinningup",bot.launcher.spinUpFlywheel());
-//            if(launcher.spinUpFlywheel()){
-//
-//                intake.shoot3();
-//            }
-//        } else{launcher.setPower(0);}
+
+        if(intakeToggle){
+            bot.intake.setPower(1);
+        }else bot.intake.stop();
+
         if(turretZeroInput){
             bot.turret.zero();
         }
+
         if(autoAimOn){
-            //(rotation - turretRange[0])%(Math.PI)+ turretRange[0]%(Math.PI)-Math.PI
             rotation = bot.turret.aimTowardsGoal(targetGoalPos, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading() /*Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw())*/);
 
         } else {
             bot.turret.setPower(0);
         }
-        //bot.launcher.setAngle(servoPos);
-//        if(openGateInput){
-//            intake.openGate();
-//        }
-//        else {
-//            intake.closeGate();
-//        }
 
-        if(inRange){
-            bot.launcher.aimServo(distance, vel);
-        }else {
-            bot.launcher.setAngle(Math.toRadians(49));// seems like a solid angle ngl
-        }
-        //bot.launcher.setAngle(launchAngle);
-        //manualOrAutoAimHood(gamepad1.b,distance);
-        //toggleLaunchPower(Gpad.getToggleValue("gamepad1.rightTrigger"));// there are too many buttons in use rn so I am taking this away for now
+        vel = bot.launcher.getFlywheelEncoder().getVelocity();// in rad/sec
+        double launchAngle = bot.launcher.aimServo(distance, vel);//we get the servo position based on the velocity we see, not the velocity we want
         launcherPower = 0.9;
 
-//        if(kickInput){
-//            intake.kickBall();
-//        } else{
-//            intake.unKick();
-//        }
-        telemetry.addData("time since start",bot.update());
+        telemetry.addData("time since start",bot.update(velBounds[0],velBounds[1]));
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
         if(selections.get("telemetry")=="on"){
             telemetry.addData("launching balls", bot.launchHandler.launchingBalls);
             telemetry.addData("launching balls", bot.launchHandler.releaseBalls);
-            telemetry.addData("flywheel position(degrees)", Math.toDegrees(bot.launcher.getFlywheelEncoder().getPos()) - startWheelAngle);
             telemetry.addData("rad/sec", bot.launcher.getFlywheelEncoder().getVelocity());
             telemetry.addData("RPM", (bot.launcher.getFlywheelEncoder().getVelocity() / ExtraMath.Tau) * 60);
             telemetry.addData("distance", distance);
-            telemetry.addData("velocity", vel);
-            telemetry.addData("velSquared", velSquared);
-            telemetry.addData("velScale", velToPowerRatio);
-            telemetry.addData("power", vel / velToPowerRatio);
+            telemetry.addData("velSquared for min angle", minVelSquared);
+            telemetry.addData("velSquared for max angle", maxVelSquared);
+            telemetry.addData("velScale", bot.launcher.maxPossibleVel);
+            telemetry.addData("power", vel / bot.launcher.maxPossibleVel);
             telemetry.addData("launchAngle", launchAngle);
-            telemetry.addData("in range", inRange);
+            telemetry.addLine();
+
+
+            double[] angles = AngleFinder.getAngles(vel,distance);
             telemetry.addData("length", angles.length);
-            telemetry.addData("in range", inRange);
-            telemetry.addData("tgtvel", vel * radPerSecToVelRatio);
-            //telemetry.addData("sensor color", sensor.argb());
 
             for (int i = 0; i < angles.length; i++)
             {
                 telemetry.addData("angle " + String.valueOf(i), Math.toDegrees(angles[i]));
             }
-            //telemetry.addData("acual power", bot.launcher.g);
             telemetry.addData("targetGoalX", targetGoalPos[0]);
             telemetry.addData("targetGoalY", targetGoalPos[1]);
 //
@@ -353,26 +313,26 @@ public class MainTeleop extends SettingSelectorOpMode
             double tan = Math.atan(deltaY / deltaX);
 
 
-            telemetry.addLine();
-            telemetry.addData("bot heading", follower.getPose().getHeading());
-            telemetry.addData("tan", tan);
-            telemetry.addLine("radians:");
-            telemetry.addData("input angle", tan - follower.getPose().getHeading() + Math.PI);
-            telemetry.addData("supposed output angle", bot.turret.getRotation(tan - follower.getPose().getHeading() + Math.PI));
-            //telemetry.addData("actual output angle", bot.turret.turretRot.getTargetPosition());
-            telemetry.addLine();
-            telemetry.addLine("degrees:");
-            telemetry.addData("input angle", Math.toDegrees(tan - follower.getPose().getHeading()) + 180);
-            telemetry.addData("modded input", Math.toDegrees(bot.turret.angleMod(tan - follower.getPose().getHeading() + Math.PI)));
-            telemetry.addData("supposed output angle", Math.toDegrees(bot.turret.getRotation(tan - follower.getPose().getHeading() + Math.PI)));
-            //telemetry.addData("actual output angle", Math.toDegrees(bot.turret.turretRot.getTargetPosition()));
-            telemetry.addLine();
-            telemetry.addData("real angle", rotation);
-            telemetry.addData("deltaX", deltaX);
-            telemetry.addData("deltaY", deltaY);
-            telemetry.addData("deltaY/deltaX", deltaY / deltaX);
-            telemetry.addData("atangent", tan);
-            telemetry.addLine();
+//            telemetry.addLine();
+//            telemetry.addData("bot heading", follower.getPose().getHeading());
+//            telemetry.addData("tan", tan);
+//            telemetry.addLine("radians:");
+//            telemetry.addData("input angle", tan - follower.getPose().getHeading() + Math.PI);
+//            telemetry.addData("supposed output angle", bot.turret.getRotation(tan - follower.getPose().getHeading() + Math.PI));
+//            //telemetry.addData("actual output angle", bot.turret.turretRot.getTargetPosition());
+//            telemetry.addLine();
+//            telemetry.addLine("degrees:");
+//            telemetry.addData("input angle", Math.toDegrees(tan - follower.getPose().getHeading()) + 180);
+//            telemetry.addData("modded input", Math.toDegrees(bot.turret.angleMod(tan - follower.getPose().getHeading() + Math.PI)));
+//            telemetry.addData("supposed output angle", Math.toDegrees(bot.turret.getRotation(tan - follower.getPose().getHeading() + Math.PI)));
+//            //telemetry.addData("actual output angle", Math.toDegrees(bot.turret.turretRot.getTargetPosition()));
+//            telemetry.addLine();
+//            telemetry.addData("real angle", rotation);
+//            telemetry.addData("deltaX", deltaX);
+//            telemetry.addData("deltaY", deltaY);
+//            telemetry.addData("deltaY/deltaX", deltaY / deltaX);
+//            telemetry.addData("atangent", tan);
+//            telemetry.addLine();
             telemetry.addLine("------------current draw in milliamps----------");
             telemetry.addData("lf", lf.getCurrent(CurrentUnit.MILLIAMPS));
             telemetry.addData("rf", rf.getCurrent(CurrentUnit.MILLIAMPS));
