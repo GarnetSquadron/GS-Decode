@@ -16,10 +16,10 @@ public class Launcher {
     //this variable is called angle servo because it is the position of the servo that launches the ball at an angle
     /// TODO give better name
     Servo angleServo;
-    RAWMOTOR motor1;
-    RAWMOTOR motor2;
+    public RAWMOTOR motor1;
+    public RAWMOTOR motor2;
     Turret turret;
-    public double maxPossibleVel = 321;
+    public double maxPossibleVel = 340;
     double power = 0;
 
     public double getCurrent(){
@@ -59,7 +59,7 @@ public class Launcher {
         //temporary flywheel code, just guesses the velocity.
         spinUpFlywheel((minVel+maxVel)/(2*maxPossibleVel));
 
-        return minVel < getFlywheelEncoder().getVelocity() && getFlywheelEncoder().getVelocity() > maxVel;
+        return minVel < getFlywheelEncoder().getVelocity() && getFlywheelEncoder().getVelocity() < maxVel;
     }
     public double getHoodPos(){
         return angleServo.getPosition();

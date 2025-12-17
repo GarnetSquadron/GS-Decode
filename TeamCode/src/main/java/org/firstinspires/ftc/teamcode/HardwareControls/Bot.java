@@ -40,7 +40,7 @@ public class Bot
         public double update(double minVel,double maxVel){
             if(launchingBalls){
                 if(launcher.spinFlyWheelWithinRange(minVel,maxVel)){
-                    if (!releaseBalls)
+                    if (!releaseBalls&&minVel<launcher.getFlywheelEncoder().getVelocity())
                     {//I thought I might as well take the absolute value in case its reversed
                         releaseBalls = true;
                         releaseStartTime = TIME.getTime();
