@@ -227,9 +227,17 @@ public class MainTeleop extends SettingSelectorOpMode
         follower.startTeleopDrive();
     }
     public void move(double yInput,double xInput,double turnInput){
-        double forwardForce = Math.signum(yInput)*(Math.abs(yInput)-0.15);
-        double strafeForce = Math.signum(xInput)*(Math.abs(xInput)-0.15);
+        double forwardForce = modifyInput(0.15,yInput);
+        double strafeForce = modifyInput(0.15,xInput);
         follower.setTeleOpDrive(forwardForce, strafeForce, turnInput, !headlessDriveOn);
+    }
+
+    /**
+     * modifies the input so that it is easier to go slow I think
+     * @return
+     */
+    public double modifyInput(double min,double input){
+        return (1-min)*input+min*Math.signum(input);
     }
     @Override
     public void loop(){
