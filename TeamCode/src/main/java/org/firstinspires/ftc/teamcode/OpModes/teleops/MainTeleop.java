@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.teleops;
 
+import static org.firstinspires.ftc.teamcode.logo.Logo.logo;
 import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.g;
 import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.targetHeight;
 
@@ -311,18 +312,18 @@ public class MainTeleop extends SettingSelectorOpMode
         double launchAngle = bot.launcher.aimServo(distance, vel);
         launcherPower = 0.9;
 
-        telemetry.addData("left stick x",gamepad1.left_stick_x);
-        telemetry.addData("left stick y",gamepad1.left_stick_y);
-        telemetry.addData("right stick x",gamepad1.right_stick_x);
-
-        telemetry.addData("launch phase",bot.update(velBounds[0],velBounds[1]));
-        telemetry.addData("phase duration",bot.launchHandler.getElapsedTime());
-        telemetry.addData("gate is open",bot.intake.gateIsOpen());
-
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
         if(selections.get("telemetry")=="on"){
+            telemetry.addData("left stick x",gamepad1.left_stick_x);
+            telemetry.addData("left stick y",gamepad1.left_stick_y);
+            telemetry.addData("right stick x",gamepad1.right_stick_x);
+
+            telemetry.addData("launch phase",bot.update(velBounds[0],velBounds[1]));
+            telemetry.addData("phase duration",bot.launchHandler.getElapsedTime());
+            telemetry.addData("gate is open",bot.intake.gateIsOpen());
+
             telemetry.addData("position", selections.get("position"));
             telemetry.addData("color", selections.get("color"));
             telemetry.addData("pos",follower.getPose());
@@ -350,7 +351,6 @@ public class MainTeleop extends SettingSelectorOpMode
             telemetry.addData("actual power",(velBounds[0]+velBounds[1])/(2*bot.launcher.maxPossibleVel));
             telemetry.addData("launchAngle", launchAngle);
             telemetry.addLine();
-
 
             double[] angles = AngleFinder.getAngles(vel,distance);
             telemetry.addData("length", angles.length);
@@ -438,11 +438,15 @@ public class MainTeleop extends SettingSelectorOpMode
             //telemetry.addData("lbump changed",Gpad.getCurrentValue("left_bumper"));
         }
         else{
+            telemetry.addLine(logo);
             telemetry.addLine("press "+intakeButtonName+" to intake");
-            telemetry.addLine("hold "+aimButtonName+" when you want to aim the turret");
+            telemetry.addLine("hold "+aimButtonName+" to aim the turret");
             telemetry.addLine("hold "+launchButtonName+" to spin up the flywheel");
-            telemetry.addLine("and release it once you want to release the balls");
+            telemetry.addLine("and release it to release the balls");
             telemetry.addLine("if the turret isnt aiming right, try turning");
+//            for(int i = 0; i<logo.length;i++){
+//                telemetry.addLine(logo[i]);
+//            }
         }
         telemetry.update();
 
