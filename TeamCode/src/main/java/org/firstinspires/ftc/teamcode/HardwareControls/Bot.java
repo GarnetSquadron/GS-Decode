@@ -22,69 +22,91 @@ public class Bot
     public void init(){
 
     }
-    public boolean update(double minVel,double maxVel){
+    public LaunchPhase update(double minVel,double maxVel){
         return launchHandler.update(minVel,maxVel);
+    }
+    public enum LaunchPhase
+    {
+        NULL,
+        SPINNING_UP,
+        GATE_OPENING,
+        RELEASING_BALLS,
+        KICKING_SERVO,
+        SHUTDOWN
     }
     public class LaunchHandler
     {
-        double power = 1;
-        double releaseStartTime;
-        double startGateTime;
-        double targetVel = 0;
-        public boolean launchingBalls = false;
-        public boolean releaseBalls = false;
-        public boolean waitingForGate = false;
+        public LaunchPhase launchPhase = LaunchPhase.NULL;
+        double phaseStartTime;
         public LaunchHandler(){
-            releaseStartTime = -1;
+            phaseStartTime = -1;
+        }
+        public double getElapsedTime(){
+            return TIME.getTime()- phaseStartTime;
         }
         public void initLaunch(){
-            launchingBalls = true;
-            releaseBalls = false;
+            launchPhase = LaunchPhase.SPINNING_UP;
             intake.closeGate();
+            phaseStartTime = TIME.getTime();
         }
-        public boolean update(double minVel,double maxVel){
-            double elapsedTime = TIME.getTime()-releaseStartTime;
-            boolean fastEnough = minVel<launcher.getFlywheelEncoder().getVelocity();
-            boolean ret = releaseBalls;
-            if(launchingBalls){
-                if(launcher.spinFlyWheelWithinRange(minVel,maxVel)){
-                    if (!releaseBalls)//if its just gotten up to speed
-                    {//I thought I might as well take the absolute value in case its reversed
-                        if(!waitingForGate){//initiate opening the gate
-                            waitingForGate = true;
-                            startGateTime = TIME.getTime();
-                            intake.openGate();
-                            intake.setPower(0);
-                            return ret;
-                        }
-                        if(TIME.getTime()- startGateTime >0.5){// once its been long enough, the gate is open and we can run the intake
-                            releaseBalls = true;
-                            releaseStartTime = TIME.getTime();
-                            intake.setPower(1);
-                        }
-                        return ret;
-                    }
-                    double timeFor3rdBallToGetUnStuck = 0.5;
-                    intake.setPower(1);
-                    if (elapsedTime < timeFor3rdBallToGetUnStuck) return ret;
-                    if (elapsedTime > timeFor3rdBallToGetUnStuck + 0.5)
-                    {
-                        intake.unKick();
-                        intake.stop();
-                        intake.closeGate();
-                        launcher.setPower(0);
-                        launchingBalls = false;
-                        waitingForGate = false;
-                        releaseBalls = false;
-                        return ret;
-                    }//else
-                    intake.kickBall();
-                }else{
+        public LaunchPhase update(double minVel,double maxVel){
+            boolean velInRange = false;
+            if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){//once you get to kicking the servo its far gone tbh
+                velInRange = launcher.spinFlyWheelWithinRange(minVel,maxVel);
+//                if(!velInRange){
+//                    launchPhase = LaunchPhase.SPINNING_UP;
+//                    phaseStartTime = TIME.getTime();
+//                    intake.stop();
+//                }
+            }
+            switch (launchPhase){
+                case NULL: {
+                    break;
+                }
+                case SPINNING_UP:{
                     intake.stop();
-                    releaseBalls = false;
+                    if (velInRange)
+                    {
+                        launchPhase = (intake.gateIsOpen()) ?LaunchPhase.RELEASING_BALLS:LaunchPhase.GATE_OPENING;
+                        phaseStartTime = TIME.getTime();
+                    }
+                    break;
+                }
+                case GATE_OPENING:{
+                    intake.openGate();
+                    if (getElapsedTime() > 0.5)
+                    {
+                        launchPhase = LaunchPhase.RELEASING_BALLS;
+                        phaseStartTime = TIME.getTime();
+                    }
+                    break;
+                }
+                case RELEASING_BALLS:{
+                    intake.setPower(1);
+                    if(getElapsedTime() > 0.4){
+                        launchPhase = LaunchPhase.KICKING_SERVO;
+                        phaseStartTime = TIME.getTime();
+                    }
+                    break;
+                }
+                case KICKING_SERVO:{
+                    intake.kickBall();
+                    if(getElapsedTime()>0.5){
+                        launchPhase = LaunchPhase.SHUTDOWN;
+                        phaseStartTime = TIME.getTime();
+                    }
+                    break;
+                }
+                case SHUTDOWN:{
+                    intake.unKick();
+                    intake.stop();
+                    intake.closeGate();
+                    launcher.setPower(0);
+                    launchPhase = LaunchPhase.NULL;
+                    break;
                 }
             }
-            return ret;
+            return launchPhase;
         }
     }
 }

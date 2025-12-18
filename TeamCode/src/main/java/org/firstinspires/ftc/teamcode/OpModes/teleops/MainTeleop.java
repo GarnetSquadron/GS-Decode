@@ -43,7 +43,6 @@ public class MainTeleop extends SettingSelectorOpMode
     double vel = 400;
     boolean inRange = true;
     //so far it seems that the inches per second match up pretty well with the rad per second. what a miracle
-    double radPerSecToVelRatio = 1;
     double velToDistRatio = 4;
     double a = 386.09*386.09/4;
     //double launchAngle = 40;
@@ -199,7 +198,7 @@ public class MainTeleop extends SettingSelectorOpMode
                         follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
                         break;
                     case "testing":
-                        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], targetGoalPos[1]-135, -Math.PI/2));
+                        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], targetGoalPos[1]-70, -Math.PI/2));
                         break;
                 }
                 break;
@@ -272,9 +271,13 @@ public class MainTeleop extends SettingSelectorOpMode
             //bot.intake.closeGate();
         }
 
-//        if(intakeToggle){
-//            bot.intake.setPower(1);
-//        }else bot.intake.stop();
+        if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
+            if (intakeToggle)
+            {
+                bot.intake.setPower(1);
+            }
+            else bot.intake.stop();
+        }
 
         if(turretZeroInput){
             bot.turret.zero();
@@ -288,13 +291,15 @@ public class MainTeleop extends SettingSelectorOpMode
         }
 
         // this should be the initial speed of the ball as exits the launcher
-        vel = bot.launcher.getFlywheelEncoder().getVelocity()/radPerSecToVelRatio;
+        vel = bot.launcher.getInPerSec();
 
         //we get the servo position based on the velocity we see, not the velocity we want
         double launchAngle = bot.launcher.aimServo(distance, vel);
         launcherPower = 0.9;
 
-        telemetry.addData("time since start",bot.update(velBounds[0],velBounds[1]));
+        telemetry.addData("launch phase",bot.update(velBounds[0],velBounds[1]));
+        telemetry.addData("phase duration",bot.launchHandler.getElapsedTime());
+        telemetry.addData("gate is open",bot.intake.gateIsOpen());
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
@@ -309,8 +314,8 @@ public class MainTeleop extends SettingSelectorOpMode
             telemetry.addData("inches for 30 deg", distance*Math.tan(Math.toRadians(RobotDimensions.Hood.minAngle)) - targetHeight);
             telemetry.addData("theoretical minimum possible vel",getMinVelSquared(distance,targetHeight));
             telemetry.addLine();
-            telemetry.addData("launching balls", bot.launchHandler.launchingBalls);
-            telemetry.addData("releasing them", bot.launchHandler.releaseBalls);
+//            telemetry.addData("launching balls", bot.launchHandler.launchingBalls);
+//            telemetry.addData("releasing them", bot.launchHandler.releaseBalls);
             telemetry.addData("rad/sec", vel);
             telemetry.addData("RPM", (vel / ExtraMath.Tau) * 60);
             telemetry.addData("velSquared for min angle", minAngleVelSquared);

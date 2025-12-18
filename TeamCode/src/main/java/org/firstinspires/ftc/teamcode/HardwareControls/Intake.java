@@ -55,8 +55,8 @@ public class Intake {
 //        }
 //    }
     public boolean closeGate(){
-        leftGate.setPosition(0/*0.08*/);
-        rightGate.setPosition(0/*0.58*/);
+        leftGate.setPosition(0.1);
+        rightGate.setPosition(0.60);
         if (leftGate.getPosition() >-0.1&& leftGate.getPosition() <0.1 && rightGate.getPosition()>-0.1 && rightGate.getPosition()<0.1){return true;}else return false;
     }
     public double getCurrent(){
@@ -101,6 +101,12 @@ public class Intake {
         servoKicker.setPosition(0.2);
         if (servoKicker.getPosition() ==0.2){return true;}else return false;
     }
-
+    /**
+     * please do not misunderstand this function, it only tells you where it is trying to go, not where it actually is
+     * Ie, you cannot run openGate() and then wait for gateIsOpen to be true
+     */
+    public boolean gateIsOpen(){
+        return (leftGate.getPosition()==0.4&&rightGate.getPosition()==0.95);
+    }
 
 }

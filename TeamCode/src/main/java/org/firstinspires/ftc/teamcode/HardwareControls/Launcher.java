@@ -18,6 +18,7 @@ public class Launcher {
     Servo angleServo;
     public RAWMOTOR motor1;
     public RAWMOTOR motor2;
+    double radPerSecToVelRatio = 1;
     Turret turret;
     public double maxPossibleVel = 340;
     double power = 0;
@@ -29,6 +30,9 @@ public class Launcher {
         double angle = AngleFinder.getOptimumAngle(vel,distance);
         setAngle(angle);
         return angle;
+    }
+    public double getInPerSec(){
+        return getFlywheelEncoder().getVelocity()/radPerSecToVelRatio;
     }
     public double[] aimAtGoal(double[] goalPos, double[] botPos, double vel,double heading) {
         double distance =  Math.sqrt(Math.pow(goalPos[0] - botPos[0],2)+Math.pow(goalPos[1]-botPos[1],2));
@@ -50,7 +54,7 @@ public class Launcher {
     }
     public double spinUpFlywheel(double power){
         setPower(-power);
-        return motor1.getEncoder().getVelocity();
+        return getInPerSec();
     }
     public boolean spinFlyWheelWithinRange(double minVel,double maxVel){
         //spin up the flywheel to get it within the provided range
@@ -59,7 +63,7 @@ public class Launcher {
         //temporary flywheel code, just guesses the velocity.
         spinUpFlywheel((minVel+maxVel)/(2*maxPossibleVel));
 
-        return minVel < getFlywheelEncoder().getVelocity() && getFlywheelEncoder().getVelocity() < maxVel;
+        return minVel < getInPerSec() && getInPerSec() < maxVel;
     }
     public double getHoodPos(){
         return angleServo.getPosition();
