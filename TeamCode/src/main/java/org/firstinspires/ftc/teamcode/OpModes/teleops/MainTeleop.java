@@ -123,6 +123,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
 //        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], 0, 0));
         bot.intake.closeGate();
+        bot.intake.unKick();
         //bot.intake.openGate();
 
 
@@ -198,7 +199,7 @@ public class MainTeleop extends SettingSelectorOpMode
                         follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
                         break;
                     case "testing":
-                        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], 0, -Math.PI/2));
+                        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], targetGoalPos[1]-135, -Math.PI/2));
                         break;
                 }
                 break;
@@ -238,7 +239,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //boolean kickInput = Gpad.getCurrentValue("right_trigger");
         boolean intakeToggle = Gpad.getCurrentValue(intakeButtonName);
 //        boolean launcherToggle = Gpad.getToggleValue("left_bumper");
-        boolean spinUpFlywheelInput = Gpad.getCurrentValue(launchButtonName);
+        boolean spinUpFlywheelInput = Gpad.getCurrentValue(launchButtonName)||gamepad1.left_bumper;
         boolean releaseTheBallsInput = Gpad.getFallingEdge(launchButtonName);
         boolean turretZeroInput = gamepad1.x;
         boolean autoAimOn = Gpad.getCurrentValue(aimButtonName);
@@ -271,9 +272,9 @@ public class MainTeleop extends SettingSelectorOpMode
             //bot.intake.closeGate();
         }
 
-        if(intakeToggle){
-            bot.intake.setPower(1);
-        }else bot.intake.stop();
+//        if(intakeToggle){
+//            bot.intake.setPower(1);
+//        }else bot.intake.stop();
 
         if(turretZeroInput){
             bot.turret.zero();
@@ -421,5 +422,10 @@ public class MainTeleop extends SettingSelectorOpMode
         }
         telemetry.update();
 
+    }
+    @Override
+    public void stop(){
+        bot.intake.unKick();
+        bot.servoController.pwmDisable();
     }
 }
