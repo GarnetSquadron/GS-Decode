@@ -227,8 +227,8 @@ public class MainTeleop extends SettingSelectorOpMode
         follower.startTeleopDrive();
     }
     public void move(double yInput,double xInput,double turnInput){
-        double forwardForce = modifyInput(0.15,yInput);
-        double strafeForce = modifyInput(0.15,xInput);
+        double forwardForce = modifyInput(0.05,yInput);
+        double strafeForce = modifyInput(0.05,xInput);
         follower.setTeleOpDrive(forwardForce, strafeForce, turnInput, !headlessDriveOn);
     }
 
@@ -243,8 +243,8 @@ public class MainTeleop extends SettingSelectorOpMode
     public void loop(){
         follower.update();
 
-        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, !headlessDriveOn);
-//        move(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+//        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, !headlessDriveOn);
+        move(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         Gpad.update();
 
         //I wanted to find a better way, but this seems like the best option for organizing the button inputs
