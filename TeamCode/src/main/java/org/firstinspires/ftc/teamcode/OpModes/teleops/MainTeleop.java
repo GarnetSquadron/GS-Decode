@@ -226,11 +226,17 @@ public class MainTeleop extends SettingSelectorOpMode
 
         follower.startTeleopDrive();
     }
+    public void move(double yInput,double xInput,double turnInput){
+        double forwardForce = Math.signum(yInput)*(Math.abs(yInput)-0.15);
+        double strafeForce = Math.signum(xInput)*(Math.abs(xInput)-0.15);
+        follower.setTeleOpDrive(forwardForce, strafeForce, turnInput, !headlessDriveOn);
+    }
     @Override
     public void loop(){
         follower.update();
 
-        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, Math.abs(gamepad1.right_stick_x)*gamepad1.right_stick_x, !headlessDriveOn);
+        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, !headlessDriveOn);
+//        move(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         Gpad.update();
 
         //I wanted to find a better way, but this seems like the best option for organizing the button inputs
@@ -297,9 +303,14 @@ public class MainTeleop extends SettingSelectorOpMode
         double launchAngle = bot.launcher.aimServo(distance, vel);
         launcherPower = 0.9;
 
+        telemetry.addData("left stick x",gamepad1.left_stick_x);
+        telemetry.addData("left stick y",gamepad1.left_stick_y);
+        telemetry.addData("right stick x",gamepad1.right_stick_x);
+
         telemetry.addData("launch phase",bot.update(velBounds[0],velBounds[1]));
         telemetry.addData("phase duration",bot.launchHandler.getElapsedTime());
         telemetry.addData("gate is open",bot.intake.gateIsOpen());
+
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
