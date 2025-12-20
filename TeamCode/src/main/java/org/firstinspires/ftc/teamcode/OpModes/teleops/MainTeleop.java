@@ -55,6 +55,7 @@ public class MainTeleop extends SettingSelectorOpMode
     //double b = 386.09*targetHeight-vel*vel;
 
     ColorSensor sensor;
+    double totalMaxCurrent = 0,lfMax = 0,rfMax = 0, lbMax = 0,rbMax = 0,intakeMax = 0, launcherMax1 = 0,launcherMax2 = 0;
 
     /**
      * gets the velocity given an angle
@@ -387,15 +388,42 @@ public class MainTeleop extends SettingSelectorOpMode
 //            telemetry.addData("deltaY/deltaX", deltaY / deltaX);
 //            telemetry.addData("atangent", tan);
 //            telemetry.addLine();
-            telemetry.addLine("------------current draw in milliamps----------");
-            telemetry.addData("lf", lf.getCurrent(CurrentUnit.MILLIAMPS));
-            telemetry.addData("rf", rf.getCurrent(CurrentUnit.MILLIAMPS));
-            telemetry.addData("lb", lb.getCurrent(CurrentUnit.MILLIAMPS));
-            telemetry.addData("rb", rb.getCurrent(CurrentUnit.MILLIAMPS));
-            telemetry.addData("intake", intakeMotor.getCurrent(CurrentUnit.MILLIAMPS));
-            telemetry.addData("launcherMotor1", bot.launcher.motor1.getCurrentMilliamps());
-            telemetry.addData("launcherMotor1", bot.launcher.motor2.getCurrentMilliamps());
 
+
+            double lfCurrent = lf.getCurrent(CurrentUnit.MILLIAMPS);
+            double rfCurrent = rf.getCurrent(CurrentUnit.MILLIAMPS);
+            double lbCurrent = lb.getCurrent(CurrentUnit.MILLIAMPS);
+            double rbCurrent = rb.getCurrent(CurrentUnit.MILLIAMPS);
+            double intakeCurrent = intakeMotor.getCurrent(CurrentUnit.MILLIAMPS);
+            double launcher1Current = bot.launcher.motor1.getCurrentMilliamps();
+            double launcher2Current = bot.launcher.motor2.getCurrentMilliamps();
+            double totalCurrent = lfCurrent+rfCurrent+lbCurrent+rbCurrent+intakeCurrent+launcher1Current+launcher2Current;
+            totalMaxCurrent = Math.max(totalMaxCurrent,totalCurrent);
+            lfMax = Math.max(lfCurrent,lfMax);
+            rfMax = Math.max(rfCurrent,rfMax);
+            lbMax = Math.max(lbCurrent,lbMax);
+            rbMax = Math.max(rbCurrent,rbMax);
+            intakeMax = Math.max(intakeCurrent,intakeMax);
+            launcherMax1 = Math.max(launcher1Current, launcherMax1);
+            launcherMax2 = Math.max(launcher2Current, launcherMax2);
+
+            telemetry.addLine("------------current draw in milliamps----------");
+            telemetry.addData("lf", lfCurrent);
+            telemetry.addData("rf", rfCurrent);
+            telemetry.addData("lb", lbCurrent);
+            telemetry.addData("rb", rbCurrent);
+            telemetry.addData("intake", intakeCurrent);
+            telemetry.addData("launcherMotor1", launcher1Current);
+            telemetry.addData("launcherMotor2", launcher2Current);
+            telemetry.addData("total current",totalCurrent);
+            telemetry.addData("max total current reached", totalMaxCurrent);
+            telemetry.addData("max lf",lfCurrent);
+            telemetry.addData("max rf",rfCurrent);
+            telemetry.addData("max lb",lbCurrent);
+            telemetry.addData("max rb",rbCurrent);
+            telemetry.addData("max intake",intakeCurrent);
+            telemetry.addData("max launcher motor 1",launcher1Current);
+            telemetry.addData("max launcher motor 2",launcher2Current);
 
 //        telemetry.addData("left gate position",intake.getGatePositions()[0]);
 //        telemetry.addData("right gate position",intake.getGatePositions()[1]);
