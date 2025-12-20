@@ -94,11 +94,11 @@ public class Intake {
         intakeMotor.stop();
     }
     public boolean kickBall(){
-        servoKicker.setPosition(0.64);
+        servoKicker.setPosition(0.6);
         if (servoKicker.getPosition() ==0.64){return true;}else return false;
     }
     public boolean unKick(){
-        servoKicker.setPosition(0.2);
+        servoKicker.setPosition(0.14);
         if (servoKicker.getPosition() ==0.2){return true;}else return false;
     }
     /**
