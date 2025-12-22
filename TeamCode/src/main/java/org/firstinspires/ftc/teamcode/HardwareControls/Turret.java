@@ -17,7 +17,7 @@ public class Turret
         turretRot.getEncoder().setCPR(384.5*4.5);//motor is 435, which has a 384.5 ticks per rotation. The belt is belted at a 4.5:1 ratio
         turretRot.getEncoder().scaleToAngleUnit(AngleUnitV2.RADIANS);
         turretRot.reverseMotor();
-        turretRot.setPID(7,0,0);
+        turretRot.setPID(4,0,0);
         zero();
     }
 

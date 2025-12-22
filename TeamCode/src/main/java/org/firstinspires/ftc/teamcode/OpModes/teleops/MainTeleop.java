@@ -49,7 +49,7 @@ public class MainTeleop extends SettingSelectorOpMode
     //double launchAngle = 40;
     boolean headlessDriveOn;
     String intakeButtonName,launchButtonName,aimButtonName;
-    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","testing");}};
+    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","goal");}};
 
     double startWheelAngle;
     //double b = 386.09*targetHeight-vel*vel;
@@ -245,8 +245,8 @@ public class MainTeleop extends SettingSelectorOpMode
     public void loop(){
         follower.update();
 
-//        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, !headlessDriveOn);
-        move(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, !headlessDriveOn);
+//        move(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         Gpad.update();
 
         //I wanted to find a better way, but this seems like the best option for organizing the button inputs
@@ -348,8 +348,9 @@ public class MainTeleop extends SettingSelectorOpMode
             telemetry.addLine();
             telemetry.addData("distance", distance);
             telemetry.addData("velScale", bot.launcher.maxPossibleVel);
-            telemetry.addData("theoretical power", vel / bot.launcher.maxPossibleVel);
-            telemetry.addData("actual power",(velBounds[0]+velBounds[1])/(2*bot.launcher.maxPossibleVel));
+            telemetry.addData("calculated power",(velBounds[0]+velBounds[1])/(2*bot.launcher.maxPossibleVel));
+            telemetry.addData("actual power 1",bot.launcher.motor1.getPower());
+            telemetry.addData("actual power 2",bot.launcher.motor2.getPower());
             telemetry.addData("launchAngle", launchAngle);
             telemetry.addLine();
 
@@ -417,13 +418,13 @@ public class MainTeleop extends SettingSelectorOpMode
             telemetry.addData("launcherMotor2", launcher2Current);
             telemetry.addData("total current",totalCurrent);
             telemetry.addData("max total current reached", totalMaxCurrent);
-            telemetry.addData("max lf",lfCurrent);
-            telemetry.addData("max rf",rfCurrent);
-            telemetry.addData("max lb",lbCurrent);
-            telemetry.addData("max rb",rbCurrent);
-            telemetry.addData("max intake",intakeCurrent);
-            telemetry.addData("max launcher motor 1",launcher1Current);
-            telemetry.addData("max launcher motor 2",launcher2Current);
+            telemetry.addData("max lf",lfMax);
+            telemetry.addData("max rf",rfMax);
+            telemetry.addData("max lb",lbMax);
+            telemetry.addData("max rb",rbMax);
+            telemetry.addData("max intake",intakeMax);
+            telemetry.addData("max launcher motor 1",launcherMax1);
+            telemetry.addData("max launcher motor 2",launcherMax2);
 
 //        telemetry.addData("left gate position",intake.getGatePositions()[0]);
 //        telemetry.addData("right gate position",intake.getGatePositions()[1]);

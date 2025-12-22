@@ -55,6 +55,7 @@ public class Tests extends SelectableOpMode
             s.add("intake Tests", IntakeTests::new);
             s.add("turret math", TurretMathTest::new);
             s.add("hood test",HoodTest::new);
+            s.add("light test",LightTest::new);
         });
     }
 
@@ -176,10 +177,10 @@ class ServoTest extends OpMode
             servo.setPosition(1);//up
         }
         if (gamepad1.a) {
-            servo.setPosition(0.66666);
+            servo.setPosition(0.6);
         }
         if (gamepad1.b) {
-            servo.setPosition(0.33333);
+            servo.setPosition(0.14);
         }
         if (gamepad1.y) {
             servo.setPosition(0);//down
@@ -383,3 +384,42 @@ class HoodTest extends OpMode{
         telemetry.update();
     }
 }
+class LightTest extends OpMode{
+    Servo light1,light2;
+    BetterControllerClass Gpad1;
+    double freq1 = 0,freq2 = 0;
+
+    @Override
+    public void init()
+    {
+        light1 = hardwareMap.get(Servo.class,"light1");
+        light2 = hardwareMap.get(Servo.class,"light2");
+        Gpad1 = new BetterControllerClass(gamepad1);
+    }
+
+    @Override
+    public void loop()
+    {
+        light1.setPosition(freq1);
+        light2.setPosition(freq2);
+        if(gamepad1.dpadUpWasPressed()){
+            freq1++;
+        }
+        if(gamepad1.dpadDownWasPressed()){
+            freq1--;
+        }
+        if(gamepad1.dpadRightWasPressed()){
+            freq2++;
+        }
+        if(gamepad1.dpadLeftWasPressed()){
+            freq2--;
+        }
+        Gpad1.update();
+        telemetry.addData("freq1",freq1);
+        telemetry.addData("freq2",freq2);
+        telemetry.addLine();
+    }
+}
+//class flyWheelTest(){
+//
+//}
