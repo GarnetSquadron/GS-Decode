@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.OpModes.teleops;
 
-import static org.firstinspires.ftc.teamcode.logo.Logo.logo;
 import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.g;
 import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.targetHeight;
+import static org.firstinspires.ftc.teamcode.logo.Logo.logo;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
@@ -271,7 +271,6 @@ public class MainTeleop extends SettingSelectorOpMode
         bot.launcher.maxPossibleVel +=gamepad1.dpadRightWasPressed()?1:(gamepad1.dpadLeftWasPressed()?-1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
         //vel+=gamepad1.aWasPressed()?1:(gamepad1.yWasPressed()?-1:0);
 
-
         //servoPos = gamepad1.left_trigger*20+30;
 
         //==============================OUTPUTS===================================\\
@@ -313,27 +312,35 @@ public class MainTeleop extends SettingSelectorOpMode
         double launchAngle = bot.launcher.aimServo(distance, vel);
         launcherPower = 0.9;
 
+        Bot.LaunchPhase launchPhase = bot.update(velBounds[0],velBounds[1]);
+
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
         if(selections.get("telemetry")=="on"){
-            telemetry.addData("left stick x",gamepad1.left_stick_x);
-            telemetry.addData("left stick y",gamepad1.left_stick_y);
-            telemetry.addData("right stick x",gamepad1.right_stick_x);
 
-            telemetry.addData("launch phase",bot.update(velBounds[0],velBounds[1]));
+
+//            telemetry.addData("left stick x",gamepad1.left_stick_x);
+//            telemetry.addData("left stick y",gamepad1.left_stick_y);
+//            telemetry.addData("right stick x",gamepad1.right_stick_x);
+
+            telemetry.addData("paused",bot.launchHandler.isPausedToSpinUp);
+            if (bot.launchHandler.isPausedToSpinUp){
+                telemetry.addLine("paused");
+            }
+            telemetry.addData("launch phase",launchPhase);
             telemetry.addData("phase duration",bot.launchHandler.getElapsedTime());
             telemetry.addData("gate is open",bot.intake.gateIsOpen());
 
-            telemetry.addData("position", selections.get("position"));
-            telemetry.addData("color", selections.get("color"));
-            telemetry.addData("pos",follower.getPose());
-            telemetry.addData("time squared for 30 deg", 2 * (distance*Math.tan(Math.toRadians(RobotDimensions.Hood.minAngle)) - targetHeight)/g);
-            telemetry.addData("distance",distance);
-            telemetry.addData("height",targetHeight);
-            telemetry.addData("tangent of 30",Math.tan(Math.toRadians(RobotDimensions.Hood.minAngle)));
-            telemetry.addData("inches for 30 deg", distance*Math.tan(Math.toRadians(RobotDimensions.Hood.minAngle)) - targetHeight);
-            telemetry.addData("theoretical minimum possible vel",getMinVelSquared(distance,targetHeight));
+//            telemetry.addData("position", selections.get("position"));
+//            telemetry.addData("color", selections.get("color"));
+//            telemetry.addData("pos",follower.getPose());
+//            telemetry.addData("time squared for 30 deg", 2 * (distance*Math.tan(Math.toRadians(RobotDimensions.Hood.minAngle)) - targetHeight)/g);
+//            telemetry.addData("distance",distance);
+//            telemetry.addData("height",targetHeight);
+//            telemetry.addData("tangent of 30",Math.tan(Math.toRadians(RobotDimensions.Hood.minAngle)));
+//            telemetry.addData("inches for 30 deg", distance*Math.tan(Math.toRadians(RobotDimensions.Hood.minAngle)) - targetHeight);
+//            telemetry.addData("theoretical minimum possible vel",getMinVelSquared(distance,targetHeight));
             telemetry.addLine();
 //            telemetry.addData("launching balls", bot.launchHandler.launchingBalls);
 //            telemetry.addData("releasing them", bot.launchHandler.releaseBalls);
@@ -344,6 +351,7 @@ public class MainTeleop extends SettingSelectorOpMode
             telemetry.addData("real max", Math.sqrt(maxAngleVelSquared));
             telemetry.addData("minimum speed", velBounds[0]);
             telemetry.addData("maximum speed", velBounds[1]);
+            telemetry.addData("average",(velBounds[0]+velBounds[1])/2);
             //telemetry.addData("in range",velBounds[0] < getFlywheelEncoder().getVelocity() && getFlywheelEncoder().getVelocity() > velBounds[1]);
             telemetry.addLine();
             telemetry.addData("distance", distance);
@@ -477,7 +485,9 @@ public class MainTeleop extends SettingSelectorOpMode
 //                telemetry.addLine(logo[i]);
 //            }
         }
+        //telemetry.addData("is auto clear",telemetry.isAutoClear());
         telemetry.update();
+        telemetry.clear();
 
     }
     @Override

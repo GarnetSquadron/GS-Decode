@@ -61,7 +61,7 @@ public class Launcher {
         //if its in the range return true otherwise
 
         //temporary flywheel code, just guesses the velocity.
-        spinUpFlywheel((minVel+maxVel)/(2*maxPossibleVel));
+        spinUpFlywheel((maxVel)/(maxPossibleVel));
 
         return minVel < getInPerSec() && getInPerSec() < maxVel;
     }

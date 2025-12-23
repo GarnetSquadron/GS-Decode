@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
+import org.firstinspires.ftc.teamcode.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 
 import java.util.List;
@@ -56,6 +57,7 @@ public class Tests extends SelectableOpMode
             s.add("turret math", TurretMathTest::new);
             s.add("hood test",HoodTest::new);
             s.add("light test",LightTest::new);
+            s.add("simple telemetry",SimpleTelemetryTest::new);
         });
     }
 
@@ -418,6 +420,27 @@ class LightTest extends OpMode{
         telemetry.addData("freq1",freq1);
         telemetry.addData("freq2",freq2);
         telemetry.addLine();
+    }
+}
+class SimpleTelemetryTest extends OpMode{
+    SimplerTelemetry telemetry;
+    double count = 0;
+    @Override
+    public void init()
+    {
+        this.telemetry = new SimplerTelemetry(super.telemetry);
+    }
+
+    @Override
+    public void loop()
+    {
+        telemetry.addLine("this works?");
+        telemetry.addLine("maybe?");
+        telemetry.addLine(String.valueOf(count));
+        telemetry.addData("count",count);
+        telemetry.update();
+        telemetry.clear();
+        count++;
     }
 }
 //class flyWheelTest(){

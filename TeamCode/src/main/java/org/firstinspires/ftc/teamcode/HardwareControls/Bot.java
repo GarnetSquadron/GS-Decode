@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoController;
 
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
+import org.firstinspires.ftc.teamcode.SimplerTelemetry;
 
 public class Bot
 {
@@ -37,7 +38,9 @@ public class Bot
     public class LaunchHandler
     {
         public LaunchPhase launchPhase = LaunchPhase.NULL;
-        double phaseStartTime;
+        public boolean isPausedToSpinUp = false;
+        public double pauseStartTime = -1;
+        double phaseStartTime = -1;
         public LaunchHandler(){
             phaseStartTime = -1;
         }
@@ -49,25 +52,40 @@ public class Bot
             intake.closeGate();
             phaseStartTime = TIME.getTime();
         }
-        public LaunchPhase update(double minVel,double maxVel){
+        public LaunchPhase update(double minVel, double maxVel){
             boolean velInRange = false;
+            SimplerTelemetry.addLine("start of loop");
+            // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){//once you get to kicking the servo its far gone tbh
                 velInRange = launcher.spinFlyWheelWithinRange(minVel,maxVel);
-//                if(!velInRange){
-//                    launchPhase = LaunchPhase.SPINNING_UP;
-//                    phaseStartTime = TIME.getTime();
-//                    intake.stop();
-//                }
+                SimplerTelemetry.addData("vel in range",velInRange);
+                if(!velInRange){
+                    isPausedToSpinUp = true;
+                    pauseStartTime = TIME.getTime();
+                    intake.stop();
+                }
+                if(isPausedToSpinUp){
+                    SimplerTelemetry.addLine("paused");
+                    intake.stop();
+                    if(launcher.getInPerSec()>(minVel+maxVel)/2){
+                        isPausedToSpinUp = false;
+                        //change the phase start time so that there is the correct time remaining in that phase.
+                        phaseStartTime = TIME.getTime();
+                    }
+                    //if paused, do not carry out the instructions in the switch case
+                    return launchPhase;
+                }
             }
+            SimplerTelemetry.addLine("going to switch case");
             switch (launchPhase){
                 case NULL: {
                     break;
                 }
                 case SPINNING_UP:{
                     intake.stop();
-                    if (velInRange)
+                    if (launcher.getInPerSec()>(minVel+maxVel)/2)//wait for it to be in the right range
                     {
-                        launchPhase = (intake.gateIsOpen()) ?LaunchPhase.RELEASING_BALLS:LaunchPhase.GATE_OPENING;
+                        launchPhase = LaunchPhase.GATE_OPENING;
                         phaseStartTime = TIME.getTime();
                     }
                     break;
@@ -82,7 +100,9 @@ public class Bot
                     break;
                 }
                 case RELEASING_BALLS:{
+                    intake.openGate();
                     intake.setPower(1);
+                    SimplerTelemetry.addLine("releasing balls!");
                     if(getElapsedTime() > 0.4){
                         launchPhase = LaunchPhase.KICKING_SERVO;
                         phaseStartTime = TIME.getTime();
@@ -90,6 +110,7 @@ public class Bot
                     break;
                 }
                 case KICKING_SERVO:{
+                    intake.openGate();
                     intake.kickBall();
                     if(getElapsedTime()>0.5){
                         launchPhase = LaunchPhase.SHUTDOWN;
