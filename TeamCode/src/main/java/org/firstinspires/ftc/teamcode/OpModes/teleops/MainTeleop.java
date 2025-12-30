@@ -257,7 +257,7 @@ public class MainTeleop extends SettingSelectorOpMode
     public void loop(){
         follower.update();
 
-        follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, !headlessDriveOn);
+        follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, !headlessDriveOn);
 //        move(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         Gpad.update();
 
@@ -348,6 +348,9 @@ public class MainTeleop extends SettingSelectorOpMode
             if (bot.launchHandler.isPausedToSpinUp){
                 telemetry.addLine("paused");
             }
+            telemetry.addData("ljoystick y",gamepad1.left_stick_y);
+            telemetry.addData("ljoystick x",gamepad1.left_stick_x);
+            telemetry.addData("rjoystick x",gamepad1.right_stick_x);
             telemetry.addData("launch phase",launchPhase);
             telemetry.addData("phase duration",bot.launchHandler.getElapsedTime());
             telemetry.addData("gate is open",bot.intake.gateIsOpen());

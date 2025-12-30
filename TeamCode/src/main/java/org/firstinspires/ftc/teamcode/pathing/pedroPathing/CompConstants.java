@@ -18,12 +18,12 @@ public class CompConstants
 {
 
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .translationalPIDFCoefficients(new PIDFCoefficients(0, 0, 0, 0))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0, 0))
             .headingPIDFCoefficients(new PIDFCoefficients(2, 0, 0.1, 0))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0))
             .mass(13.245)//29.2lb = 735 moles (of water) = 58.4 moles(Eastern) = 13.245kg
-            .forwardZeroPowerAcceleration(-45.186)
-            .lateralZeroPowerAcceleration(-82.716);
+            .forwardZeroPowerAcceleration(-59.8)
+            .lateralZeroPowerAcceleration(-96.2);
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
@@ -31,12 +31,12 @@ public class CompConstants
             .rightRearMotorName("rb")
             .leftRearMotorName("lb")
             .leftFrontMotorName("lf")
-            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .xVelocity(64.332)
-            .yVelocity(52.612);
+            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .xVelocity(66.6)
+            .yVelocity(49.6);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(4.5)//TODO: Check this and figure out which center it is
