@@ -53,7 +53,7 @@ public class MainTeleop extends SettingSelectorOpMode
     //double launchAngle = 40;
     boolean headlessDriveOn;
     String intakeButtonName,launchButtonName,aimButtonName,stopLaunchName;
-    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","testing");}};
+    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","goal");}};
 
     double startWheelAngle;
     //double b = 386.09*targetHeight-vel*vel;
