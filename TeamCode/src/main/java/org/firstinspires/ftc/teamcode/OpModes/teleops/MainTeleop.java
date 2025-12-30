@@ -20,7 +20,9 @@ import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,9 +34,11 @@ import kotlin.Pair;
 @TeleOp(name = "Main teleop")
 public class MainTeleop extends SettingSelectorOpMode
 {
+    VoltageSensor voltageSensor;
     private static final Logger log = LoggerFactory.getLogger(MainTeleop.class);
     public static Follower follower;
     public DcMotorEx lf,rf,lb,rb,intakeMotor;
+    public double loopStartTime = 0;
     Bot bot;
     double rotation = 0;
     double servoPos = 0.5;
@@ -48,8 +52,8 @@ public class MainTeleop extends SettingSelectorOpMode
     double a = 386.09*386.09/4;
     //double launchAngle = 40;
     boolean headlessDriveOn;
-    String intakeButtonName,launchButtonName,aimButtonName;
-    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","goal");}};
+    String intakeButtonName,launchButtonName,aimButtonName,stopLaunchName;
+    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","testing");}};
 
     double startWheelAngle;
     //double b = 386.09*targetHeight-vel*vel;
@@ -72,11 +76,11 @@ public class MainTeleop extends SettingSelectorOpMode
         return g*(y+Math.sqrt(y*y+x*x));
     }
     public double[] getVelBoundsFromVelSquaredBounds(double minAngleVelSquared,double maxAngleVelSquared){
-        if(maxAngleVelSquared<0){ maxAngleVelSquared = bot.launcher.maxPossibleVel;}
+        //if(maxAngleVelSquared<0){ maxAngleVelSquared = bot.launcher.getMaxPossibleExitVel();}
         if(minAngleVelSquared<0){ minAngleVelSquared = getMinVelSquared(distance,targetHeight);}
         //make sure max isn't too fast
-        double maxAngleVel = Math.min(Math.sqrt(maxAngleVelSquared), bot.launcher.maxPossibleVel);
-        double minAngleVel = Math.min(Math.sqrt(minAngleVelSquared), bot.launcher.maxPossibleVel);
+        double maxAngleVel = (maxAngleVelSquared<0)?bot.launcher.getMaxPossibleExitVel():Math.min(Math.sqrt(maxAngleVelSquared), bot.launcher.getMaxPossibleExitVel());
+        double minAngleVel = Math.min(Math.sqrt(minAngleVelSquared), bot.launcher.getMaxPossibleExitVel());
         if(minAngleVel<maxAngleVel){// return the bounds such that the smaller one is the first one
             return new double[]{minAngleVel,maxAngleVel};
         }else{
@@ -113,6 +117,7 @@ public class MainTeleop extends SettingSelectorOpMode
     public void init()
     {
 
+        voltageSensor = hardwareMap.voltageSensor.get("Control Hub");
         bot = new Bot(hardwareMap);
 
         Gpad = new BetterControllerClass(gamepad1);
@@ -138,6 +143,7 @@ public class MainTeleop extends SettingSelectorOpMode
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intakeMotor");
         //FlywheelMotor1 = hardwareMap.get(DcMotorEx.class, "launcherMotor1");
         //FlywheelMotor2 = hardwareMap.get( DcMotorEx.class, "launcherMotor2");
+
     }
     @Override
     public void init_loop(){
@@ -157,18 +163,21 @@ public class MainTeleop extends SettingSelectorOpMode
                 intakeButtonName = "left_bumper";
                 launchButtonName = "right_trigger";
                 aimButtonName = "right_bumper";
+                stopLaunchName = "left_trigger";
                 headlessDriveOn = false;
                 break;
             case "Nathan":
-                intakeButtonName = "right_bumper";
+                intakeButtonName = "left_bumper";
                 launchButtonName = "right_trigger";
                 aimButtonName = "left_trigger";
+                stopLaunchName = "right_bumper";
                 headlessDriveOn = true;
                 break;
             case "Charlie":
                 intakeButtonName = "right_bumper";
-                launchButtonName = "launch_trigger";
+                launchButtonName = "right_trigger";
                 aimButtonName = "left_trigger";
+                stopLaunchName = "left_bumper";
                 headlessDriveOn = true;
                 break;
             case "DJ":
@@ -176,12 +185,14 @@ public class MainTeleop extends SettingSelectorOpMode
                 //idk I think it would be cool to put the aiming and the launching on one hand
                 launchButtonName = "right_trigger";
                 aimButtonName = "right_bumper";
+                stopLaunchName = "left_trigger";
                 headlessDriveOn = true;
                 break;
             default:
                 intakeButtonName = "right_bumper";
                 launchButtonName = "left_bumper";
                 aimButtonName = "left_trigger";
+                stopLaunchName = "right_trigger";
                 headlessDriveOn = false;
         }
 
@@ -200,7 +211,8 @@ public class MainTeleop extends SettingSelectorOpMode
                         follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
                         break;
                     case "testing":
-                        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], targetGoalPos[1]-70, -Math.PI/2));
+//                        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], targetGoalPos[1]-70, -Math.PI/2));
+                        follower.setStartingPose(new Pose(81, 104, Math.PI));
                         break;
                 }
                 break;
@@ -251,25 +263,20 @@ public class MainTeleop extends SettingSelectorOpMode
 
         //I wanted to find a better way, but this seems like the best option for organizing the button inputs
         //==============================INPUTS====================================\\
-        //boolean kickInput = Gpad.getCurrentValue("right_trigger");
         boolean intakeToggle = Gpad.getCurrentValue(intakeButtonName);
-//        boolean launcherToggle = Gpad.getToggleValue("left_bumper");
-        boolean spinUpFlywheelInput = Gpad.getCurrentValue(launchButtonName)||gamepad1.left_bumper;
+        boolean spinUpFlywheelInput = Gpad.getCurrentValue(launchButtonName);
         boolean releaseTheBallsInput = Gpad.getFallingEdge(launchButtonName);
+        boolean stopTheBallsInput = Gpad.getRisingEdge(stopLaunchName);
         boolean turretZeroInput = gamepad1.x;
         boolean autoAimOn = Gpad.getCurrentValue(aimButtonName);
-        //boolean openGateInput = gamepad1.a;
-        //boolean extraSpinUpInput = Gpad.getCurrentValue("left_trigger");
-        //boolean autoHood = Gpad.getCurrentValue("left_trigger");
 
         distance=Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
-        //distance +=gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0);
         double minAngleVelSquared = getVelSquared(distance, Math.toRadians(RobotDimensions.Hood.minAngle));
         double maxAngleVelSquared = getVelSquared(distance, Math.toRadians(RobotDimensions.Hood.maxAngle));
         double[] velBounds = getVelBoundsFromVelSquaredBounds(minAngleVelSquared,maxAngleVelSquared);
-        //inRange = velSquared>=0;
-        bot.launcher.maxPossibleVel +=gamepad1.dpadRightWasPressed()?1:(gamepad1.dpadLeftWasPressed()?-1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
-        //vel+=gamepad1.aWasPressed()?1:(gamepad1.yWasPressed()?-1:0);
+        bot.launcher.flywheelToBallSpeedRatio +=gamepad1.dpadRightWasPressed()?0.1:(gamepad1.dpadLeftWasPressed()?-0.1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
+        bot.launcher.maxPossibleAngVel +=gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
+        bot.launcher.ratio+=gamepad1.aWasPressed()?0.1:(gamepad1.yWasPressed()?-0.1:0);
 
         //servoPos = gamepad1.left_trigger*20+30;
 
@@ -277,13 +284,22 @@ public class MainTeleop extends SettingSelectorOpMode
 
         //welcome to the now slightly contained mess
 
-        if(releaseTheBallsInput){
-            bot.launchHandler.initLaunch();
-        }
+        if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
+            if (releaseTheBallsInput)
+            {
+                bot.launchHandler.initLaunch();
+            }
 
-        if(spinUpFlywheelInput){
-            telemetry.addData("speed", bot.launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]));
-            //bot.intake.closeGate();
+            if (spinUpFlywheelInput)
+            {
+                telemetry.addData("speed", bot.launcher.spinFlyWheelWithinRange(velBounds[0], velBounds[1]));
+                //bot.intake.closeGate();
+            }
+        }
+        else {
+            if(stopTheBallsInput){
+                bot.launchHandler.stopLaunch();
+            }
         }
 
         if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
@@ -306,7 +322,7 @@ public class MainTeleop extends SettingSelectorOpMode
         }
 
         // this should be the initial speed of the ball as exits the launcher
-        vel = bot.launcher.getInPerSec();
+        vel = bot.launcher.getExitVel();
 
         //we get the servo position based on the velocity we see, not the velocity we want
         double launchAngle = bot.launcher.aimServo(distance, vel);
@@ -323,6 +339,10 @@ public class MainTeleop extends SettingSelectorOpMode
 //            telemetry.addData("left stick x",gamepad1.left_stick_x);
 //            telemetry.addData("left stick y",gamepad1.left_stick_y);
 //            telemetry.addData("right stick x",gamepad1.right_stick_x);
+            telemetry.addData("voltage sensor",voltageSensor.getVoltage());
+            telemetry.addData("loop time",TIME.getTime()-loopStartTime);
+            loopStartTime = TIME.getTime();
+            telemetry.addLine();
 
             telemetry.addData("paused",bot.launchHandler.isPausedToSpinUp);
             if (bot.launchHandler.isPausedToSpinUp){
@@ -331,6 +351,14 @@ public class MainTeleop extends SettingSelectorOpMode
             telemetry.addData("launch phase",launchPhase);
             telemetry.addData("phase duration",bot.launchHandler.getElapsedTime());
             telemetry.addData("gate is open",bot.intake.gateIsOpen());
+            telemetry.addData("radPerSec to VelRatio",bot.launcher.flywheelToBallSpeedRatio);
+            telemetry.addLine();
+            telemetry.addData("target ratio",bot.launcher.ratio);
+            telemetry.addData("target speed",bot.targetSpeed);
+            telemetry.addData("thing it should be",bot.launcher.betweenVel(velBounds[0],velBounds[1]));
+            telemetry.addData("actual speed", bot.launcher.getExitVel());
+            telemetry.addData("target flywheel speed",bot.targetSpeed*bot.launcher.flywheelToBallSpeedRatio);
+            telemetry.addData("target power",bot.targetSpeed/bot.launcher.getMaxPossibleExitVel());
 
 //            telemetry.addData("position", selections.get("position"));
 //            telemetry.addData("color", selections.get("color"));
@@ -355,8 +383,9 @@ public class MainTeleop extends SettingSelectorOpMode
             //telemetry.addData("in range",velBounds[0] < getFlywheelEncoder().getVelocity() && getFlywheelEncoder().getVelocity() > velBounds[1]);
             telemetry.addLine();
             telemetry.addData("distance", distance);
-            telemetry.addData("velScale", bot.launcher.maxPossibleVel);
-            telemetry.addData("calculated power",(velBounds[0]+velBounds[1])/(2*bot.launcher.maxPossibleVel));
+            telemetry.addData("in/sec scale", bot.launcher.getMaxPossibleExitVel());
+            telemetry.addData("rad/sec scale", bot.launcher.maxPossibleAngVel);
+            telemetry.addData("calculated power",(velBounds[0]+velBounds[1])/(2*bot.launcher.getMaxPossibleExitVel()));
             telemetry.addData("actual power 1",bot.launcher.motor1.getPower());
             telemetry.addData("actual power 2",bot.launcher.motor2.getPower());
             telemetry.addData("launchAngle", launchAngle);
@@ -369,8 +398,8 @@ public class MainTeleop extends SettingSelectorOpMode
             {
                 telemetry.addData("angle " + String.valueOf(i), Math.toDegrees(angles[i]));
             }
-            telemetry.addData("targetGoalX", targetGoalPos[0]);
-            telemetry.addData("targetGoalY", targetGoalPos[1]);
+//            telemetry.addData("targetGoalX", targetGoalPos[0]);
+//            telemetry.addData("targetGoalY", targetGoalPos[1]);
 //
             double deltaX = targetGoalPos[0] - follower.getPose().getX();
             double deltaY = targetGoalPos[1] - follower.getPose().getY();
