@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.HardwareControls;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
@@ -10,17 +11,28 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
 public class Launcher {
+    VoltageSensor voltageSensor;
     double maxCurrent = 0;
+    public double ratio = 0.5;
 
-    double timeWhenFlywheel;
-    //this variable is called angle servo because it is the position of the servo that launches the ball at an angle
+    //this variable is called angle servo because it is the servo that sets the angle of the ball
     /// TODO give better name
     Servo angleServo;
     public RAWMOTOR motor1;
     public RAWMOTOR motor2;
-    double radPerSecToVelRatio = 1;
+    /**
+     *  = (flywheel angular velocity in rad/sec)/(ball exit velocity in inches/sec).
+     *  so basically its in rad/inch
+     */
+    public double flywheelToBallSpeedRatio = 1;
     Turret turret;
-    public double maxPossibleVel = 340;
+    public double maxPossibleAngVel = 350;
+    /**
+     * the theoretical maximum velocity a ball could leave the launcher at
+     */
+    public double getMaxPossibleExitVel() {
+        return (maxPossibleAngVel)/flywheelToBallSpeedRatio;
+    }
     double power = 0;
 
     public double getCurrent(){
@@ -31,8 +43,9 @@ public class Launcher {
         setAngle(angle);
         return angle;
     }
-    public double getInPerSec(){
-        return getFlywheelEncoder().getVelocity()/radPerSecToVelRatio;
+    public double getExitVel(){
+        //getVelocity gets the rad/sec, so we divide that by rad/sec and then multiply by in/sec to get the inches per sec
+        return getFlywheelEncoder().getVelocity()/ flywheelToBallSpeedRatio;
     }
     public double[] aimAtGoal(double[] goalPos, double[] botPos, double vel,double heading) {
         double distance =  Math.sqrt(Math.pow(goalPos[0] - botPos[0],2)+Math.pow(goalPos[1]-botPos[1],2));
@@ -54,16 +67,19 @@ public class Launcher {
     }
     public double spinUpFlywheel(double power){
         setPower(-power);
-        return getInPerSec();
+        return getExitVel();
+    }
+    public double betweenVel(double minVel, double maxVel){
+        return minVel*(1-ratio)+maxVel*ratio;
     }
     public boolean spinFlyWheelWithinRange(double minVel,double maxVel){
         //spin up the flywheel to get it within the provided range
         //if its in the range return true otherwise
 
         //temporary flywheel code, just guesses the velocity.
-        spinUpFlywheel((maxVel)/(maxPossibleVel));
+        spinUpFlywheel(betweenVel(minVel,maxVel)/(getMaxPossibleExitVel()));//minVel/(2*max)+0.5
 
-        return minVel < getInPerSec() && getInPerSec() < maxVel;
+        return minVel < getExitVel() && getExitVel() < maxVel;
     }
     public double getHoodPos(){
         return angleServo.getPosition();
@@ -96,6 +112,8 @@ public class Launcher {
 //    }
 
     public Launcher(HardwareMap hardwareMap){
+        voltageSensor = hardwareMap.voltageSensor.get("Control Hub");
+
         angleServo = hardwareMap.get(Servo.class, "angleServo");
         motor1 = new RAWMOTOR(hardwareMap, "launcherMotor1");
         motor2 = new RAWMOTOR(hardwareMap, "launcherMotor2");

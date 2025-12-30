@@ -13,6 +13,7 @@ public class Bot
     public Turret turret;
     public LaunchHandler launchHandler;
     public ServoController servoController;
+    public double targetSpeed = 0;
     public Bot(HardwareMap hardwareMap){
         launcher = new Launcher(hardwareMap);
         intake = new Intake(hardwareMap);
@@ -52,7 +53,11 @@ public class Bot
             intake.closeGate();
             phaseStartTime = TIME.getTime();
         }
+        public void stopLaunch(){
+            launchPhase = LaunchPhase.SHUTDOWN;
+        }
         public LaunchPhase update(double minVel, double maxVel){
+            targetSpeed = launcher.betweenVel(minVel,maxVel);
             boolean velInRange = false;
             SimplerTelemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
@@ -67,7 +72,7 @@ public class Bot
                 if(isPausedToSpinUp){
                     SimplerTelemetry.addLine("paused");
                     intake.stop();
-                    if(launcher.getInPerSec()>(minVel+maxVel)/2){
+                    if(launcher.getExitVel()>targetSpeed){
                         isPausedToSpinUp = false;
                         //change the phase start time so that there is the correct time remaining in that phase.
                         phaseStartTime = TIME.getTime();
@@ -83,7 +88,7 @@ public class Bot
                 }
                 case SPINNING_UP:{
                     intake.stop();
-                    if (launcher.getInPerSec()>(minVel+maxVel)/2)//wait for it to be in the right range
+                    if (launcher.getExitVel()>targetSpeed)//wait for it to be in the right range
                     {
                         launchPhase = LaunchPhase.GATE_OPENING;
                         phaseStartTime = TIME.getTime();
