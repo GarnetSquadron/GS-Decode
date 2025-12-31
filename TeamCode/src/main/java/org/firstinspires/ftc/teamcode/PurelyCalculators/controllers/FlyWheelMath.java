@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.PurelyCalculators.controllers;
 
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 
-public class PidFliywheel {
+public class FlyWheelMath
+{
     static double inc = 0;
     public static double[] getPid(double velocity, double target,double scaleaz, double scalebz){
         double diff = target-velocity;

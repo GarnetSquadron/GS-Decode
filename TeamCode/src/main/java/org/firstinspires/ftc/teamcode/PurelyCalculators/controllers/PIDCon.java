@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.PurelyCalculators.controllers;
 
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.SmoothVelocityEncoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.SmoothVelocityEncoder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ValueAtTimeStamp;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 

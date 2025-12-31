@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses;
+package org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 

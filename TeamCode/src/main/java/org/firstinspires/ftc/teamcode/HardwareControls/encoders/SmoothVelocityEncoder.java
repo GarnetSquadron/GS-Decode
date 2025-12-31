@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders;
+package org.firstinspires.ftc.teamcode.HardwareControls.encoders;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 

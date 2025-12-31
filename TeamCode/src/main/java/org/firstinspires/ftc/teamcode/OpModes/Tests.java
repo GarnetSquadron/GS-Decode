@@ -20,8 +20,9 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Turret;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
+import org.firstinspires.ftc.teamcode.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 
 import java.util.List;
@@ -55,6 +56,8 @@ public class Tests extends SelectableOpMode
             s.add("intake Tests", IntakeTests::new);
             s.add("turret math", TurretMathTest::new);
             s.add("hood test",HoodTest::new);
+            s.add("light test",LightTest::new);
+            s.add("simple telemetry",SimpleTelemetryTest::new);
         });
     }
 
@@ -176,10 +179,10 @@ class ServoTest extends OpMode
             servo.setPosition(1);//up
         }
         if (gamepad1.a) {
-            servo.setPosition(0.66666);
+            servo.setPosition(0.6);
         }
         if (gamepad1.b) {
-            servo.setPosition(0.33333);
+            servo.setPosition(0.14);
         }
         if (gamepad1.y) {
             servo.setPosition(0);//down
@@ -383,3 +386,63 @@ class HoodTest extends OpMode{
         telemetry.update();
     }
 }
+class LightTest extends OpMode{
+    Servo light1,light2;
+    BetterControllerClass Gpad1;
+    double freq1 = 0,freq2 = 0;
+
+    @Override
+    public void init()
+    {
+        light1 = hardwareMap.get(Servo.class,"light1");
+        light2 = hardwareMap.get(Servo.class,"light2");
+        Gpad1 = new BetterControllerClass(gamepad1);
+    }
+
+    @Override
+    public void loop()
+    {
+        light1.setPosition(freq1);
+        light2.setPosition(freq2);
+        if(gamepad1.dpadUpWasPressed()){
+            freq1++;
+        }
+        if(gamepad1.dpadDownWasPressed()){
+            freq1--;
+        }
+        if(gamepad1.dpadRightWasPressed()){
+            freq2++;
+        }
+        if(gamepad1.dpadLeftWasPressed()){
+            freq2--;
+        }
+        Gpad1.update();
+        telemetry.addData("freq1",freq1);
+        telemetry.addData("freq2",freq2);
+        telemetry.addLine();
+    }
+}
+class SimpleTelemetryTest extends OpMode{
+    SimplerTelemetry telemetry;
+    double count = 0;
+    @Override
+    public void init()
+    {
+        this.telemetry = new SimplerTelemetry(super.telemetry);
+    }
+
+    @Override
+    public void loop()
+    {
+        telemetry.addLine("this works?");
+        telemetry.addLine("maybe?");
+        telemetry.addLine(String.valueOf(count));
+        telemetry.addData("count",count);
+        telemetry.update();
+        telemetry.clear();
+        count++;
+    }
+}
+//class flyWheelTest(){
+//
+//}

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.HardwareControls;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.Encoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.MOTOR;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
@@ -17,7 +17,7 @@ public class Turret
         turretRot.getEncoder().setCPR(384.5*4.5);//motor is 435, which has a 384.5 ticks per rotation. The belt is belted at a 4.5:1 ratio
         turretRot.getEncoder().scaleToAngleUnit(AngleUnitV2.RADIANS);
         turretRot.reverseMotor();
-        turretRot.setPID(7,0,0);
+        turretRot.setPID(4,0,0);
         zero();
     }
 
