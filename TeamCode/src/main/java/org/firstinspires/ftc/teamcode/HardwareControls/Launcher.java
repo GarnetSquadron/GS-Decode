@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
 public class Launcher {
@@ -24,13 +24,13 @@ public class Launcher {
      *  = (flywheel angular velocity in rad/sec)/(ball exit velocity in inches/sec).
      *  so basically its in rad/inch
      */
-    public double flywheelToBallSpeedRatio = 1;
+    public static double flywheelToBallSpeedRatio = 1;
     Turret turret;
-    public double maxPossibleAngVel = 350;
+    public static double maxPossibleAngVel = 350;
     /**
      * the theoretical maximum velocity a ball could leave the launcher at
      */
-    public double getMaxPossibleExitVel() {
+    public static double getMaxPossibleExitVel() {
         return (maxPossibleAngVel)/flywheelToBallSpeedRatio;
     }
     double power = 0;
@@ -39,7 +39,7 @@ public class Launcher {
         return (motor1.getCurrentMilliamps()+motor2.getCurrentMilliamps())/2;
     }
     public double aimServo(double distance,double vel){
-        double angle = AngleFinder.getOptimumAngle(vel,distance);
+        double angle = TrajectoryMath.getOptimumAngle(vel,distance);
         setAngle(angle);
         return angle;
     }

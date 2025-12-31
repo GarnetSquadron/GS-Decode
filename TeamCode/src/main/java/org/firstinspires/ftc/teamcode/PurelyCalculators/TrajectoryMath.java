@@ -2,16 +2,19 @@ package org.firstinspires.ftc.teamcode.PurelyCalculators;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
+import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 
 import java.util.Arrays;
 
-public class AngleFinder
+public class TrajectoryMath
 {
     /**
      * needs to be somewhere between minGoalHeight and maxGoalHeight, so why not the average
      */
     final static public double targetHeight = (FieldDimensions.maxGoalHeight+FieldDimensions.minGoalHeight)/2.0-RobotDimensions.Hood.approxBallExitHeight;//The height difference is the height of the goal-the height of the ball as it exits
     public final static double g = 386.09;//9.8 m/s^2=386.09in/s
+
+    static double a = 386.09*386.09/4;
 
     /**
      * calculate both the angles (in radians of course)
@@ -64,5 +67,26 @@ public class AngleFinder
      */
     static double getAngleFromTime(double t,double distance){
         return Math.atan((g/2*t*t+targetHeight)/(distance));
+    }
+
+    public static double getVelSquared(double dist, double launchAngle) {
+        double c = dist*dist+targetHeight*targetHeight;
+        double tSquare = 2 * (dist*Math.tan(launchAngle)- targetHeight)/g;
+        return a*tSquare+c/tSquare+g*targetHeight;
+    };
+    public static double getMinVelSquared(double x,double y){
+        return g*(y+Math.sqrt(y*y+x*x));
+    }
+    public static double[] getVelBoundsFromVelSquaredBounds(double minAngleVelSquared, double maxAngleVelSquared, double distance){
+        //if(maxAngleVelSquared<0){ maxAngleVelSquared = bot.launcher.getMaxPossibleExitVel();}
+        if(minAngleVelSquared<0){ minAngleVelSquared = getMinVelSquared(distance,targetHeight);}
+        //make sure max isn't too fast
+        double maxAngleVel = (maxAngleVelSquared<0)? Launcher.getMaxPossibleExitVel():Math.min(Math.sqrt(maxAngleVelSquared), Launcher.getMaxPossibleExitVel());
+        double minAngleVel = Math.min(Math.sqrt(minAngleVelSquared), Launcher.getMaxPossibleExitVel());
+        if(minAngleVel<maxAngleVel){// return the bounds such that the smaller one is the first one
+            return new double[]{minAngleVel,maxAngleVel};
+        }else{
+            return new double[]{maxAngleVel,minAngleVel};
+        }
     }
 }
