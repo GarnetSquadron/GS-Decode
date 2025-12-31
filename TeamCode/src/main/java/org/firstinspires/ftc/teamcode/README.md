@@ -1,15 +1,17 @@
 hi
 
-The first thing you want to do to learn how to program the robot is to learn java. I have faith that you can find some decent tutorials on youtube. Specifically learn how classes work and what extension and abstract classes are, and what overriding a function is. It may also help to look into annotations, as they are used to add opmodes to the driver station.
+The first thing you want to do to learn how to program the robot is to learn java. I have faith that you can find some decent tutorials on youtube. Specifically learn how classes work and what extension and abstract classes are, and what overriding a function is. It may also help to look into annotations, as they are used to add opmodes to the driver station. It wont be hard to just google some videos. or ask chatgpt. 
 
 
 fine heres some links:
 
-https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.youtube.com/watch%3Fv%3D23HFxAPyJ9U&ved=2ahUKEwjIoOCcu-aRAxU1kWoFHdHlGD8QkPEHegQIFxAB&usg=AOvVaw0g7IX4lTG1IAkYaGpbED-N
+https://www.youtube.com/watch?v=23HFxAPyJ9U
 
-https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.youtube.com/watch%3Fv%3DIUqKuGNasdM&ved=2ahUKEwiSk5WVveaRAxUIk2oFHdBrHIkQtwJ6BAgaEAI&usg=AOvVaw07E-iPRnFyTA-Vh8jgF4JR
+https://www.youtube.com/watch?v=IUqKuGNasdM
 
-https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.youtube.com/watch%3Fv%3DeIrMbAQSU34&ved=2ahUKEwjIoOCcu-aRAxU1kWoFHdHlGD8QkPEHegQIGhAB&usg=AOvVaw0YCsoDtTnlA5yAHU8fmUPI
+https://www.youtube.com/watch?v=eIrMbAQSU34
+
+https://www.youtube.com/watch?v=r3GGV2TG_vw&list=PL_c9BZzLwBRKIMP_xNTJxi9lIgQhE51rF
 
 https://youtu.be/dQw4w9WgXcQ
 
