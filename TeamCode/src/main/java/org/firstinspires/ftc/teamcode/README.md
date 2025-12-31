@@ -9,6 +9,8 @@ https://www.youtube.com/watch?v=23HFxAPyJ9U
 
 https://www.youtube.com/watch?v=IUqKuGNasdM
 
+https://www.youtube.com/watch?v=HvPlEJ3LHgE
+
 https://www.youtube.com/watch?v=4TO8b8P9H7s
 
 https://www.youtube.com/watch?v=eIrMbAQSU34
@@ -42,7 +44,9 @@ _feel free to add stuff if you find more_
 
 
 + (at least for the logitech controllers) gamepad joystick values are reversed from what you would think, if you push the stick forward you get a negative number and if you push the stick right you get a negative number
-+ the default sdk Telemetry class is very confusing. Telemetry.clearAll() doesn't seem to clear everything, telemetry.update doesn't seem to actually update anything unless you add `telemetry.addData()` lines. Check out[SimplerTelemetry.java](SimplerTelemetry.java) and see more details about how it works in [list of important classes](https://github.com/GarnetSquadron/GS-Decode/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/README.md#here-are-some-of-the-most-important-classes-in-this-code)
++ the default sdk Telemetry class is very confusing. Telemetry.clearAll() doesn't seem to clear everything, telemetry.update doesn't seem to actually update anything unless you add `telemetry.addData()` lines. Check out [SimplerTelemetry.java](SimplerTelemetry.java) and see more details about how it works in [list of important classes](https://github.com/GarnetSquadron/GS-Decode/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/README.md#here-are-some-of-the-most-important-classes-in-this-code)
++ 
+
 _there are more I just dont feel like trying to remember them rn_
 
 
@@ -52,6 +56,9 @@ _there are more I just dont feel like trying to remember them rn_
 Holds all imports and objects used to import methods. Basically, when you are making a
 new opmode, instead of creating a new instance of each object you need, simply create
 an instance of this and
+
+Telemetry
+This is the class that allows you to display data onto the driver station. The OpMode class contains an instance of it(called `telemetry`), and so when you write a new opmode its basically like `system.out`. So the ftc version of `system.out.println()` is `telemetry.addLine()`, but then you also need to add the line `telemetry.update()`. It also has a method called `telemetry.addData()`. This is used to easily display any non-string thing. it takes a String  and an Object. 
 
 [SimplerTelemetry.java](SimplerTelemetry.java)
 I got really fed up with the built in telemetry because some of its functions are counter intuitive. So I made this class, which you can use instead. You initialize it with new SimplerTelemetry(telemetry) The really nice thing about this class is that it stores the output in a static string, which means that you can add output to the telemetry in any method that doesn't have access to the specific instance that 
