@@ -41,8 +41,8 @@ _feel free to add stuff if you find more_
 
 
 
-- (at least for the logitech controllers) gamepad joystick values are reversed from what you would think, if you push the stick forward you get a negative number and if you push the stick right you get a negative number
-- 
++ (at least for the logitech controllers) gamepad joystick values are reversed from what you would think, if you push the stick forward you get a negative number and if you push the stick right you get a negative number
++ the default sdk Telemetry class is very confusing. Telemetry.clearAll() doesn't seem to clear everything, telemetry.update doesn't seem to actually update anything unless you add `telemetry.addData()` lines. Check out[SimplerTelemetry.java](SimplerTelemetry.java) and see more details about how it works in [list of important classes](https://github.com/GarnetSquadron/GS-Decode/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/README.md#here-are-some-of-the-most-important-classes-in-this-code)
 _there are more I just dont feel like trying to remember them rn_
 
 
@@ -53,22 +53,8 @@ Holds all imports and objects used to import methods. Basically, when you are ma
 new opmode, instead of creating a new instance of each object you need, simply create
 an instance of this and
 
-[TeleOpActionScheduler](randomStuffWeArentUsingATM/OpmodeActionSceduling/TeleOpActionScheduler.java)
-Adds action supports for non autonomous
-
-[TeleOpAction](randomStuffWeArentUsingATM/OpmodeActionSceduling/TeleOpAction.java)
-Used by teleop action scheduler, hotels information
-
-[MotorEx](com/arcrobotics/ftclib/hardware/motors/MotorEx.java)
-ftc lib’s motor class, used only in mecanum drive
-
-[PinpointLocalizer](pathing/roadrunner/localizers/PinpointLocalizer.java)
-a class that roadrunnerifies the pinpoint
-Headless Drive Command:
-Takes mecanum drive as a constructor input, headless drive code
-
-[ActionServo.java](hardwareClasses%2FActionServo.java)
-Action compatible servo class(probably unneccesary in most cases but idk)
+[SimplerTelemetry.java](SimplerTelemetry.java)
+I got really fed up with the built in telemetry because some of its functions are counter intuitive. So I made this class, which you can use instead. You initialize it with new SimplerTelemetry(telemetry) The really nice thing about this class is that it stores the output in a static string, which means that you can add output to the telemetry in any method that doesn't have access to the specific instance that 
 
 CRServo:
 continuous rotation servo
@@ -78,15 +64,6 @@ servo class provided by sdk
 ServoImplEx:
 servo class that can disable the servo
 
-REMOVE EXTENDS SUBSYSTEM BASE
-
-DELETE REGULAR DRIVE
-
-Motor:
-SDK Motor class
-MOTOR:
-Custom motor class with controller support
-
 [RAWMOTOR.java](HardwareControls/hardwareClasses/motors/RAWMOTOR.java)
 Basic custom motor class with max power and encoder support
 [MOTOR.java](HardwareControls/hardwareClasses/motors/MOTOR.java)
@@ -94,6 +71,9 @@ This class extends rawmotor and adds positional control using a pid.
 
 [UpdatableMOTOR.java](HardwareControls/hardwareClasses/motors/UpdatableMOTOR.java)
 Uses UpdatePower in a loop to continuously update power
+
+DcMotorEx:
+if you want you can use this instead of the motor class I made, it has worse features though
 
 ### USEFUL LINKS:
 
