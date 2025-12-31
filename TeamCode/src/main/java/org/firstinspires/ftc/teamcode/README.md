@@ -9,6 +9,8 @@ https://www.youtube.com/watch?v=23HFxAPyJ9U
 
 https://www.youtube.com/watch?v=IUqKuGNasdM
 
+https://www.youtube.com/watch?v=4TO8b8P9H7s
+
 https://www.youtube.com/watch?v=eIrMbAQSU34
 
 https://www.youtube.com/watch?v=r3GGV2TG_vw&list=PL_c9BZzLwBRKIMP_xNTJxi9lIgQhE51rF
@@ -46,13 +48,10 @@ _there are more I just dont feel like trying to remember them rn_
 
 ### here are some of the most important classes in this code
 
-[Bot](SeasonSpecific/Bot.java)
+[Bot.java](HardwareControls/Bot.java)
 Holds all imports and objects used to import methods. Basically, when you are making a
 new opmode, instead of creating a new instance of each object you need, simply create
 an instance of this and
-
-[MecanumDrive](pathing/roadrunner/drives/MecanumDrive.java)
-the mecanum drive code, implements roadrunner
 
 [TeleOpActionScheduler](randomStuffWeArentUsingATM/OpmodeActionSceduling/TeleOpActionScheduler.java)
 Adds action supports for non autonomous
@@ -88,20 +87,13 @@ SDK Motor class
 MOTOR:
 Custom motor class with controller support
 
-[RAWMOTOR.java](hardwareClasses%2Fmotors%2FRAWMOTOR.java)
+[RAWMOTOR.java](HardwareControls/hardwareClasses/motors/RAWMOTOR.java)
 Basic custom motor class with max power and encoder support
+[MOTOR.java](HardwareControls/hardwareClasses/motors/MOTOR.java)
+This class extends rawmotor and adds positional control using a pid. 
 
-[UpdatableMOTOR.java](hardwareClasses%2Fmotors%2FUpdatableMOTOR.java)
+[UpdatableMOTOR.java](HardwareControls/hardwareClasses/motors/UpdatableMOTOR.java)
 Uses UpdatePower in a loop to continuously update power
-
-[ACTIONMOTOR.java](hardwareClasses%2Fmotors%2FACTIONMOTOR.java)
-a motor class with actions
-
-[LimitedMotor.java](hardwareClasses%2Fmotors%2FLimitedMotor.java)
-A motor with limited position
-
-[DistanceSensorMotor.java](hardwareClasses%2Fmotors%2FDistanceSensorMotor.java)
-Limited motor with distance sensor report
 
 ### USEFUL LINKS:
 
@@ -110,6 +102,13 @@ intro to ftc sdk:
 https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/overview/index.html
 
 https://ftc-docs.firstinspires.org/en/latest/programming_resources/android_studio_java/Android-Studio-Tutorial.html
+
+pedro docs:
+https://pedropathing.com/docs/pathing
+
+visualizer: https://visualizer.pedropathing.com/
+
+
 
 roadrunner docs:
 
