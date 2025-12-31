@@ -53,7 +53,7 @@ public class MainTeleop extends SettingSelectorOpMode
     //double launchAngle = 40;
     boolean headlessDriveOn;
     String intakeButtonName,launchButtonName,aimButtonName,stopLaunchName;
-    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","goal");}};
+    static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","tiny triangle");}};
 
     double startWheelAngle;
     //double b = 386.09*targetHeight-vel*vel;
@@ -167,10 +167,10 @@ public class MainTeleop extends SettingSelectorOpMode
                 headlessDriveOn = false;
                 break;
             case "Nathan":
-                intakeButtonName = "left_bumper";
+                intakeButtonName = "right_bumper";
                 launchButtonName = "right_trigger";
                 aimButtonName = "left_trigger";
-                stopLaunchName = "right_bumper";
+                stopLaunchName = "left_bumper";
                 headlessDriveOn = true;
                 break;
             case "Charlie":
@@ -329,6 +329,12 @@ public class MainTeleop extends SettingSelectorOpMode
         launcherPower = 0.9;
 
         Bot.LaunchPhase launchPhase = bot.update(velBounds[0],velBounds[1]);
+
+        if(distance>100){
+            bot.launcher.flywheelToBallSpeedRatio = 1.2;
+        }else{
+            bot.launcher.flywheelToBallSpeedRatio = 1;
+        }
 
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
