@@ -8,7 +8,6 @@ public class PidFliywheel {
         double diff = target-velocity;
         double scale=0;
         double isCloseToTarget = 0;
-        // target 5.5 velocity 5.7
         if (velocity <target+0.1 & velocity>target-0.1){isCloseToTarget=1;}
         double[] ret = new double[3];
         ret[2] = isCloseToTarget;
