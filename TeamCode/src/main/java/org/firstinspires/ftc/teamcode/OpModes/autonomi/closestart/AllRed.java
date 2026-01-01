@@ -106,8 +106,10 @@ public class AllRed extends LinearOpMode
         waitForStart();
         follower.followPath(ShootPreload);
 
-        while(follower.isBusy()){
-            follower.update();
+//        while(follower.isBusy()){
+//            follower.update();
+//            follower.followPath(ShootPreload);
+
 
 //            if(follower.getChainIndex()==1){
 //                follower.pausePathFollowing();
