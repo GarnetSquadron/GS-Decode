@@ -146,8 +146,8 @@ public class AllRed extends LinearOpMode
 //                launcher.setPower(0.7);
 //            }
 
-            telemetry.addData("path", follower.getChainIndex());
-            telemetry.update();
-        }
+//            telemetry.addData("path", follower.getChainIndex());
+//            telemetry.update();
+//        }
     }
 }
