@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
@@ -25,13 +26,37 @@ public class Launcher {
      *  so basically its in rad/inch
      */
     public static double flywheelToBallSpeedRatio = 1;
+
+    /**
+     * at 280 ball speed its 300
+     * @param flywheelSpeed
+     * @return
+     */
+    public static double getBallSpeedFromFlywheelSpeed(double flywheelSpeed){
+        return flywheelSpeed/flywheelToBallSpeedRatio;
+    }
+    public static
     Turret turret;
-    public static double maxPossibleAngVel = 350;
+    /**
+     * 13.00 battery:
+     * 1.0: 400
+     * 0.9: 365
+     *
+     * 12.55 battery:
+     * 1.0: 370
+     * 0.9: 335
+     * 0.8: 300
+     * 0.7: 260
+     * 0.6: 215
+     * 0.5: 170
+     * 0.4: 130
+     */
+    public static double maxPossibleAngVel = 300;
     /**
      * the theoretical maximum velocity a ball could leave the launcher at
      */
     public static double getMaxPossibleExitVel() {
-        return (maxPossibleAngVel)/flywheelToBallSpeedRatio;
+        return getBallSpeedFromFlywheelSpeed(maxPossibleAngVel);
     }
     double power = 0;
 
@@ -45,7 +70,7 @@ public class Launcher {
     }
     public double getExitVel(){
         //getVelocity gets the rad/sec, so we divide that by rad/sec and then multiply by in/sec to get the inches per sec
-        return getFlywheelEncoder().getVelocity()/ flywheelToBallSpeedRatio;
+        return getBallSpeedFromFlywheelSpeed(getFlywheelEncoder().getVelocity());
     }
     public double[] aimAtGoal(double[] goalPos, double[] botPos, double vel,double heading) {
         double distance =  Math.sqrt(Math.pow(goalPos[0] - botPos[0],2)+Math.pow(goalPos[1]-botPos[1],2));
@@ -65,6 +90,9 @@ public class Launcher {
     public void setAngle(double angle){
         angleServo.setPosition((angle-Math.toRadians(30))*0.5/ Math.toRadians(20) );
     }
+    public double getAngle(){
+        return angleServo.getPosition()*Math.toRadians(20)/0.5+Math.toRadians(30);
+    }
     public double spinUpFlywheel(double power){
         setPower(-power);
         return getExitVel();
@@ -81,8 +109,8 @@ public class Launcher {
 
         return minVel < getExitVel() && getExitVel() < maxVel;
     }
-    public double getHoodPos(){
-        return angleServo.getPosition();
+    public boolean spinFlyWheelWithinRange(double[] range){
+        return spinFlyWheelWithinRange(range[0],range[1]);
     }
     public Encoder getFlywheelEncoder(){
         return motor1.getEncoder();

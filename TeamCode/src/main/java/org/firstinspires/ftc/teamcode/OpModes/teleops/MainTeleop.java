@@ -33,41 +33,20 @@ import kotlin.Pair;
 public class MainTeleop extends SettingSelectorOpMode
 {
     VoltageSensor voltageSensor;
-    private static final Logger log = LoggerFactory.getLogger(MainTeleop.class);
+    Pose startingPose;
     public static Follower follower;
     public DcMotorEx lf,rf,lb,rb,intakeMotor;
     public double loopStartTime = 0;
     Bot bot;
     double rotation = 0;
-    double servoPos = 0.5;
-    double launcherPower = 0.6;
     double[] targetGoalPos;
     double distance = 100;
     double vel = 400;
-    boolean inRange = true;
-    //so far it seems that the inches per second match up pretty well with the rad per second. what a miracle
-    //double launchAngle = 40;
     boolean headlessDriveOn;
     String intakeButtonName,launchButtonName,aimButtonName,stopLaunchName;
     static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","tiny triangle");}};
 
-    double startWheelAngle;
-    //double b = 386.09*targetHeight-vel*vel;
-
-    ColorSensor sensor;
     double totalMaxCurrent = 0,lfMax = 0,rfMax = 0, lbMax = 0,rbMax = 0,intakeMax = 0, launcherMax1 = 0,launcherMax2 = 0;
-
-    /**
-     * gets the velocity given an angle
-     * @param dist distance between robot and goal in inches
-     * @param launchAngle angle of the initial velocity vector that the ball comes out of the launcher with with respect to the horizontal
-     * @return
-     */
-
-    //DoubleUnaryOperator distToVel =  (dist)-> Math.sqrt(distToVelSquared.applyAsDouble(dist));//Math.sqrt(g*(AngleFinder.targetHeight+0.1+Math.sqrt((AngleFinder.targetHeight+0.1)*(AngleFinder.targetHeight+0.1)+dist*dist)))+20;//(dist*dist/10) * velToDistRatio;
-    GoBildaPinpointDriver pinpointDriver;
-    IMU imu;
-
     BetterControllerClass Gpad;
 
     public MainTeleop()
@@ -95,31 +74,6 @@ public class MainTeleop extends SettingSelectorOpMode
     {
 
         voltageSensor = hardwareMap.voltageSensor.get("Control Hub");
-        bot = new Bot(hardwareMap);
-
-        Gpad = new BetterControllerClass(gamepad1);
-
-        //set up follower
-        follower = CompConstants.createFollower(hardwareMap);
-//        PanelsConfigurables.INSTANCE.refreshClass(this);
-
-        //follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
-//        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], 0, 0));
-        bot.intake.closeGate();
-        bot.intake.unKick();
-        //bot.intake.openGate();
-
-
-        imu = hardwareMap.get(IMU.class, "imu");
-        imu.resetYaw();
-        //sensor = hardwareMap.get(ColorSensor.class, "sensor");
-        lf = hardwareMap.get(DcMotorEx.class,"lf");
-        rf = hardwareMap.get(DcMotorEx.class,"rf");
-        lb = hardwareMap.get(DcMotorEx.class,"lb");
-        rb = hardwareMap.get(DcMotorEx.class,"rb");
-        intakeMotor = hardwareMap.get(DcMotorEx.class,"intakeMotor");
-        //FlywheelMotor1 = hardwareMap.get(DcMotorEx.class, "launcherMotor1");
-        //FlywheelMotor2 = hardwareMap.get( DcMotorEx.class, "launcherMotor2");
 
     }
     @Override
@@ -128,11 +82,7 @@ public class MainTeleop extends SettingSelectorOpMode
         telemetry.addLine();
         super.init_loop();
     }
-    @Override
-    public void start(){
-        super.start();
-        selections = super.selections;// now we update the static field
-
+    public void handleSettings(){
         //controls:
 
         switch (selections.get("personal config")){
@@ -182,14 +132,14 @@ public class MainTeleop extends SettingSelectorOpMode
                 switch (selections.get("position"))
                 {
                     case "goal":
-                        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
+                        startingPose = FieldDimensions.botTouchingRedGoal;
                         break;
                     case "tiny triangle":
-                        follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
+                        startingPose = FieldDimensions.botOnTinyTriangleBlueSide;
                         break;
                     case "testing":
 //                        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], targetGoalPos[1]-70, -Math.PI/2));
-                        follower.setStartingPose(new Pose(81, 104, Math.PI));
+                        startingPose = new Pose(81, 104, Math.PI);
                         break;
                 }
                 break;
@@ -200,20 +150,49 @@ public class MainTeleop extends SettingSelectorOpMode
                 switch (selections.get("position"))
                 {
                     case "goal":
-                        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
+                        startingPose = FieldDimensions.botTouchingRedGoal;
                         break;
                     case "tiny triangle":
-                        follower.setStartingPose(FieldDimensions.botOnTinyTriangleBlueSide);
+                        startingPose =  FieldDimensions.botOnTinyTriangleBlueSide;
                         break;
                     case "testing":
-                        follower.setStartingPose(new Pose(targetGoalPos[0], 0, 0));
+                        startingPose = new Pose(targetGoalPos[0], 0, 0);
                         break;
                 }
                 break;
             }
 
         }
-        startWheelAngle = Math.toDegrees(bot.launcher.getFlywheelEncoder().getPos());
+    }
+    @Override
+    public void start(){
+        super.start();
+        selections = super.selections;// now we update the static field
+
+
+        handleSettings();
+
+
+        bot = new Bot(hardwareMap,targetGoalPos);
+
+
+        Gpad = new BetterControllerClass(gamepad1);
+
+        //set up follower
+        follower = bot.follower;
+        follower.setStartingPose(startingPose);
+//        PanelsConfigurables.INSTANCE.refreshClass(this);
+
+        //follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
+//        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], 0, 0));
+        bot.intake.closeGate();
+        bot.intake.unKick();
+        //bot.intake.openGate();
+        lf = hardwareMap.get(DcMotorEx.class,"lf");
+        rf = hardwareMap.get(DcMotorEx.class,"rf");
+        lb = hardwareMap.get(DcMotorEx.class,"lb");
+        rb = hardwareMap.get(DcMotorEx.class,"rb");
+        intakeMotor = hardwareMap.get(DcMotorEx.class,"intakeMotor");
 
         follower.startTeleopDrive();
     }
@@ -251,6 +230,8 @@ public class MainTeleop extends SettingSelectorOpMode
         double minAngleVelSquared = TrajectoryMath.getVelSquared(distance, Math.toRadians(RobotDimensions.Hood.minAngle));
         double maxAngleVelSquared = TrajectoryMath.getVelSquared(distance, Math.toRadians(RobotDimensions.Hood.maxAngle));
         double[] velBounds = TrajectoryMath.getVelBoundsFromVelSquaredBounds(minAngleVelSquared,maxAngleVelSquared,distance);
+
+
         bot.launcher.flywheelToBallSpeedRatio +=gamepad1.dpadRightWasPressed()?0.1:(gamepad1.dpadLeftWasPressed()?-0.1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
         bot.launcher.maxPossibleAngVel +=gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
         bot.launcher.ratio+=gamepad1.aWasPressed()?0.1:(gamepad1.yWasPressed()?-0.1:0);
@@ -269,8 +250,7 @@ public class MainTeleop extends SettingSelectorOpMode
 
             if (spinUpFlywheelInput)
             {
-                telemetry.addData("speed", bot.launcher.spinFlyWheelWithinRange(velBounds[0], velBounds[1]));
-                //bot.intake.closeGate();
+                telemetry.addData("speed", bot.spinFlyWheelWithinFeasibleRange());
             }
         }
         else {
@@ -298,22 +278,9 @@ public class MainTeleop extends SettingSelectorOpMode
             bot.turret.setPower(0);
         }
 
-        // this should be the initial speed of the ball as exits the launcher
-        vel = bot.launcher.getExitVel();
+        double launchAngle = bot.launcher.getAngle();
 
-        //we get the servo position based on the velocity we see, not the velocity we want
-        double launchAngle = bot.launcher.aimServo(distance, vel);
-        launcherPower = 0.9;
-
-        Bot.LaunchPhase launchPhase = bot.update(velBounds[0],velBounds[1]);
-
-        if(distance>100){
-            bot.launcher.flywheelToBallSpeedRatio = 1.2;
-            launcherPower = 0.7;
-        }else{
-            bot.launcher.flywheelToBallSpeedRatio = 1;
-            launcherPower = 0.6;
-        }
+        Bot.LaunchPhase launchPhase = bot.update();
 
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
@@ -346,6 +313,7 @@ public class MainTeleop extends SettingSelectorOpMode
             telemetry.addData("thing it should be",bot.launcher.betweenVel(velBounds[0],velBounds[1]));
             telemetry.addData("actual speed", bot.launcher.getExitVel());
             telemetry.addData("target flywheel speed",bot.targetSpeed*bot.launcher.flywheelToBallSpeedRatio);
+            telemetry.addData("actual flywheel speed",bot.launcher.getFlywheelEncoder().getVelocity());
             telemetry.addData("target power",bot.targetSpeed/bot.launcher.getMaxPossibleExitVel());
             telemetry.addLine();
             telemetry.addData("rad/sec", vel);
@@ -379,6 +347,7 @@ public class MainTeleop extends SettingSelectorOpMode
 
 
 
+            //==============CURRENT====================
 
             double lfCurrent = lf.getCurrent(CurrentUnit.MILLIAMPS);
             double rfCurrent = rf.getCurrent(CurrentUnit.MILLIAMPS);
@@ -397,6 +366,7 @@ public class MainTeleop extends SettingSelectorOpMode
             launcherMax1 = Math.max(launcher1Current, launcherMax1);
             launcherMax2 = Math.max(launcher2Current, launcherMax2);
 
+            telemetry.addLine();
             telemetry.addLine("------------current draw in milliamps----------");
             telemetry.addData("lf", lfCurrent);
             telemetry.addData("rf", rfCurrent);

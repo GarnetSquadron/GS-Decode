@@ -14,7 +14,7 @@ public class TrajectoryMath
     final static public double targetHeight = (FieldDimensions.maxGoalHeight+FieldDimensions.minGoalHeight)/2.0-RobotDimensions.Hood.approxBallExitHeight;//The height difference is the height of the goal-the height of the ball as it exits
     public final static double g = 386.09;//9.8 m/s^2=386.09in/s
 
-    static double a = 386.09*386.09/4;
+    static final double a = g*g/4;
 
     /**
      * calculate both the angles (in radians of course)
@@ -24,7 +24,6 @@ public class TrajectoryMath
      */
     public static double[] getAngles(double vel,double distance)
     {
-        double a = g*g/4;
         double b = g*targetHeight-vel*vel;
         double c = distance*distance+targetHeight*targetHeight;
         double[] tSquared = ExtraMath.quadraticFormula(a,b,c);
@@ -69,6 +68,12 @@ public class TrajectoryMath
         return Math.atan((g/2*t*t+targetHeight)/(distance));
     }
 
+    /**
+     * gets the velocity given an angle
+     * @param dist distance between robot and goal in inches
+     * @param launchAngle angle of the initial velocity vector that the ball comes out of the launcher with with respect to the horizontal
+     * @return
+     */
     public static double getVelSquared(double dist, double launchAngle) {
         double c = dist*dist+targetHeight*targetHeight;
         double tSquare = 2 * (dist*Math.tan(launchAngle)- targetHeight)/g;

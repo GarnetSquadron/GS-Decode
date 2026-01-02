@@ -1,31 +1,55 @@
 package org.firstinspires.ftc.teamcode.HardwareControls;
 
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoController;
 
+import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.SimplerTelemetry;
+import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
 public class Bot
 {
     public Launcher launcher;
     public Intake intake;
     public Turret turret;
+    public Follower follower;
     public LaunchHandler launchHandler;
+    double[] targetGoalPos;
     public ServoController servoController;
     public double targetSpeed = 0;
-    public Bot(HardwareMap hardwareMap){
+    public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
+        this.targetGoalPos = targetGoalPos;
         launcher = new Launcher(hardwareMap);
         intake = new Intake(hardwareMap);
         launchHandler = new LaunchHandler();
         turret = launcher.turret;
+        follower = CompConstants.createFollower(hardwareMap);
         servoController = hardwareMap.get(ServoController.class, "Control Hub");
     }
-    public void init(){
-
+    public double getDistance(){
+        return Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
     }
-    public LaunchPhase update(double minVel,double maxVel){
-        return launchHandler.update(minVel,maxVel);
+    public double getMinAngleVelSquared(){
+        return TrajectoryMath.getVelSquared(getDistance(), Math.toRadians(RobotDimensions.Hood.minAngle));
+    }
+    public double getMaxAngleVelSquared(){
+        return TrajectoryMath.getVelSquared(getDistance(), Math.toRadians(RobotDimensions.Hood.maxAngle));
+    }
+    public double[] getVelBounds() {
+        return TrajectoryMath.getVelBoundsFromVelSquaredBounds(getMinAngleVelSquared(),getMaxAngleVelSquared(),getDistance());
+    }
+    public boolean spinFlyWheelWithinFeasibleRange(){
+        return launcher.spinFlyWheelWithinRange(getVelBounds());
+    }
+    public LaunchPhase update(){
+        launcher.aimServo(getDistance(), launcher.getExitVel());
+        return launchHandler.update(getVelBounds());
+    }
+    public void aimTurret(){
+        turret.aimTowardsGoal(targetGoalPos, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading());
     }
     public enum LaunchPhase
     {
@@ -56,13 +80,13 @@ public class Bot
         public void stopLaunch(){
             launchPhase = LaunchPhase.SHUTDOWN;
         }
-        public LaunchPhase update(double minVel, double maxVel){
-            targetSpeed = launcher.betweenVel(minVel,maxVel);
+        public LaunchPhase update(double[] velBounds){
+            targetSpeed = launcher.betweenVel(velBounds[0],velBounds[1]);
             boolean velInRange = false;
             SimplerTelemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){//once you get to kicking the servo its far gone tbh
-                velInRange = launcher.spinFlyWheelWithinRange(minVel,maxVel);
+                velInRange = launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]);
                 SimplerTelemetry.addData("vel in range",velInRange);
                 if(!velInRange){
                     isPausedToSpinUp = true;

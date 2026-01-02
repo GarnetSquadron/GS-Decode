@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.getAngles;
-import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.targetHeight;
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath.getAngles;
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath.targetHeight;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.telemetry.SelectableOpMode;
@@ -14,11 +14,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
+import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
 import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 import org.firstinspires.ftc.teamcode.HardwareControls.Turret;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
@@ -49,6 +51,7 @@ public class Tests extends SelectableOpMode
             s.folder("Vision", v->{
                 v.add("Obelisk Id Test",ObeliskIdTest::new);
             });
+            s.add("launcher test", LauncherTest::new);
             s.add("intake stall test",IntakeStallDetectTest::new);
             s.add("motor test",MotorTest::new);
             s.add("servo test",ServoTest::new);
@@ -366,7 +369,7 @@ class HoodTest extends OpMode{
         launcher.aimServo(distance,vel);
         telemetry.addData("distance", distance);
         telemetry.addData("vel",vel);
-        telemetry.addData("angle",Math.toDegrees( AngleFinder.getOptimumAngle(vel,distance)));
+        telemetry.addData("angle",Math.toDegrees( TrajectoryMath.getOptimumAngle(vel,distance)));
         double a = 386.09*386.09/4;
         double b = 386.09*targetHeight-vel*vel;
         double c = distance*distance+targetHeight*targetHeight;
@@ -389,7 +392,7 @@ class HoodTest extends OpMode{
 class LightTest extends OpMode{
     Servo light1,light2;
     BetterControllerClass Gpad1;
-    double freq1 = 0,freq2 = 0;
+    double freq1 = 0.279,freq2 = 0.666;
 
     @Override
     public void init()
@@ -402,24 +405,33 @@ class LightTest extends OpMode{
     @Override
     public void loop()
     {
-        light1.setPosition(freq1);
-        light2.setPosition(freq2);
+        double sin = Math.sin(TIME.getTime()*Math.PI*2*2);
+        if(sin>0){
+            light1.setPosition(freq1);
+            light2.setPosition(0);
+        } else{
+            light1.setPosition(0);
+            light2.setPosition(freq2);
+        }
+        double step = 0.01;
         if(gamepad1.dpadUpWasPressed()){
-            freq1++;
+            freq1+=step;
         }
         if(gamepad1.dpadDownWasPressed()){
-            freq1--;
+            freq1-=step;
         }
         if(gamepad1.dpadRightWasPressed()){
-            freq2++;
+            freq2+=step;
         }
         if(gamepad1.dpadLeftWasPressed()){
-            freq2--;
+            freq2-=step;
         }
         Gpad1.update();
         telemetry.addData("freq1",freq1);
         telemetry.addData("freq2",freq2);
-        telemetry.addLine();
+        telemetry.addData("time",TIME.getTime());
+        telemetry.addData("sin",sin);
+        telemetry.update();
     }
 }
 class SimpleTelemetryTest extends OpMode{
@@ -441,6 +453,48 @@ class SimpleTelemetryTest extends OpMode{
         telemetry.update();
         telemetry.clear();
         count++;
+    }
+}
+class LauncherTest extends OpMode{
+
+    SimplerTelemetry telemetry;
+    Bot bot;
+    BetterControllerClass gpad;
+    double power = 1;
+    double angle = 40;
+    @Override
+    public void init()
+    {
+        this.telemetry = new SimplerTelemetry(super.telemetry);
+        gpad = new BetterControllerClass(gamepad1);
+        bot = new Bot(hardwareMap, FieldDimensions.goalPositionBlue);
+    }
+
+    @Override
+    public void loop()
+    {
+        if(gpad.getCurrentValue("right_trigger")){
+            bot.launcher.spinUpFlywheel(power);
+        }
+        else{
+            bot.launcher.setPower(0);
+        }
+        if(gpad.getCurrentValue("left_trigger")){
+            bot.intake.setPower(1);
+        }
+        else{
+            bot.intake.setPower(0);
+        }
+        power+=gamepad1.dpadRightWasPressed()?0.1:(gamepad1.dpadLeftWasPressed()?-0.1:0);
+        angle+=gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0);
+        telemetry.addData("power",power);
+        telemetry.addData("angle",angle);
+        telemetry.addLine();
+        telemetry.addData("launcher velocity",bot.launcher.getExitVel());
+        telemetry.addData("predicted ball velocity",bot.launcher.getExitVel());
+        telemetry.update();
+        telemetry.clear();
+        gpad.update();
     }
 }
 //class flyWheelTest(){
