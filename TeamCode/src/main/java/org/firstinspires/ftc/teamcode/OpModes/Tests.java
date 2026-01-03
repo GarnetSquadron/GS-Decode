@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
@@ -27,7 +28,12 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import kotlin.Pair;
 
 @Configurable
 @TeleOp(name = "Tests")
@@ -459,12 +465,15 @@ class LauncherTest extends OpMode{
 
     SimplerTelemetry telemetry;
     Bot bot;
+    VoltageSensor voltageSensor;
     BetterControllerClass gpad;
     double power = 1;
     double angle = 40;
+    double batteryLevel,speed;
     @Override
     public void init()
     {
+        voltageSensor = hardwareMap.voltageSensor.get("Control Hub");
         this.telemetry = new SimplerTelemetry(super.telemetry);
         gpad = new BetterControllerClass(gamepad1);
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionBlue);
@@ -481,17 +490,28 @@ class LauncherTest extends OpMode{
         }
         if(gpad.getCurrentValue("left_trigger")){
             bot.intake.setPower(1);
+            bot.intake.kickBall();
         }
         else{
             bot.intake.setPower(0);
+            bot.intake.unKick();
+        }
+        if(gpad.getRisingEdge("left_trigger")){
+            batteryLevel = voltageSensor.getVoltage();
+            speed = bot.launcher.getFlywheelEncoder().getVelocity();
         }
         power+=gamepad1.dpadRightWasPressed()?0.1:(gamepad1.dpadLeftWasPressed()?-0.1:0);
         angle+=gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0);
+        bot.launcher.setAngle(Math.toRadians(angle));
         telemetry.addData("power",power);
         telemetry.addData("angle",angle);
         telemetry.addLine();
-        telemetry.addData("launcher velocity",bot.launcher.getExitVel());
+        telemetry.addData("recorded battery", batteryLevel);
+        telemetry.addData("recorded Rad/sec", speed);
+        telemetry.addLine();
+        telemetry.addData("launcher velocity",bot.launcher.getFlywheelEncoder().getVelocity());
         telemetry.addData("predicted ball velocity",bot.launcher.getExitVel());
+        telemetry.addData("",bot.launcher.getAngle());
         telemetry.update();
         telemetry.clear();
         gpad.update();
