@@ -199,6 +199,9 @@ public class ExtraMath
             this.a = a;
             this.b = b;
         }
+        public boolean isPurelyReal(){
+            return closeTo0(b);
+        }
         public Complex multiply(double m){
             return new Complex(a*m,b*m);
         }
@@ -271,5 +274,8 @@ public class ExtraMath
     }
     public static Complex getComplexFromPolar(double r, double theta){
         return new Complex(r*Math.cos(theta),r*Math.sin(theta));
+    }
+    public static boolean closeTo0(double num){
+        return Math.abs(num)<1e-10;
     }
 }
