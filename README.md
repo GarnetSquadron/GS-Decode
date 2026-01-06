@@ -1,3 +1,13 @@
+check out [README.md](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/README.md)
+
+
+
+
+
+
+
+ftc readme in case your interested
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the DECODE (2025-2026) competition season.

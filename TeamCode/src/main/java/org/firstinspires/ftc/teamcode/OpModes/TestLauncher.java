@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.ExtraMath;
-import org.firstinspires.ftc.teamcode.controllers.PidFliywheel;
-import org.firstinspires.ftc.teamcode.hardwareClasses.motors.RAWMOTOR;
-import org.firstinspires.ftc.teamcode.time.TIME;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.FlyWheelMath;
+import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 
 @TeleOp(name = "launcher")
 public class TestLauncher extends OpMode {
@@ -79,7 +79,7 @@ public class TestLauncher extends OpMode {
             trigWasJustPressed = true;
         }else{trigWasJustPressed =false;}
 
-        double[] returnedVal = PidFliywheel.getPid(motorVelocity,target,scale,scale);
+        double[] returnedVal = FlyWheelMath.getPid(motorVelocity,target,scale,scale);
         boolean isTarget = returnedVal[2]==1;
         boolean isReallyTarget;
         if (isTarget){timer+=0.1;}else timer = 0;

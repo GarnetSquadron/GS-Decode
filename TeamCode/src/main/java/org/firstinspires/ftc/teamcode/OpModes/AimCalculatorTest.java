@@ -7,7 +7,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Launcher;
+import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.TestConstants;
 
 @TeleOp(name = "aimCalc" )

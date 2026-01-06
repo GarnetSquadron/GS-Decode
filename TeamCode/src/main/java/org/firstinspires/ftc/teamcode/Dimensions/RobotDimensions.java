@@ -10,8 +10,8 @@ public class RobotDimensions
      */
     public static class Hood
     {
-        public static final double minAngle = 40;
-        public static final double maxAngle = 60;
-        public static final double approxBallExitHeight = 0.372957;
+        public static final double minAngle = 30;
+        public static final double maxAngle = 50;
+        public static final double approxBallExitHeight = 14.68331709;
     }
 }
