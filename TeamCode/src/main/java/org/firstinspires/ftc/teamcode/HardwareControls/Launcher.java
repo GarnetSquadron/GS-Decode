@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
@@ -104,8 +103,12 @@ public class Launcher {
         //spin up the flywheel to get it within the provided range
         //if its in the range return true otherwise
 
+        //pid code
+        double targetVel = betweenVel(minVel,maxVel)/(getMaxPossibleExitVel());
+        double speed = LauncherPid.GetPid(motor1.getEncoder().getVelocity(),targetVel,0.0006);
+        spinUpFlywheel(speed);
         //temporary flywheel code, just guesses the velocity.
-        spinUpFlywheel(betweenVel(minVel,maxVel)/(getMaxPossibleExitVel()));//minVel/(2*max)+0.5
+        //it doesn't exist anymore mb
 
         return minVel < getExitVel() && getExitVel() < maxVel;
     }

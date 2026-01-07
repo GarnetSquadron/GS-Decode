@@ -67,6 +67,7 @@ public class Tests extends SelectableOpMode
             s.add("hood test",HoodTest::new);
             s.add("light test",LightTest::new);
             s.add("simple telemetry",SimpleTelemetryTest::new);
+            s.add("flywheel test",FlyWheelTest::new);
         });
     }
 
@@ -517,6 +518,25 @@ class LauncherTest extends OpMode{
         gpad.update();
     }
 }
-//class flyWheelTest(){
-//
-//}
+class FlyWheelTest extends OpMode{
+    public int target=0;
+    Launcher launcher;
+    @Override
+    public void init(){
+        launcher = new Launcher(hardwareMap);
+    }
+    @Override
+    public void loop(){
+        if (gamepad1.aWasPressed()){
+            target ++;
+        }if (gamepad1.bWasPressed()){
+            target --;
+        }
+        launcher.spinFlyWheelWithinRange(new double[]{target,target});
+
+        telemetry.addData("target ", target);
+        telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
+        telemetry.update();
+    }
+
+}
