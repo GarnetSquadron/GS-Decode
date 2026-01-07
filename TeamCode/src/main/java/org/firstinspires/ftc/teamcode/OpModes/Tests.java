@@ -519,7 +519,9 @@ class LauncherTest extends OpMode{
     }
 }
 class FlyWheelTest extends OpMode{
-    public int target=0;
+    public int target=100;
+    double forceDamp = 0.01;
+    double kP=0, kD=-0;
     Launcher launcher;
     @Override
     public void init(){
@@ -528,14 +530,29 @@ class FlyWheelTest extends OpMode{
     @Override
     public void loop(){
         if (gamepad1.aWasPressed()){
-            target ++;
+            kP += 0.001;
         }if (gamepad1.bWasPressed()){
-            target --;
+            kP -= 0.001;
         }
-        launcher.spinFlyWheelWithinRange(new double[]{target,target});
-
+        if (gamepad1.yWasPressed()){
+            kD += 0.01;
+        }
+        if (gamepad1.xWasPressed()){
+            kD -= 0.01;
+        }
+        if(gamepad1.right_bumper) {
+            launcher.SpinUpFlywheelWithPid(target, target, forceDamp, kP, kD);
+        }else{
+            launcher.setPower(0);
+        }
         telemetry.addData("target ", target);
         telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
+        telemetry.addData("force damo ", forceDamp);
+        telemetry.addData("force", launcher.motor1.getPower());
+        telemetry.addData("kp",kP);
+        telemetry.addData("kd",kD);
+        telemetry.addData("p",launcher.launcherPid.p);
+        telemetry.addData("d",launcher.launcherPid.d);
         telemetry.update();
     }
 

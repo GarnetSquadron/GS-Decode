@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
 public class Launcher {
+    public LauncherPid launcherPid = new LauncherPid();
     VoltageSensor voltageSensor;
     double maxCurrent = 0;
     public double ratio = 0.5;
@@ -106,10 +107,18 @@ public class Launcher {
 
         //pid code
         double targetVel = betweenVel(minVel,maxVel)/(getMaxPossibleExitVel());
-        double speed = LauncherPid.GetPid(motor1.getEncoder().getVelocity(),targetVel,0.0006);
+        double speed = launcherPid.GetPid(motor1.getEncoder().getVelocity(),targetVel,0.1,0.01,0.1,-0.1);
         spinUpFlywheel(speed);
         //temporary flywheel code, just guesses the velocity.
         //it doesn't exist anymore mb
+
+        return minVel < getExitVel() && getExitVel() < maxVel;
+    }
+    public boolean SpinUpFlywheelWithPid(double minVel, double maxVel, double forceDamp,double Kp,double kD){
+        //pd code
+        double targetVel = betweenVel(minVel,maxVel)/(getMaxPossibleExitVel());
+        double speed = launcherPid.GetPid(motor1.getEncoder().getVelocity(),targetVel,0.1,forceDamp,Kp,-kD);
+        spinUpFlywheel(speed);
 
         return minVel < getExitVel() && getExitVel() < maxVel;
     }
