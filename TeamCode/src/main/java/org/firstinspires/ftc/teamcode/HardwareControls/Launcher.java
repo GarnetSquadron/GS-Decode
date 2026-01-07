@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
@@ -87,7 +88,7 @@ public class Launcher {
      * @param angle the angle relative to horizontal that the ball comes out at (in radians of course)
      */
     public void setAngle(double angle){
-        angleServo.setPosition((angle-Math.toRadians(30))*0.5/ Math.toRadians(20) );
+        angleServo.setPosition((angle-Math.toRadians(RobotDimensions.Hood.minAngle))*0.5/ Math.toRadians(RobotDimensions.Hood.maxAngle-RobotDimensions.Hood.minAngle) );
     }
     public double getAngle(){
         return angleServo.getPosition()*Math.toRadians(20)/0.5+Math.toRadians(30);
