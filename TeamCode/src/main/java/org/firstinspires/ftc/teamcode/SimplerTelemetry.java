@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import java.lang.reflect.Array;
-import java.util.HashMap;
-import java.util.Map;
+
 
 /**
  * the default sdk telemetry is over complicated and the clear functions make no sense.
