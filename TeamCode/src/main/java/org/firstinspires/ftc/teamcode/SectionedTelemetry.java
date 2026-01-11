@@ -18,7 +18,7 @@ public class SectionedTelemetry
         this.telemetry = telemetry;
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         sections = new LinkedHashMap<>();
-//        sections.put(defaultKey,"");
+        sections.put(defaultKey,"");
     }
     public static void addLine(String line,String key){
         sections.merge(key,line+"\n",(u,v)-> u+v);
@@ -54,10 +54,14 @@ public class SectionedTelemetry
         return spaceFiller.substring(0,(telemetryWidth-text.length())/2)+text+spaceFiller.substring((telemetryWidth+text.length())/2);
     }
     public void update(){
+        telemetry.addLine(sections.get(defaultKey));
         for(Map.Entry<String,String> entry:sections.entrySet()){
-            if(entry.getKey()!=defaultKey) telemetry.addLine(centerText(entry.getKey(),"="));
-            telemetry.addLine(entry.getValue());
-            telemetry.addLine();
+            if(entry.getKey()!=defaultKey)
+            {
+                telemetry.addLine(centerText(entry.getKey(), "="));
+                telemetry.addLine(entry.getValue());
+                telemetry.addLine();
+            }
         }
         telemetry.update();
     }

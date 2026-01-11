@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import static org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath.getAngles;
-import static org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath.targetHeight;
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath.getTargetHeight;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.telemetry.SelectableOpMode;
@@ -25,15 +25,11 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
+import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 import org.firstinspires.ftc.teamcode.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import kotlin.Pair;
 
 @Configurable
 @TeleOp(name = "Tests")
@@ -66,7 +62,7 @@ public class Tests extends SelectableOpMode
             s.add("turret math", TurretMathTest::new);
             s.add("hood test",HoodTest::new);
             s.add("light test",LightTest::new);
-            s.add("simple telemetry",SimpleTelemetryTest::new);
+            s.add("simple telemetry", SectionedTelemetryTest::new);
             s.add("flywheel test",FlyWheelTest::new);
         });
     }
@@ -378,8 +374,8 @@ class HoodTest extends OpMode{
         telemetry.addData("vel",vel);
         telemetry.addData("angle",Math.toDegrees( TrajectoryMath.getOptimumAngle(vel,distance)));
         double a = 386.09*386.09/4;
-        double b = 386.09*targetHeight-vel*vel;
-        double c = distance*distance+targetHeight*targetHeight;
+        double b = 386.09*getTargetHeight()-vel*vel;
+        double c = distance*distance+getTargetHeight()*getTargetHeight();
         double[] tSquared = ExtraMath.quadraticFormula(a,b,c);
         double[] angles = getAngles(vel,distance);
         telemetry.addData("a", a);
@@ -441,13 +437,13 @@ class LightTest extends OpMode{
         telemetry.update();
     }
 }
-class SimpleTelemetryTest extends OpMode{
-    SimplerTelemetry telemetry;
+class SectionedTelemetryTest extends OpMode{
+    SectionedTelemetry telemetry;
     double count = 0;
     @Override
     public void init()
     {
-        this.telemetry = new SimplerTelemetry(super.telemetry);
+        this.telemetry = new SectionedTelemetry(super.telemetry);
     }
 
     @Override
@@ -457,6 +453,7 @@ class SimpleTelemetryTest extends OpMode{
         telemetry.addLine("maybe?");
         telemetry.addLine(String.valueOf(count));
         telemetry.addData("count",count);
+        telemetry.addLine("do you like this section?","cool section");
         telemetry.update();
         telemetry.clear();
         count++;
@@ -519,41 +516,77 @@ class LauncherTest extends OpMode{
     }
 }
 class FlyWheelTest extends OpMode{
-    public int target=100;
+    SectionedTelemetry telemetry;
+    public double target=100;
     double forceDamp = 0.01;
-    double kP=0, kD=-0;
+    double Kp =0.002, Kd =-0, Ks = 0.05,Kv = 0.0,Ka = 0;
     Launcher launcher;
+    BetterControllerClass gpad;
     @Override
     public void init(){
         launcher = new Launcher(hardwareMap);
+        gpad = new BetterControllerClass(gamepad1);
+        this.telemetry = new SectionedTelemetry(super.telemetry);
     }
+    double[] numbers = new double[5];
     @Override
     public void loop(){
-        if (gamepad1.aWasPressed()){
-            kP += 0.001;
-        }if (gamepad1.bWasPressed()){
-            kP -= 0.001;
-        }
-        if (gamepad1.yWasPressed()){
-            kD += 0.01;
-        }
-        if (gamepad1.xWasPressed()){
-            kD -= 0.01;
-        }
-        if(gamepad1.right_bumper) {
-            launcher.SpinUpFlywheelWithPid(target, target, forceDamp, kP, kD);
+//        if (gamepad1.aWasPressed()){
+//            Kp += 0.001;
+//        }if (gamepad1.bWasPressed()){
+//            Kp -= 0.001;
+//        }
+//        if (gamepad1.yWasPressed()){
+//            Kd += 0.01;
+//        }
+//        if (gamepad1.xWasPressed()){
+//            Kd -= 0.01;
+//        }
+//        if (gamepad1.dpadDownWasPressed()){
+//            Kp += 0.001;
+//        }if (gamepad1.dpadUpWasPressed()){
+//            Kp -= 0.001;
+//        }
+//        if (gamepad1.dpadLeftWasPressed()){
+//            Kd += 0.01;
+//        }
+//        if (gamepad1.dpadRightWasPressed()){
+//            Kd -= 0.01;
+//        }
+        gpad.update();
+        launcher.launcherPIDF.Kp += gpad.getIncrement("dpad_up","dpad_down",0.001);
+        launcher.launcherPIDF.Kd += gpad.getIncrement("dpad_right","dpad_left",0.00001);
+        launcher.launcherPIDF.Kd += gpad.getIncrement("a","y",0.001);
+        launcher.launcherPIDF.Kv += gpad.getIncrement("b","x",0.001);
+        target += gpad.getIncrement("left_bumper","right_bumper",10);
+        launcher.updatePID(target,target);
+        if(gpad.getCurrentValue("right_trigger")) {
+            //launcher.launcherPIDF.setConstants(Kp, Kd,0, Ks,Kv,Ka);
+            telemetry.addData("stabilized at target",launcher.spinFlyWheelWithinRange(target, target));
         }else{
             launcher.setPower(0);
         }
-        telemetry.addData("target ", target);
-        telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
+        if(gpad.getRisingEdge("right_trigger")){
+            launcher.launcherPIDF.resetPid();
+        }
+//        telemetry.addData("target ", target);
+//        telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
         telemetry.addData("force damo ", forceDamp);
         telemetry.addData("force", launcher.motor1.getPower());
-        telemetry.addData("kp",kP);
-        telemetry.addData("kd",kD);
-        telemetry.addData("p",launcher.launcherPid.p);
-        telemetry.addData("d",launcher.launcherPid.d);
+        telemetry.addData("kp", launcher.launcherPIDF.Kp);
+        telemetry.addData("kd", launcher.launcherPIDF.Kd);
+        telemetry.addData("ks", launcher.launcherPIDF.Ks);
+        telemetry.addData("kv", launcher.launcherPIDF.Kv);
+//        telemetry.addData("p",launcher.launcherPIDF.p);
+//        telemetry.addData("d",launcher.launcherPIDF.d);
+//        telemetry.addData("supposed force",launcher.launcherPIDF.force);
+        telemetry.addData("supposed feed forward",launcher.launcherPIDF.getFeedForward(target));
+        telemetry.addData("acceleration",launcher.launcherPIDF.getAcceleration());
+        telemetry.addArray("diffs",launcher.launcherPIDF.differences,"arrays");
+        telemetry.addArray("times",launcher.launcherPIDF.times,"arrays");
+        telemetry.addData("loop time",launcher.launcherPIDF.times[0]-launcher.launcherPIDF.times[1]);
         telemetry.update();
+        telemetry.clear();
     }
 
 }
