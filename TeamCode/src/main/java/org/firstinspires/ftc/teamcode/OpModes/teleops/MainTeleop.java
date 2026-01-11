@@ -292,7 +292,7 @@ public class MainTeleop extends SettingSelectorOpMode
 //            telemetry.addData("right stick x",gamepad1.right_stick_x);
 //            telemetry.addData("loop time",bot.launcher.launcherPIDF.times[0]-bot.launcher.launcherPIDF.times[1]);
 //            telemetry.addData("voltage sensor",voltageSensor.getVoltage());
-            if(bot.adjustingConstants){
+//            if(bot.adjustingConstants){
                 telemetry.addData("loop time", TIME.getTime() - loopStartTime);
                 loopStartTime = TIME.getTime();
                 telemetry.addLine();
@@ -306,8 +306,9 @@ public class MainTeleop extends SettingSelectorOpMode
                 telemetry.addData("radPerSec to VelRatio", bot.launcher.flywheelToBallSpeedRatio);
                 telemetry.addData("velocity ratio", bot.launcher.ratio);
                 telemetry.addData("height ratio", TrajectoryMath.ratio);
+                telemetry.addData("distance",distance);
                 telemetry.addLine(bot.getConstantList());
-            }
+//            }
 //            telemetry.addLine();
 //            telemetry.addData("target ratio",bot.launcher.ratio);
 //            telemetry.addData("target speed",bot.targetSpeed);

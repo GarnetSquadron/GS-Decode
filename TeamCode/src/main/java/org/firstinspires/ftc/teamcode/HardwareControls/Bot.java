@@ -59,14 +59,15 @@ public class Bot
         radToInchRatioMap = new StepApproximation(stepSize,"rad to inch");
         velRangeRatioMap = new StepApproximation(stepSize,"vel ratio");
         heightRatioMap = new StepApproximation(stepSize,"height ratio");
-        putConstant(36,1.35,0.3,0.3);
-        putConstant(42, 1.45,0.4,0.3);
-        putConstant(48,1.3375,0.5,0.3);
-        putConstant(54,1.3316,0.5,0.3);
-        putConstant(60,1.3261,0.6,0.1);
-        putConstant(66,1.2199,0.6,0.4);
-        putConstant(72,1.313,0.5,0.1);
-        putConstant(78,1.3121,0.5,0.2);
+        double adjustment = 6.708;
+        putConstant(36+adjustment,1.35,0.3,0.3);
+        putConstant(42+adjustment, 1.45,0.4,0.3);
+        putConstant(48+adjustment,1.3375,0.5,0.3);
+        putConstant(54+adjustment,1.3316,0.5,0.3);
+        putConstant(60+adjustment,1.3261,0.6,0.1);
+        putConstant(66+adjustment,1.2199,0.6,0.4);
+        putConstant(72+adjustment,1.313,0.5,0.1);
+        putConstant(78+adjustment,1.3121,0.5,0.2);
     }
     public double getDistance(){
         return Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
