@@ -57,11 +57,14 @@ public class LauncherPIDF
         return ExtraMath.closeTo0(getAcceleration(),20);
     }
     public boolean closeToTarget(){
-        return ExtraMath.closeTo0(average(differences),margin);
+        return ExtraMath.closeTo0(differences[0],margin);
     }
     public boolean hasStabilized(){
         return lowAcceleration() && closeToTarget();
     }
+//    public boolean hasStabilizedRelaxed(){
+//        return lowAcceleration() && closeToTarget();
+//    }
     public double getFeedForward(double targetVel){
         return Ks *Math.signum(targetVel)+Kv *targetVel;
     }
