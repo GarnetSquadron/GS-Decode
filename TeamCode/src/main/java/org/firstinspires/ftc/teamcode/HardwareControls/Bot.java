@@ -114,6 +114,10 @@ public class Bot
     }
     public class LaunchHandler
     {
+        public double intakePower = 0.8;
+        void powerIntake(){
+            intake.setPower(intakePower);
+        }
         public LaunchPhase launchPhase = LaunchPhase.NULL;
         public boolean isPausedToSpinUp = false;
         public double pauseStartTime = -1;
@@ -132,6 +136,7 @@ public class Bot
         public void stopLaunch(){
             launchPhase = LaunchPhase.SHUTDOWN;
         }
+
         public LaunchPhase update(double[] velBounds){
             launcher.updatePID(velBounds[0],velBounds[1]);
             targetSpeed = launcher.betweenVel(velBounds[0],velBounds[1]);
@@ -154,7 +159,7 @@ public class Bot
                         isPausedToSpinUp = false;
                         //change the phase start time so that there is the correct time remaining in that phase.
                         phaseStartTime = TIME.getTime();
-                        intake.setPower(1);
+                        powerIntake();
                     }
                     //if paused, do not carry out the instructions in the switch case
                     return launchPhase;
@@ -166,7 +171,7 @@ public class Bot
                     break;
                 }
                 case SPINNING_UP:{
-                    intake.stop();
+                    powerIntake();
                     if (launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]))//wait for it to be in the right range
                     {
                         launchPhase = LaunchPhase.GATE_OPENING;
@@ -180,13 +185,13 @@ public class Bot
                     {
                         launchPhase = LaunchPhase.RELEASING_BALLS;
                         phaseStartTime = TIME.getTime();
-                        intake.setPower(1);
+                        powerIntake();
                     }
                     break;
                 }
                 case RELEASING_BALLS:{
                     intake.openGate();
-                    intake.setPower(1);
+                    powerIntake();
                     telemetry.addLine("releasing balls!");
 //                    if(getElapsedTime() > 0.2 && !velInRange){
 //
