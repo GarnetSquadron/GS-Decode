@@ -54,13 +54,13 @@ public class LauncherPIDF
         return average(derivatives);
     }
     public boolean lowAcceleration(){
-        return ExtraMath.closeTo0(getAcceleration(),10);
+        return ExtraMath.closeTo0(getAcceleration(),20);
     }
     public boolean closeToTarget(){
         return ExtraMath.closeTo0(average(differences),margin);
     }
     public boolean hasStabilized(){
-        return closeToTarget() &&closeToTarget();
+        return lowAcceleration() && closeToTarget();
     }
     public double getFeedForward(double targetVel){
         return Ks *Math.signum(targetVel)+Kv *targetVel;
