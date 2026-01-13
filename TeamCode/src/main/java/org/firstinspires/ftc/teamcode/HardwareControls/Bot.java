@@ -179,16 +179,13 @@ public class Bot
                     {
                         launchPhase = LaunchPhase.RELEASING_BALLS;
                         phaseStartTime = TIME.getTime();
-                        intake.setPower(1);
                     }
                     break;
                 }
                 case RELEASING_BALLS:{
                     intake.openGate();
+                    intake.setPower(1);
                     telemetry.addLine("releasing balls!");
-//                    if(getElapsedTime() > 0.2 && !velInRange){
-//
-//                    }
                     if(getElapsedTime() > 0.4){
                         launchPhase = LaunchPhase.KICKING_SERVO;
                         phaseStartTime = TIME.getTime();
