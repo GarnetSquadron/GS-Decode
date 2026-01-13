@@ -8,10 +8,14 @@ import java.util.Arrays;
 
 public class TrajectoryMath
 {
+    static public double ratio = 0;
     /**
      * needs to be somewhere between minGoalHeight and maxGoalHeight, so why not the average
      */
-    final static public double targetHeight = (FieldDimensions.maxGoalHeight+FieldDimensions.minGoalHeight)/2.0-RobotDimensions.Hood.approxBallExitHeight;//The height difference is the height of the goal-the height of the ball as it exits
+    static public double getTargetHeight ()
+    {
+        return FieldDimensions.maxGoalHeight * ratio + FieldDimensions.minGoalHeight * (1 - ratio) - RobotDimensions.Hood.approxBallExitHeight;
+    }//The height difference is the height of the goal-the height of the ball as it exits
     public final static double g = 386.09;//9.8 m/s^2=386.09in/s
 
     static final double a = g*g/4;
@@ -24,6 +28,7 @@ public class TrajectoryMath
      */
     public static double[] getAngles(double vel,double distance)
     {
+        double targetHeight = getTargetHeight();
         double b = g*targetHeight-vel*vel;
         double c = distance*distance+targetHeight*targetHeight;
         double[] tSquared = ExtraMath.quadraticFormula(a,b,c);
@@ -65,6 +70,7 @@ public class TrajectoryMath
      * @return
      */
     static double getAngleFromTime(double t,double distance){
+        double targetHeight = getTargetHeight();
         return Math.atan((g/2*t*t+targetHeight)/(distance));
     }
 
@@ -75,19 +81,21 @@ public class TrajectoryMath
      * @return
      */
     public static double getVelSquared(double dist, double launchAngle) {
+        double targetHeight = getTargetHeight();
         double c = dist*dist+targetHeight*targetHeight;
         double tSquare = 2 * (dist*Math.tan(launchAngle)- targetHeight)/g;
         return a*tSquare+c/tSquare+g*targetHeight;
     };
     public static double getMinVelSquared(double x,double y){
-        return g*(y+Math.sqrt(y*y+x*x));
+        return g*(y+Math.sqrt(y*y+x*x))+1;
     }
     public static double[] getVelBoundsFromVelSquaredBounds(double minAngleVelSquared, double maxAngleVelSquared, double distance){
+        double targetHeight = getTargetHeight();
         //if(maxAngleVelSquared<0){ maxAngleVelSquared = bot.launcher.getMaxPossibleExitVel();}
         if(minAngleVelSquared<0){ minAngleVelSquared = getMinVelSquared(distance,targetHeight);}
         //make sure max isn't too fast
-        double maxAngleVel = (maxAngleVelSquared<0)? Launcher.getMaxPossibleExitVel():Math.min(Math.sqrt(maxAngleVelSquared), Launcher.getMaxPossibleExitVel());
-        double minAngleVel = Math.min(Math.sqrt(minAngleVelSquared), Launcher.getMaxPossibleExitVel());
+        double maxAngleVel = (maxAngleVelSquared<0)? Launcher.getMaxPossibleExitVel():Math.sqrt(maxAngleVelSquared);
+        double minAngleVel = Math.sqrt(minAngleVelSquared);
         if(minAngleVel<maxAngleVel){// return the bounds such that the smaller one is the first one
             return new double[]{minAngleVel,maxAngleVel};
         }else{

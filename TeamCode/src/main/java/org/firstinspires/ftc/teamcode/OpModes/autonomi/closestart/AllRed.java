@@ -21,8 +21,7 @@ public class AllRed extends LinearOpMode
     Follower follower;
 
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() throws InterruptedException {
         follower = TestConstants.createFollower(hardwareMap);
         follower.setStartingPose(new Pose());
         follower.update();
@@ -40,13 +39,13 @@ public class AllRed extends LinearOpMode
 
         PathChain CollectClose = builder
                 .addPath(
-            // Path 2, Go to collect closest pattern
-            new BezierCurve(
-                    new Pose(80.000, 20.000),
-                    new Pose(83.155, 37.521),
-                    new Pose(134.113, 32.451)
-            )
-    )
+                        // Path 2, Go to collect closest pattern
+                        new BezierCurve(
+                                new Pose(80.000, 20.000),
+                                new Pose(83.155, 37.521),
+                                new Pose(134.113, 32.451)
+                        )
+                )
                 .setLinearHeadingInterpolation(Math.toRadians(65), Math.toRadians(0))
                 .build();
 
@@ -151,3 +150,4 @@ public class AllRed extends LinearOpMode
 //        }
     }
 }
+
