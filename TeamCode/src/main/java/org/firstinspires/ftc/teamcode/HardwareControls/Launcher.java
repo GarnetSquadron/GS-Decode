@@ -116,7 +116,7 @@ public class Launcher {
         telemetry.addData("acceleration",launcherPIDF.getAcceleration());
         telemetry.addData("has stabilized", launcherPIDF.hasStabilized());
         telemetry.addData("acceleration good", launcherPIDF.lowAcceleration());
-        telemetry.addData("velocity good", launcherPIDF.currentIsCloseToTarget());
+        telemetry.addData("velocity good", launcherPIDF.averageIsCloseToTarget());
         telemetry.addData("velocity difference", launcherPIDF.differences[0]);
         telemetry.addData("supposed velocity difference", currentVel-targetVel);
         telemetry.addData("target ratio", ratio);
