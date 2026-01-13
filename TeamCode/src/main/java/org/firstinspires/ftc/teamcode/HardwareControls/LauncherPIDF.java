@@ -56,11 +56,17 @@ public class LauncherPIDF
     public boolean lowAcceleration(){
         return ExtraMath.closeTo0(getAcceleration(),20);
     }
-    public boolean closeToTarget(){
+    public boolean averageIsCloseToTarget(){
         return ExtraMath.closeTo0(differences[0],margin);
     }
+    public boolean AverageCloseToTarget(){
+        return ExtraMath.closeTo0(average(differences),margin);
+    }
     public boolean hasStabilized(){
-        return lowAcceleration() && closeToTarget();
+        return lowAcceleration() && averageIsCloseToTarget();
+    }
+    public boolean hasDestabilized(){
+        return lowAcceleration() && averageIsCloseToTarget();
     }
 //    public boolean hasStabilizedRelaxed(){
 //        return lowAcceleration() && closeToTarget();
