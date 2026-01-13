@@ -24,7 +24,6 @@ public class Intake {
         leftGate = hardwareMap.get(Servo.class, "leftGate");
         rightGate = hardwareMap.get(Servo.class, "rightGate");
         intakeMotor.reverseMotor();
-        intakeMotor.setBrakeMode();
     }
     public boolean openGate(){
         leftGate.setPosition(0.4); //0.4
