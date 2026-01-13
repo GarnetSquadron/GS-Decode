@@ -144,10 +144,9 @@ public class Bot
             telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){//once you get to kicking the servo its far gone tbh
-                //velInRange = launcher.launcherPIDF.hasStabilized();
-                telemetry.addData("vel has stabilized",launcher.launcherPIDF.hasStabilized());
-                telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
-                if(launcher.launcherPIDF.hasDestabilized()){
+                velInRange = launcher.launcherPIDF.hasStabilized();
+                telemetry.addData("vel in range",velInRange);
+                if(!velInRange){
                     isPausedToSpinUp = true;
                     pauseStartTime = TIME.getTime();
                     intake.stop();
@@ -156,7 +155,7 @@ public class Bot
                     launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]);
                     telemetry.addLine("paused");
                     intake.stop();
-                    if(launcher.launcherPIDF.hasStabilized()){
+                    if(velInRange){
                         isPausedToSpinUp = false;
                         //change the phase start time so that there is the correct time remaining in that phase.
                         phaseStartTime = TIME.getTime();
