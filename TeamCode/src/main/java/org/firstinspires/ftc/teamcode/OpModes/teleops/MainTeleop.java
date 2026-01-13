@@ -228,7 +228,7 @@ public class MainTeleop extends SettingSelectorOpMode
 
         bot.launcher.flywheelToBallSpeedRatio +=gamepad1.dpadRightWasPressed()?0.1:(gamepad1.dpadLeftWasPressed()?-0.1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
         TrajectoryMath.ratio +=gamepad1.dpadUpWasPressed()?0.1:(gamepad1.dpadDownWasPressed()?-0.1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
-        bot.launcher.ratio+=gamepad1.aWasPressed()?0.1:(gamepad1.yWasPressed()?-0.1:0);
+        bot.launchHandler.intakePower+=gamepad1.aWasPressed()?0.1:(gamepad1.yWasPressed()?-0.1:0);
 
         bot.adjustingConstants = Gpad.getToggleValue("b");
         if(Gpad.getRisingEdge("x")&&bot.adjustingConstants){bot.putConstant(bot.getDistance(),bot.launcher.flywheelToBallSpeedRatio,TrajectoryMath.ratio,bot.launcher.ratio);}
