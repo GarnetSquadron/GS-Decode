@@ -154,7 +154,6 @@ public class Bot
                         isPausedToSpinUp = false;
                         //change the phase start time so that there is the correct time remaining in that phase.
                         phaseStartTime = TIME.getTime();
-                        intake.setPower(1);
                     }
                     //if paused, do not carry out the instructions in the switch case
                     return launchPhase;
@@ -186,7 +185,6 @@ public class Bot
                 }
                 case RELEASING_BALLS:{
                     intake.openGate();
-                    intake.setPower(1);
                     telemetry.addLine("releasing balls!");
 //                    if(getElapsedTime() > 0.2 && !velInRange){
 //
