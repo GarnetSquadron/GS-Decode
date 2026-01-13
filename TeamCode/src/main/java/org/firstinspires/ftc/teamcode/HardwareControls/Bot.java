@@ -114,7 +114,7 @@ public class Bot
     }
     public class LaunchHandler
     {
-        public double intakePower = 0.8;
+        public double intakePower = 1;
         void powerIntake(){
             intake.setPower(intakePower);
         }
