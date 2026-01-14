@@ -5,109 +5,110 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
-import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
-import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
-import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
 
-@Autonomous(name = "BetterAutoRedAll")
+@Autonomous(name = "\uD83E\uDD69 DJ's Sweaty 21 BALL AUTO \uD83E\uDD69")
 public class BetterAllRed extends OpMode
 {
     Follower follower;
     Timer pathTimer;
-    SectionedTelemetry telemetry;
     private int pathState;
     Bot bot;
 
-    PathChain ShootPreload,CollectClose,Shoot1,CollectMiddle,Shoot2,CollectFar,Shoot3;
+    PathChain ShootPreload,CollectClose,Shoot1,CollectMiddle,PressGate,Shoot2,CollectFar,Shoot3;
 
     PathBuilder builder;
-    private final Pose startPose = new Pose(88.000, 8.000,Math.toRadians(-90)); // Start Pose of our robot.
-    Path scorePreload;
-    private final Pose scorePose = new Pose(80.000, 20.000, Math.toRadians(-115)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+
     public void initializePaths(){
-        scorePreload = new Path(new BezierLine(startPose, scorePose));
-        scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
 
         builder = follower.pathBuilder();
 
+        ShootPreload = builder
+                .addPath(
+                        new BezierLine(
+                                new Pose(123.000, 123.000),
+                                new Pose(86.000, 86.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(216), Math.toRadians(220))
+                .build();
+
         CollectClose = builder
                 .addPath(
-                        // Path 2, Go to collect closest pattern
                         new BezierCurve(
-                                new Pose(80.000, 20.000),
-                                new Pose(83.155, 37.521),
-                                new Pose(134.113, 32.451)
+                                new Pose(86.000, 86.000),
+                                new Pose(90.622, 81.069),
+                                new Pose(129.646, 84.039)
                         )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(65), Math.toRadians(0))
+                ).setLinearHeadingInterpolation(Math.toRadians(340), Math.toRadians(360))
                 .build();
 
         Shoot1 = builder
                 .addPath(
-                        // Path 3, Go to shoot at close position, change ALL Math.toRadians(45) values to adjust the CLOSE shooting horizontal angle
-                        new BezierCurve(
-                                new Pose(134.113, 32.451),
-                                new Pose(97.099, 41.070),
-                                new Pose(78.000, 78.000)
+                        new BezierLine(
+                                new Pose(129.646, 84.039),
+                                new Pose(86.000, 86.000)
                         )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(45))
+                ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(220))
                 .build();
 
         CollectMiddle = builder
                 .addPath(
-                        // Path 4, Go to collect middle pattern
                         new BezierCurve(
-                                new Pose(78.000, 78.000),
-                                new Pose(92.535, 59.324),
-                                new Pose(126.000, 57.296)
+                                new Pose(86.000, 86.000),
+                                new Pose(93.635, 54.596),
+                                new Pose(128.608, 59.328)
                         )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(0))
+                ).setLinearHeadingInterpolation(Math.toRadians(290), Math.toRadians(360))
+                .build();
+
+        PressGate = builder
+                .addPath(
+                        new BezierCurve(
+                                new Pose(128.608, 59.328),
+                                new Pose(116.682, 68.759),
+                                new Pose(125.740, 68.434)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(325))
                 .build();
 
         Shoot2 = builder
                 .addPath(
-                        // Path 5, Go to shoot at close position, change ALL Math.toRadians(45) values to adjust the CLOSE shooting horizontal angle
-                        new BezierLine(new Pose(126.000, 57.296), new Pose(78.000, 78.000))
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(45))
+                        new BezierLine(
+                                new Pose(125.740, 68.434),
+                                new Pose(86.000, 86.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(325), Math.toRadians(220))
                 .build();
 
         CollectFar = builder
                 .addPath(
-                        // Path 6, Go to collect furthest pattern
                         new BezierCurve(
-                                new Pose(78.000, 78.000),
-                                new Pose(100.141, 84.169),
-                                new Pose(128.282, 83.155)
+                                new Pose(86.000, 86.000),
+                                new Pose(86.622, 20.783),
+                                new Pose(117.728, 38.452),
+                                new Pose(130.621, 35.186)
                         )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(0))
+                ).setLinearHeadingInterpolation(Math.toRadians(300), Math.toRadians(360))
                 .build();
 
         Shoot3 = builder
                 .addPath(
-                        // Path 7, Go to shoot at close position, change ALL Math.toRadians(45) values to adjust the CLOSE shooting horizontal angle
-                        new BezierLine(new Pose(128.282, 83.155), new Pose(78.000, 78.000))
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(45))
+                        new BezierLine(
+                                new Pose(130.621, 35.186),
+                                new Pose(86.000, 86.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(220))
                 .build();
+
     }
+
     @Override
     public void init()
     {
@@ -115,140 +116,43 @@ public class BetterAllRed extends OpMode
         pathTimer = new Timer();
         follower = bot.follower;
         initializePaths();
-        follower.setStartingPose(startPose);
-        telemetry = new SectionedTelemetry(super.telemetry);
-    }
-    @Override
-    public void init_loop(){
-        updateTelemetry();
-        bot.initTelemetry();
+        follower.setStartingPose((new Pose(123, 123, Math.toRadians(216))));
     }
 
     public void start(){
-//        follower.followPath(scorePreload);
+        follower.followPath(ShootPreload);
     }
     public void autonomousPathUpdate() {
         bot.update();
         switch (pathState) {
 
             case 0:
-                follower.followPath(scorePreload,true);
+                follower.followPath(ShootPreload);
                 incrementPathState();
-//                if(!follower.isBusy()){
-//                    incrementPathState();
-//                    bot.launchHandler.initLaunch();
-//                    //follower.pausePathFollowing();
-//                }
                 break;
 
             case 1:
-                bot.aimTurret();
-                bot.spinFlyWheelWithinFeasibleRange();
                 if(!follower.isBusy()){
                     incrementPathState();
-                    bot.launchHandler.initLaunch();
-                    //follower.pausePathFollowing();
                 }
-                break;
+
             case 2:
-                /* Score Preload */
+                bot.launchHandler.initLaunch();
 
-                if(bot.launchHandler.launchPhase== Bot.LaunchPhase.SHUTDOWN){
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(CollectClose,true);
-                    incrementPathState();
-                }
-                break;
-            case 3:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1Pose's position */
-                if(!follower.isBusy()) {
-                    /* Grab Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(Shoot1,true);
-                    incrementPathState();
-                }
-                break;
-            case 4:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-                if(!follower.isBusy()) {
-                    /* Score Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(CollectMiddle,true);
-                    incrementPathState();
-                }
-                break;
-            case 5:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup2Pose's position */
-                if(!follower.isBusy()) {
-                    /* Grab Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(Shoot2,true);
-                    incrementPathState();
-                }
-                break;
-            case 6:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-                if(!follower.isBusy()) {
-                    /* Score Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(CollectFar,true);
-                    incrementPathState();
-                }
-                break;
-            case 7:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
-                if(!follower.isBusy()) {
-                    /* Grab Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(Shoot3, true);
-                    incrementPathState();
-                }
-                break;
-            case 8:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-                if(!follower.isBusy()) {
-                    /* Set the state to a Case we won't use or define, so it just stops running an new paths */
-                    setPathState(-1);
-                }
-                break;
         }
     }
-    double loopStartTime;
 
     @Override
     public void loop()
     {
-        //follower.setTeleOpDrive(1,0,0);
         follower.update();
         autonomousPathUpdate();
-        updateTelemetry();
-//        telemetry.addData("path state", pathState);
-//        telemetry.addData("is busy", follower.isBusy());
-//        telemetry.addData("loop time", TIME.getTime() - loopStartTime);
-//        loopStartTime = TIME.getTime();
-//        telemetry.addData("x", follower.getPose().getX());
-//        telemetry.addData("y", follower.getPose().getY());
-//        telemetry.addData("heading", follower.getPose().getHeading());
-//        telemetry.update();
-//        telemetry.clear();
-
-    }
-    public void updateTelemetry(){
         telemetry.addData("path state", pathState);
-        telemetry.addData("is busy", follower.isBusy());
-        telemetry.addData("loop time", TIME.getTime() - loopStartTime);
-        loopStartTime = TIME.getTime();
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.update();
-        telemetry.clear();
+
     }
     public void setPathState(int pState) {
         pathState = pState;
