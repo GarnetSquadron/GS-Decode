@@ -91,6 +91,13 @@ public class Bot
     public boolean spinFlyWheelWithinFeasibleRange(){
         return launcher.spinFlyWheelWithinRange(getVelBounds());
     }
+
+    /**
+     * for if you want to see it before the start of the opmode
+     */
+    public void initTelemetry(){
+        telemetry.addLine("hi");
+    }
     public LaunchPhase update(){
         launcher.aimServo(getDistance(), launcher.getExitVel());
         double[] velBounds = getVelBounds();
