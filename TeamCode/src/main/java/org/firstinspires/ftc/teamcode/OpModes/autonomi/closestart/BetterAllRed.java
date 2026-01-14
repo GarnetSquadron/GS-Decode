@@ -18,6 +18,8 @@ import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
 import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
+import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
 
@@ -26,6 +28,7 @@ public class BetterAllRed extends OpMode
 {
     Follower follower;
     Timer pathTimer;
+    SectionedTelemetry telemetry;
     private int pathState;
     Bot bot;
 
@@ -113,94 +116,110 @@ public class BetterAllRed extends OpMode
         follower = bot.follower;
         initializePaths();
         follower.setStartingPose(startPose);
+        telemetry = new SectionedTelemetry(super.telemetry);
+    }
+    @Override
+    public void init_loop(){
+        updateTelemetry();
+        bot.initTelemetry();
     }
 
     public void start(){
-        follower.followPath(scorePreload);
+//        follower.followPath(scorePreload);
     }
     public void autonomousPathUpdate() {
         bot.update();
         switch (pathState) {
 
             case 0:
-                follower.followPath(scorePreload);
+                follower.followPath(scorePreload,true);
                 incrementPathState();
+//                if(!follower.isBusy()){
+//                    incrementPathState();
+//                    bot.launchHandler.initLaunch();
+//                    //follower.pausePathFollowing();
+//                }
                 break;
 
             case 1:
-
+                bot.aimTurret();
+                bot.spinFlyWheelWithinFeasibleRange();
                 if(!follower.isBusy()){
                     incrementPathState();
+                    bot.launchHandler.initLaunch();
                     //follower.pausePathFollowing();
                 }
+                break;
             case 2:
                 /* Score Preload */
-                bot.launchHandler.initLaunch();
-//                if(bot.launchHandler.launchPhase== Bot.LaunchPhase.SHUTDOWN){
-//
-//                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-//                    follower.followPath(CollectClose,true);
-//                    incrementPathState();
-//                }
-//            case 3:
-//                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1Pose's position */
-//                if(!follower.isBusy()) {
-//                    /* Grab Sample */
-//
-//                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-//                    follower.followPath(Shoot1,true);
-//                    incrementPathState();
-//                }
-//                break;
-//            case 4:
-//                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-//                if(!follower.isBusy()) {
-//                    /* Score Sample */
-//
-//                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-//                    follower.followPath(CollectMiddle,true);
-//                    incrementPathState();
-//                }
-//                break;
-//            case 5:
-//                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup2Pose's position */
-//                if(!follower.isBusy()) {
-//                    /* Grab Sample */
-//
-//                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-//                    follower.followPath(Shoot2,true);
-//                    incrementPathState();
-//                }
-//                break;
-//            case 6:
-//                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-//                if(!follower.isBusy()) {
-//                    /* Score Sample */
-//
-//                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-//                    follower.followPath(CollectFar,true);
-//                    incrementPathState();
-//                }
-//                break;
-//            case 7:
-//                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
-//                if(!follower.isBusy()) {
-//                    /* Grab Sample */
-//
-//                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-//                    follower.followPath(Shoot3, true);
-//                    incrementPathState();
-//                }
-//                break;
-//            case 8:
-//                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-//                if(!follower.isBusy()) {
-//                    /* Set the state to a Case we won't use or define, so it just stops running an new paths */
-//                    setPathState(-1);
-//                }
-//                break;
+
+                if(bot.launchHandler.launchPhase== Bot.LaunchPhase.SHUTDOWN){
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
+                    follower.followPath(CollectClose,true);
+                    incrementPathState();
+                }
+                break;
+            case 3:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1Pose's position */
+                if(!follower.isBusy()) {
+                    /* Grab Sample */
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
+                    follower.followPath(Shoot1,true);
+                    incrementPathState();
+                }
+                break;
+            case 4:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+                if(!follower.isBusy()) {
+                    /* Score Sample */
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
+                    follower.followPath(CollectMiddle,true);
+                    incrementPathState();
+                }
+                break;
+            case 5:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup2Pose's position */
+                if(!follower.isBusy()) {
+                    /* Grab Sample */
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
+                    follower.followPath(Shoot2,true);
+                    incrementPathState();
+                }
+                break;
+            case 6:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+                if(!follower.isBusy()) {
+                    /* Score Sample */
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
+                    follower.followPath(CollectFar,true);
+                    incrementPathState();
+                }
+                break;
+            case 7:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
+                if(!follower.isBusy()) {
+                    /* Grab Sample */
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
+                    follower.followPath(Shoot3, true);
+                    incrementPathState();
+                }
+                break;
+            case 8:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+                if(!follower.isBusy()) {
+                    /* Set the state to a Case we won't use or define, so it just stops running an new paths */
+                    setPathState(-1);
+                }
+                break;
         }
     }
+    double loopStartTime;
 
     @Override
     public void loop()
@@ -208,12 +227,28 @@ public class BetterAllRed extends OpMode
         //follower.setTeleOpDrive(1,0,0);
         follower.update();
         autonomousPathUpdate();
+        updateTelemetry();
+//        telemetry.addData("path state", pathState);
+//        telemetry.addData("is busy", follower.isBusy());
+//        telemetry.addData("loop time", TIME.getTime() - loopStartTime);
+//        loopStartTime = TIME.getTime();
+//        telemetry.addData("x", follower.getPose().getX());
+//        telemetry.addData("y", follower.getPose().getY());
+//        telemetry.addData("heading", follower.getPose().getHeading());
+//        telemetry.update();
+//        telemetry.clear();
+
+    }
+    public void updateTelemetry(){
         telemetry.addData("path state", pathState);
+        telemetry.addData("is busy", follower.isBusy());
+        telemetry.addData("loop time", TIME.getTime() - loopStartTime);
+        loopStartTime = TIME.getTime();
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.update();
-
+        telemetry.clear();
     }
     public void setPathState(int pState) {
         pathState = pState;
