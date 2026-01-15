@@ -17,6 +17,7 @@ import java.util.Map;
 
 public class Bot
 {
+    public Lights lights;
     public StepApproximation radToInchRatioMap;
     public StepApproximation velRangeRatioMap;
     public StepApproximation heightRatioMap;
@@ -44,6 +45,7 @@ public class Bot
     public double targetSpeed = 0;
     SectTelemetryAdder telemetry;
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
+        lights = new Lights(hardwareMap);
         this.targetGoalPos = targetGoalPos;
         launcher = new Launcher(hardwareMap);
         intake = new Intake(hardwareMap);
@@ -135,14 +137,39 @@ public class Bot
             launchPhase = LaunchPhase.SPINNING_UP;
             intake.closeGate();
             phaseStartTime = TIME.getTime();
+            ballsReleased = 0;
+            isPausedToSpinUp = false;
         }
         public void stopLaunch(){
             launchPhase = LaunchPhase.SHUTDOWN;
         }
+        /**
+         * temporary counter for far zone waiting
+         */
+        int ballsReleased = 0;
         public LaunchPhase update(double[] velBounds){
             launcher.updatePID(velBounds[0],velBounds[1]);
             targetSpeed = launcher.betweenVel(velBounds[0],velBounds[1]);
+
+
             boolean velInRange = false;
+            lights.light1.setColor(isPausedToSpinUp? Light.Color.Orange:Light.Color.Green);
+            switch (ballsReleased){
+                case 0:
+                    lights.light2.setColor(Light.Color.RED);
+                    break;
+                case 1:
+                    lights.light2.setColor(Light.Color.Orange);
+                    break;
+                case 2:
+                    lights.light2.setColor(Light.Color.Yellow);
+                    break;
+                case 3:
+                    lights.light2.setColor(Light.Color.Green);
+                    break;
+                default:
+                    lights.light2.setColor(Light.Color.Sage);
+            }
             telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){//once you get to kicking the servo its far gone tbh
@@ -157,7 +184,7 @@ public class Bot
                     launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]);
                     telemetry.addLine("paused");
                     intake.stop();
-                    if(velInRange){
+                    if(velInRange&&TIME.getTime()- pauseStartTime>1){
                         isPausedToSpinUp = false;
                         //change the phase start time so that there is the correct time remaining in that phase.
                         phaseStartTime = TIME.getTime();
@@ -181,6 +208,7 @@ public class Bot
                     break;
                 }
                 case GATE_OPENING:{
+                    intake.stop();
                     intake.openGate();
                     if (getElapsedTime() > 0.5)
                     {
@@ -193,7 +221,13 @@ public class Bot
                     intake.openGate();
                     intake.setPower(1);
                     telemetry.addLine("releasing balls!");
-                    if(getElapsedTime() > 0.4){
+                    if(getElapsedTime() > 0.1&&ballsReleased<2){
+                        isPausedToSpinUp = true;
+                        pauseStartTime = TIME.getTime();
+                        ballsReleased++;
+                        //phaseStartTime = TIME.getTime();
+                    }
+                    if(getElapsedTime() > 0.4&&ballsReleased>=2){
                         launchPhase = LaunchPhase.KICKING_SERVO;
                         phaseStartTime = TIME.getTime();
                     }

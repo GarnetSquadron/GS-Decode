@@ -300,6 +300,7 @@ public class MainTeleop extends SettingSelectorOpMode
 //            telemetry.addData("ljoystick x",gamepad1.left_stick_x);
 //            telemetry.addData("rjoystick x",gamepad1.right_stick_x);
                 telemetry.addData("launch phase", launchPhase);
+                telemetry.addData("intake power",bot.intake.getPower());
 //            telemetry.addData("phase duration",bot.launchHandler.getElapsedTime());
 //            telemetry.addData("gate is open",bot.intake.gateIsOpen());
                 telemetry.addLine();
