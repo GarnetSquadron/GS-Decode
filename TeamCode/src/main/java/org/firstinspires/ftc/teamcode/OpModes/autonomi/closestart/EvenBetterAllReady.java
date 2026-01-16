@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 
 
-@Autonomous(name = "\uD83E\uDD69 FINAL BOSS OF ALL AUTOS RED \uD83E\uDD69")
+@Autonomous(name = "Indubitally")
 public class EvenBetterAllReady extends OpMode
 {
     Follower follower;
