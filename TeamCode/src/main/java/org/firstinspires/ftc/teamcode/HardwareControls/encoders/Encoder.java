@@ -18,11 +18,17 @@ public class Encoder
     DoubleSupplier positionSupplier, velocitySupplier;
     double offset = 0, scale = 1;
     double CPR = 0;
+    public void setVelocitySupplier(DoubleSupplier velocitySupplier){
+        this.positionSupplier = velocitySupplier;
+    }
+    public void baseVelocityOnPosition(){
+        velocitySupplier = () -> getAverageTimeDerivative(prevPos, getCurrentPositionAndTime());
+    }
 
     public Encoder(DoubleSupplier positionSupplier)
     {
         this.positionSupplier = positionSupplier;
-        velocitySupplier = () -> getAverageTimeDerivative(prevPos, getCurrentPositionAndTime());
+        baseVelocityOnPosition();
     }
 
     public Encoder(Encoder encoder)

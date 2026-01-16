@@ -17,6 +17,7 @@ import java.util.Map;
 
 public class Bot
 {
+    public Lights lights;
     public StepApproximation radToInchRatioMap;
     public StepApproximation velRangeRatioMap;
     public StepApproximation heightRatioMap;
@@ -44,6 +45,7 @@ public class Bot
     public double targetSpeed = 0;
     SectTelemetryAdder telemetry;
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
+        lights = new Lights(hardwareMap);
         this.targetGoalPos = targetGoalPos;
         launcher = new Launcher(hardwareMap);
         intake = new Intake(hardwareMap);
@@ -139,35 +141,39 @@ public class Bot
             launchPhase = LaunchPhase.SPINNING_UP;
             intake.closeGate();
             phaseStartTime = TIME.getTime();
+            isPausedToSpinUp = false;
         }
         public void stopLaunch(){
             launchPhase = LaunchPhase.SHUTDOWN;
         }
-
         public LaunchPhase update(double[] velBounds){
             launcher.updatePID(velBounds[0],velBounds[1]);
             targetSpeed = launcher.betweenVel(velBounds[0],velBounds[1]);
+
+
             boolean velInRange = false;
+            lights.leftLight.setColor(!launcher.launcherPIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
+            lights.rightLight.setColor(launcher.launcherPIDF.hasDestabilized()? Light.Color.Orange:Light.Color.Green);
             telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){//once you get to kicking the servo its far gone tbh
                 //velInRange = launcher.launcherPIDF.hasStabilized();
                 telemetry.addData("vel has stabilized",launcher.launcherPIDF.hasStabilized());
                 telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
-                if(launcher.launcherPIDF.hasDestabilized()){
+                if(launcher.launcherPIDF.hasDestabilized()&&launchPhase!=LaunchPhase.SPINNING_UP){
                     isPausedToSpinUp = true;
                     pauseStartTime = TIME.getTime();
-                    intake.stop();
+                    intake.setPower(-0.5);
                 }
                 if(isPausedToSpinUp){
                     launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]);
                     telemetry.addLine("paused");
-                    intake.stop();
+                    intake.setPower(0);
                     if(launcher.launcherPIDF.hasStabilized()){
                         isPausedToSpinUp = false;
                         //change the phase start time so that there is the correct time remaining in that phase.
                         phaseStartTime = TIME.getTime();
-                        powerIntake();
+                        if(launchPhase==LaunchPhase.RELEASING_BALLS){powerIntake();}
                     }
                     //if paused, do not carry out the instructions in the switch case
                     return launchPhase;
@@ -179,8 +185,8 @@ public class Bot
                     break;
                 }
                 case SPINNING_UP:{
-                    powerIntake();
-                    if (launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]))//wait for it to be in the right range
+                    intake.stop();
+                    if (launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1])&&getElapsedTime()>1)//wait for it to be in the right range
                     {
                         launchPhase = LaunchPhase.GATE_OPENING;
                         phaseStartTime = TIME.getTime();
@@ -188,6 +194,7 @@ public class Bot
                     break;
                 }
                 case GATE_OPENING:{
+                    intake.stop();
                     intake.openGate();
                     if (getElapsedTime() > 0.5)
                     {
@@ -201,9 +208,6 @@ public class Bot
                     intake.openGate();
                     powerIntake();
                     telemetry.addLine("releasing balls!");
-//                    if(getElapsedTime() > 0.2 && !velInRange){
-//
-//                    }
                     if(getElapsedTime() > 0.4){
                         launchPhase = LaunchPhase.KICKING_SERVO;
                         phaseStartTime = TIME.getTime();
