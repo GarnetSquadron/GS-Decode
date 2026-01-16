@@ -225,13 +225,11 @@ public class yetAnotherRedAuto extends OpMode
 
     public void start(){
         follower.followPath(ShootPreload);
+        setPathState(0);
     }
     public void autonomousPathUpdate() {
         bot.update();
-        setPathState(0);
         switch (pathState) {
-
-
             case 0:
                 follower.followPath(Path1);
                 setPathState(1);
@@ -253,8 +251,10 @@ public class yetAnotherRedAuto extends OpMode
                 }
                 break;
             case 3:
-                follower.followPath(Path4);
-                setPathState(4);
+                if(!follower.isBusy()){
+                    follower.followPath(Path4);
+                    setPathState(4);
+                    }
                 break;
 
 
