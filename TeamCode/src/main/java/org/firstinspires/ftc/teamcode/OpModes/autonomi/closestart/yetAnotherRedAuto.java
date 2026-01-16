@@ -54,7 +54,7 @@ public class yetAnotherRedAuto extends OpMode
                         new BezierCurve(
                                 new Pose(86.000, 86.000),
                                 new Pose(90.622, 81.069),
-                                new Pose(129.646, 84.039)
+                                new Pose(120.000, 84.039)
                         )
                 ).setLinearHeadingInterpolation(Math.toRadians(340), Math.toRadians(360))
                 .build();
@@ -75,7 +75,7 @@ public class yetAnotherRedAuto extends OpMode
                         new BezierCurve(
                                 new Pose(86.000, 86.000),
                                 new Pose(93.635, 54.596),
-                                new Pose(128.608, 59.328)
+                                new Pose(120.000, 59.328)
                         )
                 ).setLinearHeadingInterpolation(Math.toRadians(290), Math.toRadians(360))
                 .build();
