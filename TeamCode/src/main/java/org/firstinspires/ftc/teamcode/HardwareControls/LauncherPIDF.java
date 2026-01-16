@@ -75,6 +75,9 @@ public class LauncherPIDF
 //        }
 //        return true;
     }
+    public boolean closeToTarget(){
+        return ExtraMath.closeTo0(average(differences),margin);
+    }
     public boolean hasDestabilized(){
         return !ExtraMath.closeTo0(differences[0],margin);
     }

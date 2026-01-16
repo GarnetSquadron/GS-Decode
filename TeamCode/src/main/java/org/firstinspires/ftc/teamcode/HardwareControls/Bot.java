@@ -150,7 +150,7 @@ public class Bot
             return getDistance()>120;
         }
         public boolean isUpToSpeed(){
-            return launcher.launcherPIDF.hasStabilized();
+            return pauseBetweenShots()?launcher.launcherPIDF.hasStabilized():launcher.launcherPIDF.closeToTarget();
         }
 
         /**
@@ -160,7 +160,7 @@ public class Bot
          * @return
          */
         public boolean shouldSpinUp(){
-            return pauseBetweenShots()? launcher.launcherPIDF.hasDestabilized():!launcher.launcherPIDF.hasStabilized();
+            return pauseBetweenShots()? launcher.launcherPIDF.hasDestabilized():!launcher.launcherPIDF.closeToTarget();
         }
         public LaunchPhase update(double[] velBounds){
             launcher.updatePID(velBounds[0],velBounds[1]);
