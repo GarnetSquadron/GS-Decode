@@ -306,7 +306,6 @@ public class MainTeleop extends SettingSelectorOpMode
                 telemetry.addData("radPerSec to VelRatio", bot.launcher.flywheelToBallSpeedRatio);
                 telemetry.addData("velocity ratio", bot.launcher.ratio);
                 telemetry.addData("height ratio", TrajectoryMath.ratio);
-                telemetry.addData("intake power",bot.launchHandler.intakePower);
                 telemetry.addData("distance",distance);
                 telemetry.addLine(bot.getConstantList());
 //            }

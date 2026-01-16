@@ -123,9 +123,8 @@ public class Bot
     }
     public class LaunchHandler
     {
-        public double intakePower = 1;
         void powerIntake(){
-            intake.setPower(intakePower);
+            intake.setPower(pauseBetweenShots()?0.7:1);
         }
         public LaunchPhase launchPhase = LaunchPhase.NULL;
         public boolean isPausedToSpinUp = false;
@@ -146,9 +145,28 @@ public class Bot
         public void stopLaunch(){
             launchPhase = LaunchPhase.SHUTDOWN;
         }
+
+        public boolean pauseBetweenShots(){
+            return getDistance()>120;
+        }
+        public boolean isUpToSpeed(){
+            return launcher.launcherPIDF.hasStabilized();
+        }
+
+        /**
+         * if we're in pause between shots mode, then check if the current speed is enough. otherwise check the average
+         * of the past few to reduce noise, with the price of less reaction time
+         * I know I hate my code too.
+         * @return
+         */
+        public boolean shouldSpinUp(){
+            return pauseBetweenShots()? launcher.launcherPIDF.hasDestabilized():!launcher.launcherPIDF.hasStabilized();
+        }
         public LaunchPhase update(double[] velBounds){
             launcher.updatePID(velBounds[0],velBounds[1]);
             targetSpeed = launcher.betweenVel(velBounds[0],velBounds[1]);
+            telemetry.addData("launchPhase",launchPhase);
+            telemetry.addData("is pausing",pauseBetweenShots());
 
 
             boolean velInRange = false;
@@ -156,20 +174,22 @@ public class Bot
             lights.rightLight.setColor(launcher.launcherPIDF.hasDestabilized()? Light.Color.Orange:Light.Color.Green);
             telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
-            if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){//once you get to kicking the servo its far gone tbh
+            //once you get to kicking the servo its far gone imo
+            if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){
                 //velInRange = launcher.launcherPIDF.hasStabilized();
                 telemetry.addData("vel has stabilized",launcher.launcherPIDF.hasStabilized());
                 telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
-                if(launcher.launcherPIDF.hasDestabilized()&&launchPhase!=LaunchPhase.SPINNING_UP){
+
+                if(shouldSpinUp()&&launchPhase!=LaunchPhase.SPINNING_UP&&!isPausedToSpinUp){
                     isPausedToSpinUp = true;
                     pauseStartTime = TIME.getTime();
-                    intake.setPower(-0.5);
+                    intake.setPower(pauseBetweenShots()?-0.5:0);
                 }
                 if(isPausedToSpinUp){
                     launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]);
                     telemetry.addLine("paused");
                     intake.setPower(0);
-                    if(launcher.launcherPIDF.hasStabilized()){
+                    if(isUpToSpeed()){
                         isPausedToSpinUp = false;
                         //change the phase start time so that there is the correct time remaining in that phase.
                         phaseStartTime = TIME.getTime();
