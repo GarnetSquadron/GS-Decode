@@ -33,7 +33,10 @@ public class LauncherPIDF
     public void updateArrays(double velocity, double targetVel){
         differences = updateArray(differences,velocity-targetVel);
         times = updateArray(times, TIME.getTime());
-        derivatives = updateArray(derivatives,(differences[0]- differences[sampleSize-1])/(times[0]-times[sampleSize-1]));
+        derivatives = updateArray(derivatives,getAverageAccel(0,sampleSize-1));
+    }
+    public double getAverageAccel(int index1, int index2){
+        return (differences[index1]- differences[index2])/(times[index1]-times[index2]);
     }
     public double getPid(double velocity, double targetVel) {
         //updateArrays(velocity,targetVel);
@@ -54,14 +57,33 @@ public class LauncherPIDF
         return average(derivatives);
     }
     public boolean lowAcceleration(){
-        return ExtraMath.closeTo0(getAcceleration(),10);
+        return ExtraMath.closeTo0(getAcceleration(),20);
+    }
+    public boolean currentIsCloseToTarget(){
+        return ExtraMath.closeTo0(differences[0],margin);
+    }
+    public boolean averageCloseToTarget(){
+        return ExtraMath.closeTo0(differences[0],margin);
+    }
+    public boolean hasStabilized(){
+        return lowAcceleration() && averageCloseToTarget();
+
+//        for(int i=0;i<sampleSize;i++){
+//            if(!ExtraMath.closeTo0(differences[i],margin-2)){
+//                return false;
+//            };
+//        }
+//        return true;
     }
     public boolean closeToTarget(){
         return ExtraMath.closeTo0(average(differences),margin);
     }
-    public boolean hasStabilized(){
-        return closeToTarget() &&closeToTarget();
+    public boolean hasDestabilized(){
+        return !ExtraMath.closeTo0(differences[0],margin);
     }
+//    public boolean hasStabilizedRelaxed(){
+//        return lowAcceleration() && closeToTarget();
+//    }
     public double getFeedForward(double targetVel){
         return Ks *Math.signum(targetVel)+Kv *targetVel;
     }
@@ -83,5 +105,12 @@ public class LauncherPIDF
         }
         return sum/arr.length;
     }
+//    public static double getAverageAcceleration(int iterations){
+//        double sum = 0;
+//        for(int i = 0;i<iterations;i++){
+//            sum+=;
+//        }
+//        return sum/iterations;
+//    }
 
 }

@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode.HardwareControls;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Lights{
-    public Light light1;
-    public Light light2;
+    public Light leftLight;
+    public Light rightLight;
     public Lights(HardwareMap hardwareMap){
-        light1 = new Light(hardwareMap,"light1");
-        light2 = new Light(hardwareMap,"light2");
+        leftLight = new Light(hardwareMap,"light1");
+        rightLight = new Light(hardwareMap,"light2");
     }
 }
