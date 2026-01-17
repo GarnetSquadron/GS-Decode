@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
-
+import
 
 @Autonomous(name = "Indubitally")
 public class EvenBetterAllReady extends OpMode
@@ -25,6 +25,9 @@ public class EvenBetterAllReady extends OpMode
     PathChain ShootPreload,CollectClose,Shoot1,CollectMiddle,PressGate,Shoot2,CollectFar,Shoot3,Path1,Path2,Path3,Path4,Path5,Path6;
 
     PathBuilder builder;
+
+    private static final double PAUSE_TIME = 1;
+
 
     public void initializePaths(){
 
@@ -192,7 +195,7 @@ public class EvenBetterAllReady extends OpMode
     }
     public void autonomousPathUpdate() {
         bot.update();
-        setPathState(0);
+
         switch (pathState) {
 
             case 0:
@@ -201,38 +204,42 @@ public class EvenBetterAllReady extends OpMode
                 break;
 
             case 1:
-                if(!follower.isBusy()){
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > PAUSE_TIME) {
                     follower.followPath(Path2);
                     setPathState(2);
                 }
                 break;
 
             case 2:
-                if(!follower.isBusy()){
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > PAUSE_TIME) {
                     follower.followPath(Path3);
                     setPathState(3);
                 }
                 break;
+
             case 3:
-                follower.followPath(Path4);
-                setPathState(4);
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > PAUSE_TIME) {
+                    follower.followPath(Path4);
+                    setPathState(4);
+                }
                 break;
 
             case 4:
-                if(!follower.isBusy()){
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > PAUSE_TIME) {
                     follower.followPath(Path5);
                     setPathState(5);
                 }
                 break;
 
             case 5:
-                if(!follower.isBusy()){
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > PAUSE_TIME) {
                     follower.followPath(Path6);
                     setPathState(6);
                 }
                 break;
         }
     }
+
 
     @Override
     public void loop()
