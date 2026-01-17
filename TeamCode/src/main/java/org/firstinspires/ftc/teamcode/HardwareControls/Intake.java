@@ -90,6 +90,9 @@ public class Intake {
     public void setPower(double power) {
         intakeMotor.setPower(power);
     }
+    public double getPower(){
+        return intakeMotor.getPower();
+    }
     public void stop() {
         intakeMotor.stop();
     }
