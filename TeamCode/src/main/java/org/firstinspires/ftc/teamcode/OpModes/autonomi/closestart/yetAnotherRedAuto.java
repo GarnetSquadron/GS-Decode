@@ -142,25 +142,25 @@ public class yetAnotherRedAuto extends OpMode
         Path4 = new Path(
                         new BezierCurve(
                                 new Pose(83.000, 83.000),
-                                new Pose(89.603, 65.774),
-                                new Pose(105.000, 59.000)
+                                new Pose(93.401, 71.235),
+                                new Pose(98.000, 59.000)
                         )
                 );
 
 
         Path5 = new Path(
-                        new BezierCurve(
-                                new Pose(105.000, 59.000),
-                                new Pose(120.478, 57.533),
-                                new Pose(132.000, 63.000)
+                        new BezierLine(
+                                new Pose(98.000, 59.000),
+
+                                new Pose(133.000, 59.000)
                         )
                 );
+        //Path5.setVelocityConstraint(0.6);
 
 
         Path6 = new Path(
                         new BezierLine(
-                                new Pose(132.000, 63.000),
-
+                                new Pose(133.000, 59.000),
 
                                 new Pose(83.000, 83.000)
                         )
@@ -206,7 +206,7 @@ public class yetAnotherRedAuto extends OpMode
                 break;
             case 2:
                 if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
-                    //follower.followPath(Path2,true);
+                    follower.followPath(Path2,true);
                     incrementPathState();
                 }
                 break;
@@ -218,16 +218,18 @@ public class yetAnotherRedAuto extends OpMode
                 }
                 break;
             case 4:
+                bot.spinFlyWheelWithinFeasibleRange();
                 if(!follower.isBusy()){
-                    follower.followPath(Path4,true);
+                    //follower.followPath(Path4,true);
+                    bot.launchHandler.initLaunch();
                     incrementPathState();
                 }
                 break;
 
 
             case 5:
-                if(!follower.isBusy()){
-                    follower.followPath(Path5,true);
+                if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
+                    follower.followPath(Path4,true);
                     incrementPathState();
                 }
                 break;
@@ -235,10 +237,22 @@ public class yetAnotherRedAuto extends OpMode
 
             case 6:
                 if(!follower.isBusy()){
+                    follower.followPath(Path5,true);
+                    incrementPathState();
+                }
+                break;
+            case 7:
+                bot.intake.setPower(1);
+                if(!follower.isBusy()){
                     follower.followPath(Path6,true);
                     incrementPathState();
                 }
                 break;
+            case 8:
+                bot.spinFlyWheelWithinFeasibleRange();
+                if(!follower.isBusy()){
+                    bot.launchHandler.initLaunch();
+                }
         }
     }
 

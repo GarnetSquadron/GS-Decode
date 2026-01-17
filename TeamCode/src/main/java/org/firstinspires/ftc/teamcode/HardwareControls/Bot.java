@@ -100,9 +100,12 @@ public class Bot
     public void initTelemetry(){
         telemetry.addLine("hi");
     }
+    double loopStartTime = 0;
     public LaunchPhase update(){
         launcher.aimServo(getDistance(), launcher.getExitVel());
         double[] velBounds = getVelBounds();
+        telemetry.addData("loop time", TIME.getTime() - loopStartTime);
+        loopStartTime = TIME.getTime();
         telemetry.addArray("VEL BOUNDS",velBounds);
         if(!adjustingConstants){
             updateConstants();
