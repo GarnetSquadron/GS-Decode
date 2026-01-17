@@ -7,6 +7,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
@@ -14,8 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
-
-
+import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 
 @Autonomous(name = "\uD83E\uDD69 FINAL BOSS OF ALL AUTOS RED \uD83E\uDD69")
@@ -27,10 +27,11 @@ public class yetAnotherRedAuto extends OpMode
     Bot bot;
 
 
-    PathChain ShootPreload,CollectClose,Shoot1,CollectMiddle,PressGate,Shoot2,CollectFar,Shoot3,Path1,Path2,Path3,Path4,Path5,Path6;
+    Path ShootPreload,CollectClose,Shoot1,CollectMiddle,PressGate,Shoot2,CollectFar,Shoot3,Path1,Path2,Path3,Path4,Path5,Path6;
 
 
     PathBuilder builder;
+    SectionedTelemetry telemetry;
 
 
     public void initializePaths(){
@@ -39,93 +40,76 @@ public class yetAnotherRedAuto extends OpMode
         builder = follower.pathBuilder();
 
 
-        ShootPreload = builder
-                .addPath(
+        ShootPreload = new Path(
                         new BezierLine(
                                 new Pose(123.000, 123.000),
                                 new Pose(86.000, 86.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(216), Math.toRadians(220))
-                .build();
+                );/*.setLinearHeadingInterpolation(Math.toRadians(216), Math.toRadians(220));*/
 
 
-        CollectClose = builder
-                .addPath(
+        CollectClose = new Path(
                         new BezierCurve(
                                 new Pose(86.000, 86.000),
                                 new Pose(90.622, 81.069),
                                 new Pose(120.000, 84.039)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(340), Math.toRadians(360))
-                .build();
+                );
 
 
-        Shoot1 = builder
-                .addPath(
+        Shoot1 = new Path(
                         new BezierLine(
                                 new Pose(129.646, 84.039),
                                 new Pose(86.000, 86.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(220))
-                .build();
+                );
 
 
-        CollectMiddle = builder
-                .addPath(
+        CollectMiddle = new Path(
                         new BezierCurve(
                                 new Pose(86.000, 86.000),
                                 new Pose(93.635, 54.596),
                                 new Pose(120.000, 59.328)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(290), Math.toRadians(360))
-                .build();
+                );
 
 
-        PressGate = builder
-                .addPath(
+        PressGate = new Path(
                         new BezierCurve(
                                 new Pose(128.608, 59.328),
                                 new Pose(116.682, 68.759),
                                 new Pose(125.740, 68.434)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(325))
-                .build();
+                );
 
 
-        Shoot2 = builder
-                .addPath(
+        Shoot2 = new Path(
                         new BezierLine(
                                 new Pose(125.740, 68.434),
                                 new Pose(86.000, 86.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(325), Math.toRadians(220))
-                .build();
+                );
 
 
-        CollectFar = builder
-                .addPath(
+        CollectFar = new Path(
                         new BezierCurve(
                                 new Pose(86.000, 86.000),
                                 new Pose(86.622, 20.783),
                                 new Pose(117.728, 38.452),
                                 new Pose(130.621, 35.186)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(300), Math.toRadians(360))
-                .build();
+                );
 
 
-        Shoot3 = builder
-                .addPath(
+        Shoot3 = new Path(
                         new BezierLine(
                                 new Pose(130.621, 35.186),
                                 new Pose(86.000, 86.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(220))
-                .build();
+                );
 
 
-        Path1 = builder
-                .addPath(
+        Path1 = new Path(
 
 
                         new BezierLine(
@@ -134,77 +118,53 @@ public class yetAnotherRedAuto extends OpMode
 
                                 new Pose(83.000, 83.000)
                         )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(216), Math.toRadians(300))
-
-
-                .build();
-        Path2 = builder
-                .addPath(
+                );
+        Path2 = new Path(
                         new BezierLine(
                                 new Pose(83.000, 83.000),
 
 
                                 new Pose(130.000, 83.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                );
 
 
-                .build();
-
-
-        Path3 = builder
-                .addPath(
+        Path3 = new Path(
                         new BezierLine(
                                 new Pose(130.000, 83.000),
 
 
                                 new Pose(83.000, 83.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(300))
+                );
 
 
-                .build();
-
-
-        PathChain Path4 = builder
-                .addPath(
+        Path4 = new Path(
                         new BezierCurve(
                                 new Pose(83.000, 83.000),
                                 new Pose(89.603, 65.774),
                                 new Pose(105.000, 59.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(300), Math.toRadians(0))
+                );
 
 
-                .build();
-
-
-        Path5 = builder
-                .addPath(
+        Path5 = new Path(
                         new BezierCurve(
                                 new Pose(105.000, 59.000),
                                 new Pose(120.478, 57.533),
                                 new Pose(132.000, 63.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(30))
+                );
 
 
-                .build();
-
-
-        Path6 = builder
-                .addPath(
+        Path6 = new Path(
                         new BezierLine(
                                 new Pose(132.000, 63.000),
 
 
                                 new Pose(83.000, 83.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(30), Math.toRadians(300))
-
-
-                .build();
+                );
 
 
 
@@ -220,6 +180,7 @@ public class yetAnotherRedAuto extends OpMode
         follower = bot.follower;
         initializePaths();
         follower.setStartingPose((new Pose(123, 123, Math.toRadians(216))));
+        this.telemetry = new SectionedTelemetry(super.telemetry);
     }
 
 
@@ -229,34 +190,37 @@ public class yetAnotherRedAuto extends OpMode
     }
     public void autonomousPathUpdate() {
         bot.update();
+        bot.aimTurret();
         switch (pathState) {
             case 0:
                 follower.followPath(Path1,true);
-                setPathState(1);
+                incrementPathState();
                 break;
             case 1:
                 bot.spinFlyWheelWithinFeasibleRange();
                 if(!follower.isBusy()){
                     bot.launchHandler.initLaunch();
-                    setPathState(2);
+                    incrementPathState();
                     //bot.intake.setPower(1);
                 }
                 break;
             case 2:
                 if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
-                    follower.followPath(Path2,true);
-                    bot.intake.setPower(1);
+                    //follower.followPath(Path2,true);
+                    incrementPathState();
                 }
+                break;
             case 3:
+                bot.intake.setPower(1);
                 if(!follower.isBusy()){
                     follower.followPath(Path3,true);
-                    setPathState(3);
+                    incrementPathState();
                 }
                 break;
             case 4:
                 if(!follower.isBusy()){
                     follower.followPath(Path4,true);
-                    setPathState(4);
+                    incrementPathState();
                 }
                 break;
 
@@ -264,7 +228,7 @@ public class yetAnotherRedAuto extends OpMode
             case 5:
                 if(!follower.isBusy()){
                     follower.followPath(Path5,true);
-                    setPathState(5);
+                    incrementPathState();
                 }
                 break;
 
@@ -272,7 +236,7 @@ public class yetAnotherRedAuto extends OpMode
             case 6:
                 if(!follower.isBusy()){
                     follower.followPath(Path6,true);
-                    setPathState(6);
+                    incrementPathState();
                 }
                 break;
         }
@@ -289,6 +253,7 @@ public class yetAnotherRedAuto extends OpMode
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.update();
+        telemetry.clear();
 
 
     }
