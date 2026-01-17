@@ -11,19 +11,18 @@ public class TTimer
 {
     double duration;
     double startTime;
-    DoubleSupplier TimeSinceInit;
     boolean timeStarted;
 
-    public TTimer(DoubleSupplier SystemTime)
+    public TTimer()
     {
         duration = 0;
-        TimeSinceInit = SystemTime;
+        startTime = TIME.getTime();
         timeStarted = false;
     }
 
     public void StartTimer(double duration)
     {
-        startTime = TimeSinceInit.getAsDouble();
+        startTime = TIME.getTime();
         timeStarted = true;
         this.duration = duration;
     }
@@ -35,12 +34,12 @@ public class TTimer
 
     public boolean timeover()
     {
-        return duration + startTime < TimeSinceInit.getAsDouble();
+        return timeLeft()>0;
     }
 
     public double timeLeft()
     {
-        return startTime + duration - TimeSinceInit.getAsDouble();
+        return startTime + duration - TIME.getTime();
     }
 
 }
