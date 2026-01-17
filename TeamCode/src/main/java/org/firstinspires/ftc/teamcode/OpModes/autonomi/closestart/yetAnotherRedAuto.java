@@ -165,6 +165,26 @@ public class yetAnotherRedAuto extends OpMode
                                 new Pose(83.000, 83.000)
                         )
                 );
+        
+
+        Path7 = new Path(
+                  new BezierLine(
+                    new Pose(83.000, 83.000),
+                    
+                    new Pose(114.000, 57.000)
+                  )
+                );
+        
+        
+        Path8 = new Path(
+                  new BezierLine(
+                    new Pose(114.000, 57.000),
+                    
+                    new Pose(130.000, 61.000)
+                  )
+                );
+        //Path8.setVelocityConstraint(0.6);
+
 
 
 
