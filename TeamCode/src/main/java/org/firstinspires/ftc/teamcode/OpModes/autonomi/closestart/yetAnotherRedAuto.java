@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
@@ -205,7 +207,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
         bot.launcher.launcherPIDF.setConstants(
                 /*bot.launcher.launcherPIDF.Kp*/0.002,
-                bot.launcher.launcherPIDF.Kd,
+                -0.0003,
                 bot.launcher.launcherPIDF.Ki,
                 bot.launcher.launcherPIDF.Ks,
                 bot.launcher.launcherPIDF.Kv,
@@ -272,7 +274,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                     bot.intake.setPower(1);
                     if ((!follower.isBusy())&& incrementingStep())
                     {
-                        bot.launcher.launcherPIDF.resetPid();
+                        //bot.launcher.launcherPIDF.resetPid();
                         bot.intake.setPower(0);
                         follower.followPath(launch3, true);
                         nextStep();
@@ -290,7 +292,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                 ()->{
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
-                        bot.launcher.launcherPIDF.resetPid();
+                        //bot.launcher.launcherPIDF.resetPid();
                         follower.followPath(intake3, true);
                         nextStep();
                     }
@@ -316,14 +318,19 @@ public class yetAnotherRedAuto extends AutoSuperClass
 
 
     public TTimer stopTimer;
+    double startTime = TIME.getTime();
+    double spunUpTime = 0;
+    boolean prevStabilized;
     public void start()
     {
+        startTime = TIME.getTime();
         stopTimer = new TTimer();
         stopTimer.StartTimer(29);
         //follower.followPath(ShootPreload);
         setCurrentStep(0);
         bot.updateConstants(bot.getDistance(getLaunchPosition()));
         bot.launcher.launcherPIDF.resetPid();
+        bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
 
 
     }
@@ -332,7 +339,6 @@ public class yetAnotherRedAuto extends AutoSuperClass
     {
         return launchPose.getAsVector();
     }
-
     public void autonomousPathUpdate()
     {
         bot.update();
@@ -340,6 +346,10 @@ public class yetAnotherRedAuto extends AutoSuperClass
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)
         {
             bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
+            //if almost spun up and still accelerating(basically a temporary bandaid solution to make the pid stabilize faster.)
+//            if(ExtraMath.closeTo0(bot.launcher.getFlywheelEncoder().getVelocity()-240,10)&&!bot.launcher.launcherPIDF.lowAcceleration()){
+//                bot.launcher.launcherPIDF.resetPid();
+//            }
         }
         bot.updatePID(getLaunchPosition());
         updateSteps();
@@ -355,6 +365,12 @@ public class yetAnotherRedAuto extends AutoSuperClass
         if(stopTimer.timeover()|| gamepad1.a){
             follower.breakFollowing();
         }
+
+        if(bot.launcher.launcherPIDF.lowAcceleration()&&!prevStabilized){
+            spunUpTime = TIME.getTime();
+        }
+        telemetry.addData("spinup time",spunUpTime-startTime);
+        prevStabilized = bot.launcher.launcherPIDF.hasStabilized();
         telemetry.addData("step", currentStep);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());

@@ -233,7 +233,7 @@ public class Bot
                 }
                 case SPINNING_UP:{
                     intake.stop();
-                    if (launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1])&&getElapsedTime()>1)//wait for it to be in the right range
+                    if (launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1])&&getElapsedTime()>0.1)//wait for it to be in the right range
                     {
                         launchPhase = LaunchPhase.GATE_OPENING;
                         phaseStartTime = TIME.getTime();
