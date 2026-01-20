@@ -8,6 +8,7 @@ import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoController;
 
+import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
 import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.InterpolationStuff.StepApproximation;
@@ -19,6 +20,11 @@ import java.util.Map;
 
 public class Bot
 {
+    /**
+     * used to save the current position for when teleop starts.
+     */
+    public static Pose currentPos = FieldDimensions.botTouchingRedGoal;
+    public static double currentTurretPosition = 0;
     public Lights lights;
     public StepApproximation radToInchRatioMap;
     public StepApproximation velRangeRatioMap;
@@ -73,6 +79,10 @@ public class Bot
         putConstant(72+adjustment,1.313,0.5,0.1);
         putConstant(78+adjustment,1.3121,0.5,0.2);
     }
+    public Bot(HardwareMap hardwareMap, double[] targetGoalPos,double turretPosition){
+        this(hardwareMap,targetGoalPos);
+        turret.turretRot.getEncoder().setPosition(turretPosition);
+    }
     public double getDistance(){
         return Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
     }
@@ -119,6 +129,8 @@ public class Bot
 //        telemetry.addArray("VEL BOUNDS",velBounds);
 //        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
 //        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
+        currentPos = follower.getPose();
+        currentTurretPosition = turret.turretRot.getEncoder().getPos();
         return launchHandler.update(velBounds);
     }
     public void updatePID(Vector position){
