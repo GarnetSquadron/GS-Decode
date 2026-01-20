@@ -41,8 +41,7 @@ public class Launcher {
     public static double getFlywheelSpeedFromBallSpeed(double ballSpeed){
         return ballSpeed*flywheelToBallSpeedRatio;
     }
-    public static
-    Turret turret;
+    public static Turret turret;
     /**
      * 13.00 battery:
      * 1.0: 400

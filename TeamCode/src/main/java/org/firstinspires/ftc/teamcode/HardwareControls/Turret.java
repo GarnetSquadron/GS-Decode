@@ -7,13 +7,12 @@ import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.MO
 import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 public class Turret
 {
+    SectTelemetryAdder telemetry = new SectTelemetryAdder("TURRET");
     public MOTOR turretRot;
     final double[] turretRange = {Math.toRadians(-95),Math.toRadians(75)};
-    SectTelemetryAdder telemetry = new SectTelemetryAdder("turret");
     public Turret(HardwareMap hardwareMap){
         turretRot = new MOTOR(hardwareMap, "turretRot");
         turretRot.setMaxPower(0.7);
@@ -63,12 +62,11 @@ public class Turret
      */
     public double aimTowardsGoal(double[] goalPos, double[] botPos, double heading){
         double rotAngle = Math.atan((goalPos[1] - botPos[1]) /(goalPos[0] - botPos[0]))-heading+Math.PI;
+//        double rotAngle = ExtraMath.angleFromCoords( (goalPos[0] - botPos[0]),(goalPos[1] - botPos[1]))-heading+Math.PI;
         setRotation(rotAngle);
-        telemetry.addData("target",rotAngle);
-        telemetry.addData("position",getEncoder().getPos());
-//        telemetry.addLine("funcVals:");
-//        telemetry.addData("atangent",Math.atan((goalPos[1] - botPos[1]) /(goalPos[0] - botPos[0])));
-//        telemetry.addData("heading",heading);
+//        telemetry.addData("angle",Math.toDegrees(rotAngle));
+//        telemetry.addData("atan",Math.toDegrees(Math.atan((goalPos[0] - botPos[0])/(goalPos[1] - botPos[1]))));
+//        telemetry.addData("heading",Math.toDegrees(heading));
 //        telemetry.addData("GoalX",goalPos[0]);
 //        telemetry.addData("botX", botPos[0]);
 //        telemetry.addData("deltaX", goalPos[0] - botPos[0]);

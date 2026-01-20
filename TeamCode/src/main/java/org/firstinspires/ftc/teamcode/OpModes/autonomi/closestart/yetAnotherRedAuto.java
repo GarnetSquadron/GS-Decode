@@ -1,194 +1,200 @@
 package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
 
 
-
-
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Vector;
 import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathBuilder;
-import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 
 @Autonomous(name = "\uD83E\uDD69 FINAL BOSS OF ALL AUTOS RED \uD83E\uDD69")
-public class yetAnotherRedAuto extends OpMode
+public class yetAnotherRedAuto extends AutoSuperClass
 {
     Follower follower;
     Timer pathTimer;
-    private int pathState;
     Bot bot;
+    Pose launchPose = new Pose(90, 83.000,Math.PI);
+    double intakingTargetX = 115;
+    Pose intakingTargetPos1 = new Pose(intakingTargetX, 83.000);
+    Pose intakingTargetPos2 = new Pose(intakingTargetX, 59.000);
+    Pose intakingTargetPos3 = new Pose(intakingTargetX, 34.8);
 
 
-    Path ShootPreload,CollectClose,Shoot1,CollectMiddle,PressGate,Shoot2,CollectFar,Shoot3,Path1,Path2,Path3,Path4,Path5,Path6;
+    Path shootPreload, collectClose, shoot1, collectMiddle, pressGate, shoot2, collectFar, shoot3, launchPreload, intake1, launch2, intake2, launch3, intake3, launch4;
 
 
-    PathBuilder builder;
     SectionedTelemetry telemetry;
 
 
-    public void initializePaths(){
+    public void initializePaths()
+    {
+
+        shootPreload = new Path(
+                new BezierLine(
+                        new Pose(123.000, 123.000),
+                        new Pose(86.000, 86.000)
+                )
+        );/*.setLinearHeadingInterpolation(Math.toRadians(216), Math.toRadians(220));*/
 
 
-        builder = follower.pathBuilder();
+        collectClose = new Path(
+                new BezierCurve(
+                        new Pose(86.000, 86.000),
+                        new Pose(90.622, 81.069),
+                        new Pose(120.000, 84.039)
+                )
+        );
 
 
-        ShootPreload = new Path(
-                        new BezierLine(
-                                new Pose(123.000, 123.000),
-                                new Pose(86.000, 86.000)
-                        )
-                );/*.setLinearHeadingInterpolation(Math.toRadians(216), Math.toRadians(220));*/
+        shoot1 = new Path(
+                new BezierLine(
+                        new Pose(129.646, 84.039),
+                        new Pose(86.000, 86.000)
+                )
+        );
 
 
-        CollectClose = new Path(
-                        new BezierCurve(
-                                new Pose(86.000, 86.000),
-                                new Pose(90.622, 81.069),
-                                new Pose(120.000, 84.039)
-                        )
-                );
+        collectMiddle = new Path(
+                new BezierCurve(
+                        new Pose(86.000, 86.000),
+                        new Pose(93.635, 54.596),
+                        new Pose(120.000, 59.328)
+                )
+        );
 
 
-        Shoot1 = new Path(
-                        new BezierLine(
-                                new Pose(129.646, 84.039),
-                                new Pose(86.000, 86.000)
-                        )
-                );
+        pressGate = new Path(
+                new BezierCurve(
+                        new Pose(128.608, 59.328),
+                        new Pose(116.682, 68.759),
+                        new Pose(125.740, 68.434)
+                )
+        );
 
 
-        CollectMiddle = new Path(
-                        new BezierCurve(
-                                new Pose(86.000, 86.000),
-                                new Pose(93.635, 54.596),
-                                new Pose(120.000, 59.328)
-                        )
-                );
+        shoot2 = new Path(
+                new BezierLine(
+                        new Pose(125.740, 68.434),
+                        new Pose(86.000, 86.000)
+                )
+        );
 
 
-        PressGate = new Path(
-                        new BezierCurve(
-                                new Pose(128.608, 59.328),
-                                new Pose(116.682, 68.759),
-                                new Pose(125.740, 68.434)
-                        )
-                );
+        collectFar = new Path(
+                new BezierCurve(
+                        new Pose(86.000, 86.000),
+                        new Pose(86.622, 20.783),
+                        new Pose(117.728, 38.452),
+                        new Pose(130.621, 35.186)
+                )
+        );
 
 
-        Shoot2 = new Path(
-                        new BezierLine(
-                                new Pose(125.740, 68.434),
-                                new Pose(86.000, 86.000)
-                        )
-                );
+        shoot3 = new Path(
+                new BezierLine(
+                        new Pose(130.621, 35.186),
+                        new Pose(86.000, 86.000)
+                )
+        );
 
 
-        CollectFar = new Path(
-                        new BezierCurve(
-                                new Pose(86.000, 86.000),
-                                new Pose(86.622, 20.783),
-                                new Pose(117.728, 38.452),
-                                new Pose(130.621, 35.186)
-                        )
-                );
+        launchPreload = new Path(
 
 
-        Shoot3 = new Path(
-                        new BezierLine(
-                                new Pose(130.621, 35.186),
-                                new Pose(86.000, 86.000)
-                        )
-                );
+                new BezierLine(
+                        FieldDimensions.botTouchingRedGoal,
 
 
-        Path1 = new Path(
+                        launchPose
+                )
+        );
+        intake1 = new Path(
+                new BezierLine(
+                        launchPose,
 
 
-                        new BezierLine(
-                                new Pose(126.000, 118.700),
+                        intakingTargetPos1
+                )
+        );
 
 
-                                new Pose(83.000, 83.000)
-                        )
-                );
-        Path2 = new Path(
-                        new BezierLine(
-                                new Pose(83.000, 83.000),
+        launch2 = new Path(
+                new BezierLine(
+                        intakingTargetPos1,
 
 
-                                new Pose(130.000, 83.000)
-                        )
-                );
+                        launchPose
+                )
+        );
 
 
-        Path3 = new Path(
-                        new BezierLine(
-                                new Pose(130.000, 83.000),
-
-
-                                new Pose(83.000, 83.000)
-                        )
-                );
-
-
-        Path4 = new Path(
-                        new BezierCurve(
-                                new Pose(83.000, 83.000),
-                                new Pose(93.401, 71.235),
-                                new Pose(98.000, 59.000)
-                        )
-                );
-
-
-        Path5 = new Path(
-                        new BezierLine(
-                                new Pose(98.000, 59.000),
-
-                                new Pose(133.000, 59.000)
-                        )
-                );
+        intake2 = new Path(new BezierCurve(
+                launchPose,
+                new Pose(86.6, 57.9),
+                intakingTargetPos2
+        ));
+        //path4.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0));
+//                follower.pathBuilder().addPath(
+//                new BezierCurve(
+//                        launchPose,
+//                        new Pose(86.6, 57.9),
+//                        intakingTargetPos2
+//                )
+//        ).addPath(
+//                new BezierLine(
+//                        new Pose(98.000, 59.000),
+//
+//                        intakingTargetPos2
+//                )
+//        ).build();
         //Path5.setVelocityConstraint(0.6);
 
 
-        Path6 = new Path(
-                        new BezierLine(
-                                new Pose(133.000, 59.000),
+        launch3 = new Path(
+                new BezierLine(
+                        intakingTargetPos2,
 
-                                new Pose(83.000, 83.000)
-                        )
-                );
-        
+                        launchPose
+                )
+        );
+        launch3.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180));
+        //path6.setHeadingConstraint(0.1);
 
-        Path7 = new Path(
-                  new BezierLine(
-                    new Pose(83.000, 83.000),
-                    
-                    new Pose(114.000, 57.000)
+
+        intake3 = new Path(
+                  new BezierCurve(
+                    launchPose,
+
+                    new Pose(75.3,33.97),
+
+
+                    intakingTargetPos3
                   )
                 );
-        
-        
-        Path8 = new Path(
+
+        launch4 = new Path(
                   new BezierLine(
-                    new Pose(114.000, 57.000),
-                    
-                    new Pose(130.000, 61.000)
+                    intakingTargetPos3,
+
+                    launchPose
                   )
                 );
-        //Path8.setVelocityConstraint(0.6);
+        launch4.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180));
+        //path7.setVelocityConstraint(0.6);
 
 
-
-
-
+    }
+    public boolean incrementingStep(){
+        return !gamepad1.a;
     }
 
 
@@ -196,84 +202,142 @@ public class yetAnotherRedAuto extends OpMode
     public void init()
     {
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot.launcher.launcherPIDF.setConstants(
+                /*bot.launcher.launcherPIDF.Kp*/0.002,
+                bot.launcher.launcherPIDF.Kd,
+                bot.launcher.launcherPIDF.Ki,
+                bot.launcher.launcherPIDF.Ks,
+                bot.launcher.launcherPIDF.Kv,
+                bot.launcher.launcherPIDF.Ka
+        );
         pathTimer = new Timer();
         follower = bot.follower;
         initializePaths();
-        follower.setStartingPose((new Pose(123, 123, Math.toRadians(216))));
+        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
         this.telemetry = new SectionedTelemetry(super.telemetry);
+        initSteps(
+                () ->
+                {//bot.spinFlyWheelWithinFeasibleRange();
+                    follower.followPath(launchPreload, true);
+                    nextStep();
+                },
+                () ->
+                {
+                    if ((!follower.isBusy())&& incrementingStep())
+                    {
+                        bot.launchHandler.initLaunch();
+                        nextStep();
+                        //bot.intake.setPower(1);
+                    }
+                },
+                () ->
+                {
+                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
+                    {
+                        bot.launcher.launcherPIDF.resetPid();
+                        follower.followPath(intake1, true);
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+                    bot.intake.setPower(1);
+                    if ((!follower.isBusy())&& incrementingStep())
+                    {
+                        bot.intake.setPower(0);
+                        follower.followPath(launch2, true);
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+                    if ((!follower.isBusy())&& incrementingStep())
+                    {
+                        //follower.followPath(Path4,true);
+                        bot.launchHandler.initLaunch();
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+                    if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
+                    {
+                        follower.followPath(intake2, true);
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+                    bot.intake.setPower(1);
+                    if ((!follower.isBusy())&& incrementingStep())
+                    {
+                        bot.launcher.launcherPIDF.resetPid();
+                        bot.intake.setPower(0);
+                        follower.followPath(launch3, true);
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+//                bot.spinFlyWheelWithinFeasibleRange();
+                    if ((!follower.isBusy())&& incrementingStep())
+                    {
+                        bot.launchHandler.initLaunch();
+                        nextStep();
+                    }
+                },
+                ()->{
+                    if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
+                    {
+                        bot.launcher.launcherPIDF.resetPid();
+                        follower.followPath(intake3, true);
+                        nextStep();
+                    }
+                },
+                ()->{
+                    bot.intake.setPower(1);
+                    if((!follower.isBusy())&& incrementingStep()){
+//                        bot.intake.setPower(0);
+//                        bot.launcher.launcherPIDF.resetPid();
+                        follower.followPath(launch4, true);
+                        nextStep();
+                    }
+                },
+                ()->{
+                    if((!follower.isBusy())&& incrementingStep()){
+//                        bot.launcher.launcherPIDF.resetPid();
+//                        follower.followPath(path8, true);
+                        nextStep();
+                    }
+                }
+        );
     }
 
 
-    public void start(){
+    public void start()
+    {
         //follower.followPath(ShootPreload);
-        setPathState(0);
+        setCurrentStep(0);
+        bot.updateConstants(bot.getDistance(getLaunchPosition()));
+        bot.launcher.launcherPIDF.resetPid();
+
     }
-    public void autonomousPathUpdate() {
+
+    public Vector getLaunchPosition()
+    {
+        return launchPose.getAsVector();
+    }
+
+    public void autonomousPathUpdate()
+    {
         bot.update();
         bot.aimTurret();
-        switch (pathState) {
-            case 0:
-                follower.followPath(Path1,true);
-                incrementPathState();
-                break;
-            case 1:
-                bot.spinFlyWheelWithinFeasibleRange();
-                if(!follower.isBusy()){
-                    bot.launchHandler.initLaunch();
-                    incrementPathState();
-                    //bot.intake.setPower(1);
-                }
-                break;
-            case 2:
-                if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
-                    follower.followPath(Path2,true);
-                    incrementPathState();
-                }
-                break;
-            case 3:
-                bot.intake.setPower(1);
-                if(!follower.isBusy()){
-                    follower.followPath(Path3,true);
-                    incrementPathState();
-                }
-                break;
-            case 4:
-                bot.spinFlyWheelWithinFeasibleRange();
-                if(!follower.isBusy()){
-                    //follower.followPath(Path4,true);
-                    bot.launchHandler.initLaunch();
-                    incrementPathState();
-                }
-                break;
-
-
-            case 5:
-                if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
-                    follower.followPath(Path4,true);
-                    incrementPathState();
-                }
-                break;
-
-
-            case 6:
-                if(!follower.isBusy()){
-                    follower.followPath(Path5,true);
-                    incrementPathState();
-                }
-                break;
-            case 7:
-                bot.intake.setPower(1);
-                if(!follower.isBusy()){
-                    follower.followPath(Path6,true);
-                    incrementPathState();
-                }
-                break;
-            case 8:
-                bot.spinFlyWheelWithinFeasibleRange();
-                if(!follower.isBusy()){
-                    bot.launchHandler.initLaunch();
-                }
+        if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)
+        {
+            bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
         }
+        bot.updatePID(getLaunchPosition());
+        updateSteps();
     }
 
 
@@ -281,8 +345,9 @@ public class yetAnotherRedAuto extends OpMode
     public void loop()
     {
         follower.update();
+        follower.setMaxPower(1);
         autonomousPathUpdate();
-        telemetry.addData("path state", pathState);
+        telemetry.addData("step", currentStep);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
@@ -290,13 +355,6 @@ public class yetAnotherRedAuto extends OpMode
         telemetry.clear();
 
 
-    }
-    public void setPathState(int pState) {
-        pathState = pState;
-        pathTimer.resetTimer();
-    }
-    public void incrementPathState(){
-        setPathState(pathState+1);
     }
 }
 

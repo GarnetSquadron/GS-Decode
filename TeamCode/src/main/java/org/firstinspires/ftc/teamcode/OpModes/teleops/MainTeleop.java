@@ -29,6 +29,8 @@ public class MainTeleop extends SettingSelectorOpMode
 {
     double driverAngle = 0;
     VoltageSensor voltageSensor;
+
+    boolean adjustingConstants = false;
     Pose startingPose;
     public static Follower follower;
     public DcMotorEx lf,rf,lb,rb,intakeMotor;
@@ -132,11 +134,11 @@ public class MainTeleop extends SettingSelectorOpMode
                         startingPose = FieldDimensions.botTouchingRedGoal;
                         break;
                     case "tiny triangle":
-                        startingPose = FieldDimensions.botOnTinyTriangleBlueSide;
+                        startingPose = FieldDimensions.botOnTinyTriangleRedSide;
                         break;
                     case "testing":
 //                        follower.setStartingPose(new Pose(FieldDimensions.goalPositionRed[0], targetGoalPos[1]-70, -Math.PI/2));
-                        startingPose = new Pose(81, 104, Math.PI);
+                        startingPose = new Pose(72, 72, Math.PI);
                         break;
                 }
                 break;
@@ -230,8 +232,8 @@ public class MainTeleop extends SettingSelectorOpMode
         TrajectoryMath.ratio +=gamepad1.dpadUpWasPressed()?0.1:(gamepad1.dpadDownWasPressed()?-0.1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
         bot.launcher.ratio+=gamepad1.aWasPressed()?0.1:(gamepad1.yWasPressed()?-0.1:0);
 
-        bot.adjustingConstants = Gpad.getToggleValue("b");
-        if(Gpad.getRisingEdge("x")&&bot.adjustingConstants){bot.putConstant(bot.getDistance(),bot.launcher.flywheelToBallSpeedRatio,TrajectoryMath.ratio,bot.launcher.ratio);}
+        adjustingConstants = Gpad.getToggleValue("b");
+        if(Gpad.getRisingEdge("x")&&adjustingConstants){bot.putConstant(bot.getDistance(),bot.launcher.flywheelToBallSpeedRatio,TrajectoryMath.ratio,bot.launcher.ratio);}
 
         //servoPos = gamepad1.left_trigger*20+30;
 
@@ -279,7 +281,11 @@ public class MainTeleop extends SettingSelectorOpMode
 
         double launchAngle = bot.launcher.getAngle();
 
+        bot.updatePID(follower.getPose().getAsVector());
         Bot.LaunchPhase launchPhase = bot.update();
+//        if(!adjustingConstants){
+        bot.updateConstants();
+//        }
 
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
@@ -293,6 +299,7 @@ public class MainTeleop extends SettingSelectorOpMode
 //            telemetry.addData("loop time",bot.launcher.launcherPIDF.times[0]-bot.launcher.launcherPIDF.times[1]);
 //            telemetry.addData("voltage sensor",voltageSensor.getVoltage());
 //            if(bot.adjustingConstants){
+            telemetry.addData("position",follower.getPose());
                 telemetry.addData("loop time", TIME.getTime() - loopStartTime);
                 loopStartTime = TIME.getTime();
                 telemetry.addLine();

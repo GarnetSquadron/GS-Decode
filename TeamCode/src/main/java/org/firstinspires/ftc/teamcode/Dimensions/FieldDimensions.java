@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Dimensions;
 
 import com.pedropathing.geometry.Pose;
 
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
+
 public class FieldDimensions
 {
     public static double minGoalHeight = 38.75;//0.9645 meters
@@ -14,22 +16,20 @@ public class FieldDimensions
     /**
      * The position when the back of the robot is contacting the side of the red goal. Good starting position for tests I think
      */
-    public static Pose botTouchingRedGoal = new Pose(123,123,Math.toRadians(180+36));
-    //public static Pose botTouchingRedGoal = new Pose(126,119,Math.toRadians(180+36));
+    public static Pose botTouchingRedGoal = new Pose(125.2,122.3,Math.toRadians(180+38));
     /**
      * The position when the back of the robot is contacting the side of the blue goal.
      */
     //TODO: this angle doesnt make sense to me, it should be -36 since the red one should be the
     // reflection of it across the y axis. However these angles worked and -36 didnt I think this is due to the tangent swapping sign on
     // different sides of the feild or something. I need to fix this
-    public static Pose botTouchingBlueGoal = new Pose(21,123,Math.toRadians(-36));
-    //    public static Pose botTouchingBlueGoal = new Pose(18,119,Math.toRadians(180-36));
+    public static Pose botTouchingBlueGoal = botTouchingRedGoal.mirror();//new Pose(21,123,Math.toRadians(-34));
     /**
      * red side of the triangle
      */
-    public static Pose botOnTinyTriangleRedSide = new Pose(64,9);
+    public static Pose botOnTinyTriangleRedSide = new Pose(87.3,9.54,Math.toRadians(-90));
     /**
      * blue side of the triangle
      */
-    public static Pose botOnTinyTriangleBlueSide = new Pose(81,9,Math.toRadians(-90));
+    public static Pose botOnTinyTriangleBlueSide = botOnTinyTriangleRedSide.mirror();//new Pose(81,9,Math.toRadians(-90));
 }

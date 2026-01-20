@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.PurelyCalculators;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.Vector2d;
+import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Vector;
 
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
@@ -316,5 +318,8 @@ public class ExtraMath
             return 0.0;
         }
         return queryToStart / totalRange;
+    }
+    public static Pose getPoseFromVector(Vector vector){
+        return new Pose(vector.getXComponent(),vector.getYComponent());
     }
 }

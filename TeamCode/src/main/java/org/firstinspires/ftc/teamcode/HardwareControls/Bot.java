@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.HardwareControls;
 import static org.firstinspires.ftc.teamcode.HardwareControls.Launcher.flywheelToBallSpeedRatio;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoController;
 
@@ -21,7 +23,7 @@ public class Bot
     public StepApproximation radToInchRatioMap;
     public StepApproximation velRangeRatioMap;
     public StepApproximation heightRatioMap;
-    public boolean adjustingConstants = false;
+//    public boolean adjustingConstants = false;
     public void putConstant(double distance,double radToInch,double velRatio,double height){
         radToInchRatioMap.put(distance,radToInch);
         velRangeRatioMap.put(distance,velRatio);
@@ -74,24 +76,32 @@ public class Bot
     public double getDistance(){
         return Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
     }
-    public double getMinAngleVelSquared(){
-        return TrajectoryMath.getVelSquared(getDistance(), Math.toRadians(RobotDimensions.Hood.minAngle));
+    public double getDistance(Vector coords){
+        return Math.hypot(targetGoalPos[0]-coords.getXComponent(), targetGoalPos[1]-coords.getYComponent());
     }
-    public double getMaxAngleVelSquared(){
-        return TrajectoryMath.getVelSquared(getDistance(), Math.toRadians(RobotDimensions.Hood.maxAngle));
+    public double getMinAngleVelSquared(double distance){
+        return TrajectoryMath.getVelSquared(distance, Math.toRadians(RobotDimensions.Hood.minAngle));
     }
-    public double[] getVelBounds() {
-        return TrajectoryMath.getVelBoundsFromVelSquaredBounds(getMinAngleVelSquared(),getMaxAngleVelSquared(),getDistance());
+    public double getMaxAngleVelSquared(double distance){
+        return TrajectoryMath.getVelSquared(distance, Math.toRadians(RobotDimensions.Hood.maxAngle));
+    }
+    public double[] getVelBounds(double distance) {
+        return TrajectoryMath.getVelBoundsFromVelSquaredBounds(getMinAngleVelSquared(distance),getMaxAngleVelSquared(distance),distance);
     }
 
-    public void updateConstants(){
-        double distance = getDistance();
+    public void updateConstants(double distance){
         flywheelToBallSpeedRatio = radToInchRatioMap.get(distance);
         launcher.ratio = velRangeRatioMap.get(distance);
         TrajectoryMath.ratio = heightRatioMap.get(distance);
     }
+    public void updateConstants(){
+        updateConstants(getDistance());
+    }
     public boolean spinFlyWheelWithinFeasibleRange(){
-        return launcher.spinFlyWheelWithinRange(getVelBounds());
+        return launcher.spinFlyWheelWithinRange(getVelBounds(getDistance()));
+    }
+    public void spinFlyWheelWithinFeasibleRange(Vector coords){
+        launcher.spinFlyWheelWithinRange(getVelBounds(getDistance(coords)));
     }
 
     /**
@@ -103,14 +113,17 @@ public class Bot
     double loopStartTime = 0;
     public LaunchPhase update(){
         launcher.aimServo(getDistance(), launcher.getExitVel());
-        double[] velBounds = getVelBounds();
-        telemetry.addData("loop time", TIME.getTime() - loopStartTime);
-        loopStartTime = TIME.getTime();
-        telemetry.addArray("VEL BOUNDS",velBounds);
-        if(!adjustingConstants){
-            updateConstants();
-        }
+        double[] velBounds = getVelBounds(getDistance());
+//        telemetry.addData("loop time", TIME.getTime() - loopStartTime);
+//        loopStartTime = TIME.getTime();
+//        telemetry.addArray("VEL BOUNDS",velBounds);
+//        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
+//        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
         return launchHandler.update(velBounds);
+    }
+    public void updatePID(Vector position){
+        double[] velBounds = getVelBounds(getDistance(position));
+        launcher.updatePID(velBounds[0],velBounds[1]);
     }
     public void aimTurret(){
         turret.aimTowardsGoal(targetGoalPos, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading());
@@ -166,22 +179,21 @@ public class Bot
             return pauseBetweenShots()? launcher.launcherPIDF.hasDestabilized():!launcher.launcherPIDF.closeToTarget();
         }
         public LaunchPhase update(double[] velBounds){
-            launcher.updatePID(velBounds[0],velBounds[1]);
             targetSpeed = launcher.betweenVel(velBounds[0],velBounds[1]);
-            telemetry.addData("launchPhase",launchPhase);
-            telemetry.addData("is pausing",pauseBetweenShots());
+//            telemetry.addData("launchPhase",launchPhase);
+//            telemetry.addData("is pausing",pauseBetweenShots());
 
 
             boolean velInRange = false;
             lights.leftLight.setColor(!launcher.launcherPIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
             lights.rightLight.setColor(launcher.launcherPIDF.hasDestabilized()? Light.Color.Orange:Light.Color.Green);
-            telemetry.addLine("start of loop");
+//            telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             //once you get to kicking the servo its far gone imo
             if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){
                 //velInRange = launcher.launcherPIDF.hasStabilized();
-                telemetry.addData("vel has stabilized",launcher.launcherPIDF.hasStabilized());
-                telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
+//                telemetry.addData("vel has stabilized",launcher.launcherPIDF.hasStabilized());
+//                telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
 
                 if(shouldSpinUp()&&launchPhase!=LaunchPhase.SPINNING_UP&&!isPausedToSpinUp){
                     isPausedToSpinUp = true;
@@ -190,7 +202,7 @@ public class Bot
                 }
                 if(isPausedToSpinUp){
                     launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1]);
-                    telemetry.addLine("paused");
+//                    telemetry.addLine("paused");
                     intake.setPower(0);
                     if(isUpToSpeed()){
                         isPausedToSpinUp = false;
@@ -202,7 +214,7 @@ public class Bot
                     return launchPhase;
                 }
             }
-            telemetry.addLine("going to switch case");
+//            telemetry.addLine("going to switch case");
             switch (launchPhase){
                 case NULL: {
                     break;
@@ -230,7 +242,7 @@ public class Bot
                 case RELEASING_BALLS:{
                     intake.openGate();
                     powerIntake();
-                    telemetry.addLine("releasing balls!");
+//                    telemetry.addLine("releasing balls!");
                     if(getElapsedTime() > 0.4){
                         launchPhase = LaunchPhase.KICKING_SERVO;
                         phaseStartTime = TIME.getTime();
