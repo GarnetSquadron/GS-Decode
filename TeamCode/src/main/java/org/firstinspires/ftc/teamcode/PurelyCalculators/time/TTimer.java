@@ -34,7 +34,7 @@ public class TTimer
 
     public boolean timeover()
     {
-        return timeLeft()>0;
+        return timeLeft()<0;
     }
 
     public double timeLeft()

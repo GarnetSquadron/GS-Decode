@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 
@@ -314,12 +315,16 @@ public class yetAnotherRedAuto extends AutoSuperClass
     }
 
 
+    public TTimer stopTimer;
     public void start()
     {
+        stopTimer = new TTimer();
+        stopTimer.StartTimer(29);
         //follower.followPath(ShootPreload);
         setCurrentStep(0);
         bot.updateConstants(bot.getDistance(getLaunchPosition()));
         bot.launcher.launcherPIDF.resetPid();
+
 
     }
 
@@ -347,6 +352,9 @@ public class yetAnotherRedAuto extends AutoSuperClass
         follower.update();
         follower.setMaxPower(1);
         autonomousPathUpdate();
+        if(stopTimer.timeover()|| gamepad1.a){
+            follower.breakFollowing();
+        }
         telemetry.addData("step", currentStep);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
