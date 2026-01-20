@@ -5,7 +5,7 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
- * this class allows you enter the process(ie the instructions run every loop) for each step of the auto in the form of lambdas.
+ * this class allows you write the process(ie the instructions run every loop) for each step of the auto in the form of lambdas.
  */
 public abstract class AutoSuperClass extends OpMode
 {
