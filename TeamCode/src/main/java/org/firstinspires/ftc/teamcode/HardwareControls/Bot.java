@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class Bot
@@ -23,7 +24,7 @@ public class Bot
     /**
      * used to save the current position for when teleop starts.
      */
-    public static Pose currentPos = FieldDimensions.botTouchingRedGoal;
+    public static Pose[] currentPos = new Pose[10];
     public static double currentTurretPosition = 0;
     public Lights lights;
     public StepApproximation radToInchRatioMap;
@@ -53,6 +54,7 @@ public class Bot
     public double targetSpeed = 0;
     SectTelemetryAdder telemetry;
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
+        Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);
         lights = new Lights(hardwareMap);
         this.targetGoalPos = targetGoalPos;
         launcher = new Launcher(hardwareMap);
@@ -129,7 +131,7 @@ public class Bot
 //        telemetry.addArray("VEL BOUNDS",velBounds);
 //        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
 //        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
-        currentPos = follower.getPose();
+        LauncherPIDF.updateArray(currentPos,follower.getPose());
         currentTurretPosition = turret.turretRot.getEncoder().getPos();
         return launchHandler.update(velBounds);
     }

@@ -13,13 +13,17 @@ public abstract class AutoSuperClass extends OpMode
     public int currentStep;
     Runnable[] steps;
 
+    public double[] times;
+
 
     public void initSteps(Runnable... steps)
     {
         this.steps = steps;
+        times = new double[steps.length];
     }
     public void setCurrentStep(int step)
     {
+        times[currentStep] = pathTimer.getElapsedTime();
         currentStep = step;
         pathTimer.resetTimer();
     }

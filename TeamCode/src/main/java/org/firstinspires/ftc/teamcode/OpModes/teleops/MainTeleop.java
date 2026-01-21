@@ -168,7 +168,7 @@ public class MainTeleop extends SettingSelectorOpMode
         }
         turretPos = 0;
         if(selections.get("remember old position?")=="yes"){
-            startingPose = Bot.currentPos;
+            startingPose = Bot.currentPos[0];
             turretPos = Bot.currentTurretPosition;
         }
     }

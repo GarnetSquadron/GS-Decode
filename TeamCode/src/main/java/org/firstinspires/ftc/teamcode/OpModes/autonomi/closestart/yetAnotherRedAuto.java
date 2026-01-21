@@ -26,7 +26,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
     Timer pathTimer;
     Bot bot;
     Pose launchPose = new Pose(90, 83.000,Math.PI);
-    double intakingTargetX = 115;
+    double intakingTargetX = 120;
     Pose intakingTargetPos1 = new Pose(intakingTargetX, 83.000);
     Pose intakingTargetPos2 = new Pose(intakingTargetX, 59.000);
     Pose intakingTargetPos3 = new Pose(intakingTargetX, 34.8);
@@ -237,7 +237,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                 {
                     if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
                     {
-                        bot.launcher.launcherPIDF.resetPid();
+//                        bot.launcher.launcherPIDF.resetPid();
                         follower.followPath(intake1, true);
                         nextStep();
                     }
@@ -300,7 +300,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                 ()->{
                     bot.intake.setPower(1);
                     if((!follower.isBusy())&& incrementingStep()){
-//                        bot.intake.setPower(0);
+                        bot.intake.setPower(0);
 //                        bot.launcher.launcherPIDF.resetPid();
                         follower.followPath(launch4, true);
                         nextStep();
@@ -361,15 +361,19 @@ public class yetAnotherRedAuto extends AutoSuperClass
     {
         follower.update();
         follower.setMaxPower(1);
-        autonomousPathUpdate();
         if(stopTimer.timeover()|| gamepad1.a){
             follower.breakFollowing();
+            bot.launcher.setPower(0);
+        }else{
+            autonomousPathUpdate();
         }
 
-        if(bot.launcher.launcherPIDF.lowAcceleration()&&!prevStabilized){
+        if(bot.launcher.launcherPIDF.hasStabilized()&&!prevStabilized){
             spunUpTime = TIME.getTime();
         }
         telemetry.addData("spinup time",spunUpTime-startTime);
+        telemetry.addArray("times",times);
+        telemetry.addData("current position",bot.currentPos);
         prevStabilized = bot.launcher.launcherPIDF.hasStabilized();
         telemetry.addData("step", currentStep);
         telemetry.addData("x", follower.getPose().getX());

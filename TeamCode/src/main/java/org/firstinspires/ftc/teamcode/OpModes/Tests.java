@@ -519,8 +519,8 @@ class FlyWheelTest extends OpMode{
     SectionedTelemetry telemetry;
     public double target=100;
     double forceDamp = 0.01;
-    double Kp =0.002, Kd =-0, Ks = 0.05,Kv = 0.0,Ka = 0;
     Launcher launcher;
+    double startTime = 0;
     BetterControllerClass gpad;
     @Override
     public void init(){
@@ -529,6 +529,9 @@ class FlyWheelTest extends OpMode{
         this.telemetry = new SectionedTelemetry(super.telemetry);
     }
     double[] numbers = new double[5];
+    boolean prevStabilized = false;
+    double spunUpTime = 0;
+
     @Override
     public void loop(){
 //        if (gamepad1.aWasPressed()){
@@ -568,9 +571,18 @@ class FlyWheelTest extends OpMode{
         }
         if(gpad.getRisingEdge("right_trigger")){
             launcher.launcherPIDF.resetPid();
+            startTime = TIME.getTime();
         }
 //        telemetry.addData("target ", target);
 //        telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
+        if(launcher.launcherPIDF.hasStabilized()&&!prevStabilized) {
+            spunUpTime = TIME.getTime();
+        }
+        prevStabilized = launcher.launcherPIDF.hasStabilized();
+
+        telemetry.addData("spinup time",spunUpTime-startTime);
+
+
         telemetry.addData("force damo ", forceDamp);
         telemetry.addData("force", launcher.motor1.getPower());
         telemetry.addData("kp", launcher.launcherPIDF.Kp);

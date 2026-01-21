@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.HardwareControls;
 
+import com.pedropathing.geometry.Pose;
+
 import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
@@ -95,6 +97,13 @@ public class LauncherPIDF
         Arrays.fill(times,TIME.getTime());
     };
     public static double[] updateArray(double[]arr,double val){
+        for(int i=arr.length-1;i>0;i--){
+            arr[i]=arr[i-1];
+        }
+        arr[0]=val;
+        return arr;
+    }
+    public static Pose[] updateArray(Pose[] arr, Pose val){
         for(int i=arr.length-1;i>0;i--){
             arr[i]=arr[i-1];
         }
