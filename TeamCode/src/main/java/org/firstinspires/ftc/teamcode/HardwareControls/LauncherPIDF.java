@@ -21,6 +21,7 @@ public class LauncherPIDF
     public LauncherPIDF(double Kp,double Kd,double Ki,double Ks,double Kv,double Ka){
         setConstants(Kp,Kd,Ki, Ks,Kv,Ka);
         telemetry = new SectTelemetryAdder("PIDF");
+        telemetry.addLine("hi");
     }
     public void setConstants(double Kp,double Kd,double Ki,double Ks,double Kv,double Ka){
         this.Kp = Kp;
@@ -49,6 +50,8 @@ public class LauncherPIDF
             pidForce += (p + d) * (times[0]-times[1]);
             pidForce = ExtraMath.Clamp(pidForce,1-f,-1-f);
 //        }
+        telemetry.addData("p increment",p);
+        telemetry.addData("d increment",d);
         telemetry.addData("PID Force",pidForce);
         telemetry.addData("F Force",f);
         return pidForce +f;

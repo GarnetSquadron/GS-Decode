@@ -35,7 +35,7 @@ public class ActionServo
      */
     public ActionServo(HardwareMap hardwareMap, String name, double min, double max, double t, DoubleSupplier time, double hardwareAngleRange, AngleUnitV2 unit)
     {
-        servo = new SERVO(hardwareMap, name, min, max, time, t);
+        servo = new SERVO(hardwareMap, name, min, max, t);
         this.min = min;
         this.max = max;
         SetHardwareAngleRange(hardwareAngleRange, unit);
