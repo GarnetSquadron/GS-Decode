@@ -454,8 +454,9 @@ class SectionedTelemetryTest extends OpMode{
         telemetry.addLine(String.valueOf(count));
         telemetry.addData("count",count);
         telemetry.addLine("do you like this section?","cool section");
-        telemetry.update();
-        telemetry.clear();
+        telemetry.updateAllSections();
+        telemetry.display();
+        telemetry.clearAll();
         count++;
     }
 }
@@ -510,7 +511,7 @@ class LauncherTest extends OpMode{
         telemetry.addData("launcher velocity",bot.launcher.getFlywheelEncoder().getVelocity());
         telemetry.addData("predicted ball velocity",bot.launcher.getExitVel());
         telemetry.addData("",bot.launcher.getAngle());
-        telemetry.update();
+        telemetry.display();
         telemetry.clear();
         gpad.update();
     }
@@ -557,48 +558,52 @@ class FlyWheelTest extends OpMode{
 //            Kd -= 0.01;
 //        }
         gpad.update();
-        launcher.launcherPIDF.Kp += gpad.getIncrement("dpad_up","dpad_down",0.001);
-        launcher.launcherPIDF.Kd += gpad.getIncrement("dpad_right","dpad_left",0.00001);
-        launcher.launcherPIDF.Kd += gpad.getIncrement("a","y",0.001);
-        launcher.launcherPIDF.Kv += gpad.getIncrement("b","x",0.001);
+        launcher.PIDF.Kp += gpad.getIncrement("dpad_up","dpad_down",0.001);
+        launcher.PIDF.Ki += gpad.getIncrement("dpad_right","dpad_left",0.00001);
+        launcher.PIDF.Kd += gpad.getIncrement("a","y",0.00001);
+        launcher.PIDF.Kv += gpad.getIncrement("b","x",0.001);
         target += gpad.getIncrement("left_bumper","right_bumper",10);
         launcher.updatePID(target,target);
-        if(gpad.getCurrentValue("right_trigger")) {
+        if(gpad.getCurrentValue("right_trigger")||gpad.getCurrentValue("left_trigger")) {
             //launcher.launcherPIDF.setConstants(Kp, Kd,0, Ks,Kv,Ka);
             telemetry.addData("stabilized at target",launcher.spinFlyWheelWithinRange(target, target));
         }else{
             launcher.setPower(0);
         }
         if(gpad.getRisingEdge("right_trigger")){
-            launcher.launcherPIDF.resetPid();
+            launcher.resetPID();
             startTime = TIME.getTime();
         }
 //        telemetry.addData("target ", target);
 //        telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
-        if(launcher.launcherPIDF.hasStabilized()&&!prevStabilized) {
+        if(launcher.PIDF.hasStabilized()&&!prevStabilized) {
             spunUpTime = TIME.getTime();
         }
-        prevStabilized = launcher.launcherPIDF.hasStabilized();
+        prevStabilized = launcher.PIDF.hasStabilized();
 
         telemetry.addData("spinup time",spunUpTime-startTime);
 
 
         telemetry.addData("force damo ", forceDamp);
         telemetry.addData("force", launcher.motor1.getPower());
-        telemetry.addData("kp", launcher.launcherPIDF.Kp);
-        telemetry.addData("kd", launcher.launcherPIDF.Kd);
-        telemetry.addData("ks", launcher.launcherPIDF.Ks);
-        telemetry.addData("kv", launcher.launcherPIDF.Kv);
+        telemetry.addData("kp", launcher.PIDF.Kp);
+        telemetry.addData("ki", launcher.PIDF.Ki);
+        telemetry.addData("kd", launcher.PIDF.Kd);
+        telemetry.addData("ks", launcher.PIDF.Ks);
+        telemetry.addData("kv", launcher.PIDF.Kv);
 //        telemetry.addData("p",launcher.launcherPIDF.p);
 //        telemetry.addData("d",launcher.launcherPIDF.d);
 //        telemetry.addData("supposed force",launcher.launcherPIDF.force);
-        telemetry.addData("supposed feed forward",launcher.launcherPIDF.getFeedForward(target));
-        telemetry.addData("acceleration",launcher.launcherPIDF.getAcceleration());
-        telemetry.addArray("diffs",launcher.launcherPIDF.differences,"arrays");
-        telemetry.addArray("times",launcher.launcherPIDF.times,"arrays");
-        telemetry.addData("loop time",launcher.launcherPIDF.times[0]-launcher.launcherPIDF.times[1]);
-        telemetry.update();
-        telemetry.clear();
+        telemetry.addData("supposed feed forward",launcher.PIDF.getFeedForward(target));
+        telemetry.addData("acceleration",launcher.PIDF.getAcceleration());
+        telemetry.addArray("diffs",launcher.PIDF.differences,"arrays");
+        telemetry.addArray("times",launcher.PIDF.times,"arrays");
+        telemetry.addData("loop time",launcher.PIDF.times[0]-launcher.PIDF.times[1]);
+        telemetry.updateSection();
+        telemetry.updateSection("LAUNCHER");
+        telemetry.updateSection("PIDF");
+        telemetry.display();
+        telemetry.clearAll();
     }
 
 }

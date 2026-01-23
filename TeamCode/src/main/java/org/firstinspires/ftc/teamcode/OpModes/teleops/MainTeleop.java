@@ -251,7 +251,7 @@ public class MainTeleop extends SettingSelectorOpMode
 
         if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
             if(initSpinUpFlywheelInput){
-                bot.launcher.launcherPIDF.resetPid();
+                bot.launcher.resetPID();
             }
             if (spinUpFlywheelInput)
             {
@@ -298,6 +298,9 @@ public class MainTeleop extends SettingSelectorOpMode
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 
         //========================TELEMETRY===========================\\
+
+        //                     brace your eyes
+
         if(selections.get("telemetry")=="on"){
 
 
@@ -323,7 +326,7 @@ public class MainTeleop extends SettingSelectorOpMode
                 telemetry.addData("velocity ratio", bot.launcher.ratio);
                 telemetry.addData("height ratio", TrajectoryMath.ratio);
                 telemetry.addData("distance",distance);
-                telemetry.addLine(bot.getConstantList());
+                //telemetry.addLine(bot.getConstantList());
 //            }
 //            telemetry.addLine();
 //            telemetry.addData("target ratio",bot.launcher.ratio);
@@ -383,8 +386,13 @@ public class MainTeleop extends SettingSelectorOpMode
 //            }
         }
         //telemetry.addData("is auto clear",telemetry.isAutoClear());
-        telemetry.update();
-        telemetry.clear();
+        telemetry.updateSection();
+        telemetry.updateSection("LAUNCHER");
+        telemetry.updateSection("BOT");
+//        telemetry.updateSection();
+//        telemetry.updateSection();
+        telemetry.display();
+        telemetry.clearAll();
 
     }
     @Override

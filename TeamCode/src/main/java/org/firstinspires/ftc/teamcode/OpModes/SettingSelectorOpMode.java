@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.SectionedTelemetry;
-import org.firstinspires.ftc.teamcode.SimplerTelemetry;
 
 import java.util.HashMap;
 
@@ -95,8 +94,9 @@ public abstract class SettingSelectorOpMode extends OpMode
             selectorPositions[settingIndex]--;
             lastResetTime = TIME.getTime();
         }
-        telemetry.update();
-        telemetry.clear();
+        telemetry.updateSection();
+        telemetry.display();
+        telemetry.clearAll();
     }
     @Override
     public void start(){

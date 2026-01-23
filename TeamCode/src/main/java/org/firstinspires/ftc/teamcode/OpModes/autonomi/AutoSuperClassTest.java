@@ -17,7 +17,7 @@ public class AutoSuperClassTest extends AutoSuperClass
         path1 = new Path(
                 new BezierLine(
                         new Pose(),
-                        new Pose(1,1)
+                        new Pose(10,10)
                 )
         );
     }
@@ -36,10 +36,10 @@ public class AutoSuperClassTest extends AutoSuperClass
                     if(!bot.follower.isBusy()){
                         nextStep();
                     }
-                },
-                ()->{
-                    bot.aimTurret();
                 }
+//                ()->{
+//                    bot.aimTurret();
+//                }
         );
     }
 }

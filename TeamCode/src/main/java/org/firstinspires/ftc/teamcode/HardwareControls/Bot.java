@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.HardwareControls;
 
 import static org.firstinspires.ftc.teamcode.HardwareControls.Launcher.flywheelToBallSpeedRatio;
+import static org.firstinspires.ftc.teamcode.HardwareControls.Launcher.getFlywheelSpeedFromBallSpeed;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
@@ -25,6 +26,9 @@ public class Bot
      * used to save the current position for when teleop starts.
      */
     public static Pose[] currentPos = new Pose[10];
+    static {
+        Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);
+    }
     public static double currentTurretPosition = 0;
     public Lights lights;
     public StepApproximation radToInchRatioMap;
@@ -54,7 +58,7 @@ public class Bot
     public double targetSpeed = 0;
     SectTelemetryAdder telemetry;
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
-        Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);
+        //Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);
         lights = new Lights(hardwareMap);
         this.targetGoalPos = targetGoalPos;
         launcher = new Launcher(hardwareMap);
@@ -124,16 +128,20 @@ public class Bot
     }
     double loopStartTime = 0;
     public LaunchPhase update(){
-        launcher.aimServo(getDistance(), launcher.getExitVel());
         double[] velBounds = getVelBounds(getDistance());
 //        telemetry.addData("loop time", TIME.getTime() - loopStartTime);
 //        loopStartTime = TIME.getTime();
 //        telemetry.addArray("VEL BOUNDS",velBounds);
 //        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
 //        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
-        LauncherPIDF.updateArray(currentPos,follower.getPose());
-        currentTurretPosition = turret.turretRot.getEncoder().getPos();
+        updateCurrentPos();
         return launchHandler.update(velBounds);
+    }
+    public void updateCurrentPos(){
+        currentPos = LauncherPIDF.updateArray(currentPos,follower.getPose());
+        telemetry.addArray("positions",currentPos);
+        currentTurretPosition = turret.turretRot.getEncoder().getPos();
+        telemetry.addData("turret pos",currentTurretPosition);
     }
     public void updatePID(Vector position){
         double[] velBounds = getVelBounds(getDistance(position));
@@ -180,7 +188,7 @@ public class Bot
             return getDistance()>120;
         }
         public boolean isUpToSpeed(){
-            return pauseBetweenShots()?launcher.launcherPIDF.hasStabilized():launcher.launcherPIDF.closeToTarget();
+            return pauseBetweenShots()?launcher.PIDF.hasStabilized():launcher.PIDF.closeToTarget();
         }
 
         /**
@@ -190,17 +198,18 @@ public class Bot
          * @return
          */
         public boolean shouldSpinUp(){
-            return pauseBetweenShots()? launcher.launcherPIDF.hasDestabilized():!launcher.launcherPIDF.closeToTarget();
+            return pauseBetweenShots()? launcher.PIDF.hasDestabilized():/*!launcher.PIDF.closeToTarget()*/false;
         }
         public LaunchPhase update(double[] velBounds){
             targetSpeed = launcher.betweenVel(velBounds[0],velBounds[1]);
+            launcher.aimServo(getDistance(), targetSpeed);
 //            telemetry.addData("launchPhase",launchPhase);
 //            telemetry.addData("is pausing",pauseBetweenShots());
 
 
             boolean velInRange = false;
-            lights.leftLight.setColor(!launcher.launcherPIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
-            lights.rightLight.setColor(launcher.launcherPIDF.hasDestabilized()? Light.Color.Orange:Light.Color.Green);
+            lights.leftLight.setColor(!launcher.PIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
+            lights.rightLight.setColor(launcher.PIDF.hasDestabilized()? Light.Color.Orange:Light.Color.Green);
 //            telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             //once you get to kicking the servo its far gone imo

@@ -4,6 +4,7 @@ import com.pedropathing.geometry.Pose;
 
 import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.time.StopWatch;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 
 import java.util.Arrays;
@@ -15,13 +16,16 @@ public class LauncherPIDF
     public double[] times = new double[sampleSize];
     public double[] derivatives =new double[5];
     public double Kp,Kd,Ki,Ks,Kv,Ka;
-    public double p =0;
-    public double d,f;
+    public double p =0,d,i=0,f;
     public double pidForce = 0;
-    public double margin = 10;
+    public double margin = 5;
+    public double startPosition;
+//    public double startVelocity;
+    private StopWatch stopWatch;
     SectTelemetryAdder telemetry;
     public LauncherPIDF(double Kp,double Kd,double Ki,double Ks,double Kv,double Ka){
         setConstants(Kp,Kd,Ki, Ks,Kv,Ka);
+        stopWatch = new StopWatch();
         telemetry = new SectTelemetryAdder("PIDF");
         telemetry.addLine("hi");
     }
@@ -41,7 +45,7 @@ public class LauncherPIDF
     public double getAverageAccel(int index1, int index2){
         return (differences[index1]- differences[index2])/(times[index1]-times[index2]);
     }
-    public double getPid(double velocity, double targetVel) {
+    public double getPidOldWay(double velocity, double targetVel) {
         //updateArrays(velocity,targetVel);
         p = (targetVel-velocity)*Kp;
         f = getFeedForward(targetVel);
@@ -58,6 +62,30 @@ public class LauncherPIDF
         telemetry.addData("F Force",f);
         return pidForce +f;
     }
+    public double getPidNewWay(double velocity, double targetVel,double position) {
+        //updateArrays(velocity,targetVel);
+        //distance the target has moved- distance we have moved = distance to target
+        f = getFeedForward(targetVel);
+        d = (velocity-targetVel)*Kd;
+        startPosition = ExtraMath.Clamp(startPosition,(1-f-d)/Kp-targetVel*stopWatch.getElapsedTime()+position,(-1+f+d)/Kp-targetVel*stopWatch.getElapsedTime()+position);
+        double displacement = (targetVel*stopWatch.getElapsedTime()-position+startPosition);
+        p = (displacement*Kp);
+        i+=displacement*(times[0]-times[1])*Ki;
+
+
+//        if(velocity>targetVel/3){
+        pidForce = (p + d + i);
+//        pidForce = ExtraMath.Clamp(pidForce,1-f,-1-f);
+//        }
+        telemetry.addData("time",stopWatch.getElapsedTime());
+        telemetry.addData("position-startpos",position-startPosition);
+        telemetry.addData("p",p);
+        telemetry.addData("d",d);
+        telemetry.addData("PID Force",pidForce);
+        telemetry.addData("F Force",f);
+        telemetry.addData("Net Force",f+pidForce);
+        return pidForce +f;
+    }
     public double getAcceleration(){
         return average(derivatives);
     }
@@ -69,6 +97,16 @@ public class LauncherPIDF
     }
     public boolean averageCloseToTarget(){
         return ExtraMath.closeTo0(differences[0],margin);
+    }
+    public boolean isStable(){
+        return lowAcceleration() && averageCloseToTarget();
+
+//        for(int i=0;i<sampleSize;i++){
+//            if(!ExtraMath.closeTo0(differences[i],margin-2)){
+//                return false;
+//            };
+//        }
+//        return true;
     }
     public boolean hasStabilized(){
         return lowAcceleration() && averageCloseToTarget();
@@ -92,9 +130,16 @@ public class LauncherPIDF
     public double getFeedForward(double targetVel){
         return Ks *Math.signum(targetVel)+Kv *targetVel;
     }
-    public void resetPid(){
+//    public void resetPID(){
+//        pidForce = 0;
+//        Arrays.fill(times,TIME.getTime());
+//        stopWatch.reset();
+//    };
+    public void resetPID(double position){
         pidForce = 0;
         Arrays.fill(times,TIME.getTime());
+        stopWatch.reset();
+        startPosition = position;
     };
     public static double[] updateArray(double[]arr,double val){
         for(int i=arr.length-1;i>0;i--){

@@ -20,7 +20,7 @@ public class SimplerTelemetry
     /**
      * sets the telemetry to what the current display is
      */
-    public void update()
+    public void display()
     {
         telemetry.addLine(display);
         telemetry.update();

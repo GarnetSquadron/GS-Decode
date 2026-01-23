@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 import org.firstinspires.ftc.teamcode.SectionedTelemetry;
@@ -205,13 +204,13 @@ public class yetAnotherRedAuto extends AutoSuperClass
     public void init()
     {
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
-        bot.launcher.launcherPIDF.setConstants(
+        bot.launcher.PIDF.setConstants(
                 /*bot.launcher.launcherPIDF.Kp*/0.002,
                 -0.0003,
-                bot.launcher.launcherPIDF.Ki,
-                bot.launcher.launcherPIDF.Ks,
-                bot.launcher.launcherPIDF.Kv,
-                bot.launcher.launcherPIDF.Ka
+                bot.launcher.PIDF.Ki,
+                bot.launcher.PIDF.Ks,
+                bot.launcher.PIDF.Kv,
+                bot.launcher.PIDF.Ka
         );
         pathTimer = new Timer();
         follower = bot.follower;
@@ -325,11 +324,11 @@ public class yetAnotherRedAuto extends AutoSuperClass
     {
         startTime = TIME.getTime();
         stopTimer = new TTimer();
-        stopTimer.StartTimer(29);
+        stopTimer.StartTimer(29.5);
         //follower.followPath(ShootPreload);
         setCurrentStep(0);
         bot.updateConstants(bot.getDistance(getLaunchPosition()));
-        bot.launcher.launcherPIDF.resetPid();
+        bot.launcher.resetPID();
         bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
 
 
@@ -364,23 +363,26 @@ public class yetAnotherRedAuto extends AutoSuperClass
         if(stopTimer.timeover()|| gamepad1.a){
             follower.breakFollowing();
             bot.launcher.setPower(0);
+            bot.updateCurrentPos();
         }else{
             autonomousPathUpdate();
         }
 
-        if(bot.launcher.launcherPIDF.hasStabilized()&&!prevStabilized){
+        if(bot.launcher.PIDF.hasStabilized()&&!prevStabilized){
             spunUpTime = TIME.getTime();
         }
         telemetry.addData("spinup time",spunUpTime-startTime);
         telemetry.addArray("times",times);
         telemetry.addData("current position",bot.currentPos);
-        prevStabilized = bot.launcher.launcherPIDF.hasStabilized();
+        prevStabilized = bot.launcher.PIDF.hasStabilized();
         telemetry.addData("step", currentStep);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.update();
-        telemetry.clear();
+        telemetry.updateSection();
+        telemetry.updateSection("BOT");
+        telemetry.display();
+        telemetry.clearAll();
 
 
     }

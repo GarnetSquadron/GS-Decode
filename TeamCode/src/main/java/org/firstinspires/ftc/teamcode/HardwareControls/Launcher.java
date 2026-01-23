@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
 public class Launcher {
-    public LauncherPIDF launcherPIDF = new LauncherPIDF(0.001,-0.0003,0,0.05,0.002,0);
+    public LauncherPIDF PIDF = new LauncherPIDF(0.001,-0.002,0,0.05,0.002,0);
     VoltageSensor voltageSensor;
     SectTelemetryAdder telemetry = new SectTelemetryAdder("LAUNCHER");
     double maxCurrent = 0;
@@ -105,18 +105,21 @@ public class Launcher {
     public double betweenVel(double minVel, double maxVel){
         return Math.min(minVel*(1-ratio)+maxVel*ratio,getMaxPossibleExitVel());
     }
+    public void resetPID(){
+        PIDF.resetPID(motor1.getEncoder().getPos());
+    }
     public void updatePID(double minVel, double maxVel){
         double targetVel = getFlywheelSpeedFromBallSpeed(betweenVel(minVel,maxVel));
         double currentVel = motor1.getEncoder().getVelocity();
-        launcherPIDF.updateArrays(currentVel,targetVel);
+        PIDF.updateArrays(currentVel,targetVel);
         telemetry.addData("target speed",targetVel);
         telemetry.addData("actual speed",currentVel);
         telemetry.addData("power", power);
-        telemetry.addData("acceleration",launcherPIDF.getAcceleration());
-        telemetry.addData("has stabilized", launcherPIDF.hasStabilized());
-        telemetry.addData("acceleration good", launcherPIDF.lowAcceleration());
-        telemetry.addData("velocity good", launcherPIDF.closeToTarget());
-        telemetry.addData("velocity difference", launcherPIDF.differences[0]);
+        telemetry.addData("acceleration", PIDF.getAcceleration());
+        telemetry.addData("has stabilized", PIDF.hasStabilized());
+        telemetry.addData("acceleration good", PIDF.lowAcceleration());
+        telemetry.addData("velocity good", PIDF.closeToTarget());
+        telemetry.addData("velocity difference", PIDF.differences[0]);
         telemetry.addData("supposed velocity difference", currentVel-targetVel);
         telemetry.addData("target ratio", ratio);
         telemetry.addData("rad/inches ratio", flywheelToBallSpeedRatio);
@@ -128,13 +131,13 @@ public class Launcher {
         //pid code
         double targetVel = getFlywheelSpeedFromBallSpeed(betweenVel(minVel,maxVel));
         double currentVel = motor1.getEncoder().getVelocity();
-        double power = launcherPIDF.getPid(currentVel,targetVel);
+        double power = PIDF.getPidNewWay(currentVel,targetVel,motor1.getEncoder().getPos());
 
         spinUpFlywheel(power);
         //temporary flywheel code, just guesses the velocity.
         //it doesn't exist anymore mb
 
-        return launcherPIDF.hasStabilized();
+        return PIDF.hasStabilized();
     }
 //    public boolean SpinUpFlywheelWithPid(double minVel, double maxVel){
 //        //pd code

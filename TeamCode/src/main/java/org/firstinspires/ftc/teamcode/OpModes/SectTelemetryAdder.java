@@ -23,4 +23,7 @@ public class SectTelemetryAdder
     public void addArray(String name, double[] array){
         SectionedTelemetry.addArray(name,array, defaultKey);
     }
+    public <T> void addArray(String name, T[] array){
+        SectionedTelemetry.addArray(name,array, defaultKey);
+    }
 }
