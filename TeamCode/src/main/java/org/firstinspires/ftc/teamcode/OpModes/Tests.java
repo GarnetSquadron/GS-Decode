@@ -19,6 +19,8 @@ import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
 import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
+import org.firstinspires.ftc.teamcode.HardwareControls.Light;
+import org.firstinspires.ftc.teamcode.HardwareControls.Lights;
 import org.firstinspires.ftc.teamcode.HardwareControls.Turret;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
@@ -522,11 +524,14 @@ class FlyWheelTest extends OpMode{
     double forceDamp = 0.01;
     Launcher launcher;
     double startTime = 0;
+    int oscilCount;
+    Lights lights;
     BetterControllerClass gpad;
     @Override
     public void init(){
         launcher = new Launcher(hardwareMap);
         gpad = new BetterControllerClass(gamepad1);
+        lights = new Lights(hardwareMap);
         this.telemetry = new SectionedTelemetry(super.telemetry);
     }
     double[] numbers = new double[5];
@@ -573,13 +578,19 @@ class FlyWheelTest extends OpMode{
         if(gpad.getRisingEdge("right_trigger")){
             launcher.resetPID();
             startTime = TIME.getTime();
+            oscilCount = 0;
         }
 //        telemetry.addData("target ", target);
 //        telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
         if(launcher.PIDF.hasStabilized()&&!prevStabilized) {
             spunUpTime = TIME.getTime();
+            oscilCount++;
         }
         prevStabilized = launcher.PIDF.hasStabilized();
+        lights.leftLight.setColor(prevStabilized? Light.Color.Orange: Light.Color.Green);
+
+
+        telemetry.addData("count",oscilCount);
 
         telemetry.addData("spinup time",spunUpTime-startTime);
 

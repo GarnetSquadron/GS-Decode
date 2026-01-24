@@ -89,4 +89,8 @@ public class RAWMOTOR
     public double getCurrentMilliamps(){return currentGettter.getCurrent(CurrentUnit.MILLIAMPS);}
     public double getCurrentAmps(){return currentGettter.getCurrent(CurrentUnit.AMPS);}
 
+    public void setBreak(){
+        motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+    }
+
 }

@@ -18,7 +18,7 @@ public class LauncherPIDF
     public double Kp,Kd,Ki,Ks,Kv,Ka;
     public double p =0,d,i=0,f;
     public double pidForce = 0;
-    public double margin = 5;
+    public double margin = 10;
     public double startPosition;
 //    public double startVelocity;
     private StopWatch stopWatch;

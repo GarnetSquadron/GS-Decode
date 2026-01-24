@@ -127,6 +127,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                         intakingTargetPos1
                 )
         );
+        intake1.setBrakingStrength(2);
 
 
         launch2 = new Path(
@@ -144,6 +145,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                 new Pose(86.6, 57.9),
                 intakingTargetPos2
         ));
+        intake1.setBrakingStrength(2);
         //path4.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0));
 //                follower.pathBuilder().addPath(
 //                new BezierCurve(
@@ -246,13 +248,16 @@ public class yetAnotherRedAuto extends AutoSuperClass
                     bot.intake.setPower(1);
                     if ((!follower.isBusy())&& incrementingStep())
                     {
-                        bot.intake.setPower(0);
+
                         follower.followPath(launch2, true);
                         nextStep();
                     }
                 },
                 () ->
                 {
+                    if(pathTimer.getElapsedTime()>300){
+                        bot.intake.setPower(0);
+                    }
                     if ((!follower.isBusy())&& incrementingStep())
                     {
                         //follower.followPath(Path4,true);
@@ -309,6 +314,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                     if((!follower.isBusy())&& incrementingStep()){
 //                        bot.launcher.launcherPIDF.resetPid();
 //                        follower.followPath(path8, true);
+                        bot.launchHandler.initLaunch();
                         nextStep();
                     }
                 }
@@ -324,7 +330,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
     {
         startTime = TIME.getTime();
         stopTimer = new TTimer();
-        stopTimer.StartTimer(29.5);
+        stopTimer.StartTimer(30);
         //follower.followPath(ShootPreload);
         setCurrentStep(0);
         bot.updateConstants(bot.getDistance(getLaunchPosition()));
