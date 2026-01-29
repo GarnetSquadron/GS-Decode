@@ -24,9 +24,10 @@ public class yetAnotherRedAuto extends AutoSuperClass
     Follower follower;
     Timer pathTimer;
     Bot bot;
-    Pose launchPose = new Pose(90, 83.000,Math.PI);
+    double launchY = 84.000;
+    Pose launchPose = new Pose(90, launchY,Math.PI);
     double intakingTargetX = 120;
-    Pose intakingTargetPos1 = new Pose(intakingTargetX, 83.000);
+    Pose intakingTargetPos1 = new Pose(intakingTargetX, launchY);
     Pose intakingTargetPos2 = new Pose(intakingTargetX, 59.000);
     Pose intakingTargetPos3 = new Pose(intakingTargetX, 34.8);
 
@@ -222,13 +223,16 @@ public class yetAnotherRedAuto extends AutoSuperClass
         initSteps(
                 () ->
                 {//bot.spinFlyWheelWithinFeasibleRange();
+                    bot.launcher.setPower(bot.launcher.PIDF.getFeedForward(300));
                     follower.followPath(launchPreload, true);
                     nextStep();
                 },
                 () ->
                 {
+
                     if ((!follower.isBusy())&& incrementingStep())
                     {
+                        bot.launcher.resetPID();
                         bot.launchHandler.initLaunch();
                         nextStep();
                         //bot.intake.setPower(1);
@@ -238,7 +242,6 @@ public class yetAnotherRedAuto extends AutoSuperClass
                 {
                     if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
                     {
-//                        bot.launcher.launcherPIDF.resetPid();
                         follower.followPath(intake1, true);
                         nextStep();
                     }
@@ -246,7 +249,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                 () ->
                 {
                     bot.intake.setPower(1);
-                    if ((!follower.isBusy())&& incrementingStep())
+                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
                     {
 
                         follower.followPath(launch2, true);
@@ -348,9 +351,12 @@ public class yetAnotherRedAuto extends AutoSuperClass
     {
         bot.update();
         bot.aimTurret();
-        if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)
+//        if(currentStep == 1){
+//        }
+        if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
         {
             bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
+//            bot.launcher.setPower(-bot.launcher.PIDF.getFeedForward(300));
             //if almost spun up and still accelerating(basically a temporary bandaid solution to make the pid stabilize faster.)
 //            if(ExtraMath.closeTo0(bot.launcher.getFlywheelEncoder().getVelocity()-240,10)&&!bot.launcher.launcherPIDF.lowAcceleration()){
 //                bot.launcher.launcherPIDF.resetPid();
@@ -377,15 +383,17 @@ public class yetAnotherRedAuto extends AutoSuperClass
             spunUpTime = TIME.getTime();
         }
         telemetry.addData("spinup time",spunUpTime-startTime);
-        telemetry.addArray("times",times);
+//        telemetry.addArray("times",times);
         telemetry.addData("current position",bot.currentPos);
         prevStabilized = bot.launcher.PIDF.hasStabilized();
         telemetry.addData("step", currentStep);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
+//        telemetry.a
         telemetry.updateSection();
         telemetry.updateSection("BOT");
+//        telemetry.updateSection("LAUNCHER");
         telemetry.display();
         telemetry.clearAll();
 

@@ -186,7 +186,9 @@ public class BlueGoalAuto extends AutoSuperClass
     public void init()
     {
 
+        Bot.redSide = false;
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+
 
         bot.launcher.PIDF.setConstants(
                 0.002,

@@ -170,6 +170,12 @@ public class MainTeleop extends SettingSelectorOpMode
         if(selections.get("remember old position?")=="yes"){
             startingPose = Bot.currentPos[0];
             turretPos = Bot.currentTurretPosition;
+            if(Bot.redSide){
+                targetGoalPos = FieldDimensions.goalPositionRed;
+            }else{
+                targetGoalPos = FieldDimensions.goalPositionBlue;
+
+            }
         }
     }
     @Override
@@ -387,8 +393,9 @@ public class MainTeleop extends SettingSelectorOpMode
         }
         //telemetry.addData("is auto clear",telemetry.isAutoClear());
         telemetry.updateSection();
-        telemetry.updateSection("LAUNCHER");
-        telemetry.updateSection("BOT");
+//        telemetry.updateSection("LAUNCHER");
+//        telemetry.updateSection("BOT");
+//        telemetry.updateSection("TURRET");
 //        telemetry.updateSection();
 //        telemetry.updateSection();
         telemetry.display();

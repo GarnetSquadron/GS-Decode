@@ -30,6 +30,7 @@ public class Bot
         Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);
     }
     public static double currentTurretPosition = 0;
+    public static boolean redSide = true;
     public Lights lights;
     public StepApproximation radToInchRatioMap;
     public StepApproximation velRangeRatioMap;
@@ -204,7 +205,7 @@ public class Bot
          * @return
          */
         public boolean shouldSpinUp(){
-            return pauseBetweenShots()? launcher.PIDF.hasDestabilized():/*!launcher.PIDF.closeToTarget()*/false;
+            return pauseBetweenShots()? launcher.PIDF.hasDestabilized():!launcher.PIDF.closeToTarget();
         }
         public LaunchPhase update(double[] velBounds){
             targetSpeed = launcher.betweenVel(velBounds[0],velBounds[1]);

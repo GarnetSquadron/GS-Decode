@@ -116,6 +116,7 @@ public class BlueTriangle extends AutoSuperClass {
     @Override
     public void init() {
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        Bot.redSide = false;
         follower = bot.follower;
 
         paths = new Paths(follower);
