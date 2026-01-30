@@ -23,7 +23,11 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
+import org.firstinspires.ftc.teamcode.logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 @Configurable
@@ -55,6 +59,7 @@ public class Tests extends SelectableOpMode
             s.add("intake Tests", IntakeTests::new);
             s.add("turret math", TurretMathTest::new);
             s.add("hood test",HoodTest::new);
+            s.add("logger test", loggerTest::new);
         });
     }
 
@@ -377,6 +382,24 @@ class HoodTest extends OpMode{
         for(int i=0;i<angles.length;i++){
             telemetry.addData("angle "+String.valueOf(i),Math.toDegrees(angles[i]));
         }
+        telemetry.update();
+    }
+}
+
+class loggerTest extends OpMode{
+    private static final Logger log = LoggerFactory.getLogger(loggerTest.class);
+    private logger logger;
+    String data = "none";
+    @Override
+    public void init(){
+        logger = new logger();
+        logger.connect();
+
+    }
+    @Override
+    public void loop(){
+        data = logger.networkConnection.latestData;
+        telemetry.addData("latest message: ", data);
         telemetry.update();
     }
 }
