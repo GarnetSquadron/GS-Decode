@@ -12,4 +12,8 @@ public abstract class Controller
     }
 
     public abstract double calculate();
+    /**
+     * should reset all state that changes in a nonintuitive meeting
+     */
+    public void resetState(){}
 }

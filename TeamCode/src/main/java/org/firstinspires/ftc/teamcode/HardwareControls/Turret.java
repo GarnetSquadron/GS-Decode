@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.MOTOR;
 import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.PIDCon;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
 public class Turret
@@ -19,7 +20,7 @@ public class Turret
         turretRot.getEncoder().setCPR(384.5*4.5);//motor is 435, which has a 384.5 ticks per rotation. The belt is belted at a 4.5:1 ratio
         turretRot.getEncoder().scaleToAngleUnit(AngleUnitV2.RADIANS);
         turretRot.reverseMotor();
-        turretRot.setPID(4,0,0);
+        turretRot.setPID(4,0/*0.05*/,0);
         zero();
     }
 
@@ -64,6 +65,7 @@ public class Turret
         double rotAngle = Math.atan((goalPos[1] - botPos[1]) /(goalPos[0] - botPos[0]))-heading+Math.PI;
 //        double rotAngle = ExtraMath.angleFromCoords( (goalPos[0] - botPos[0]),(goalPos[1] - botPos[1]))-heading+Math.PI;
         setRotation(rotAngle);
+        telemetry.addData("integral",((PIDCon)turretRot.getController()).getIntegral());
 //        telemetry.addData("angle",Math.toDegrees(rotAngle));
 //        telemetry.addData("atan",Math.toDegrees(Math.atan((goalPos[0] - botPos[0])/(goalPos[1] - botPos[1]))));
 //        telemetry.addData("heading",Math.toDegrees(heading));
@@ -76,5 +78,8 @@ public class Turret
     }
     public void zero(){
         turretRot.getEncoder().setPosition(0);
+    }
+    public void resetPID(){
+        turretRot.getController().resetState();
     }
 }

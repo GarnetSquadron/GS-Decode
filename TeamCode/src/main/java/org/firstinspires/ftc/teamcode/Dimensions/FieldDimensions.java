@@ -11,8 +11,8 @@ public class FieldDimensions
 
     //update later with real positions
     public static double[] fieldCenter = {72,72};//(0,0) is the corner of the field
-    public static double[] goalPositionRed = {132,135};
-    public static double[] goalPositionBlue = {12,135};
+    public static double[] goalPositionRed = {142,142};
+    public static double[] goalPositionBlue = {5,142};
     /**
      * The position when the back of the robot is contacting the side of the red goal. Good starting position for tests I think
      */

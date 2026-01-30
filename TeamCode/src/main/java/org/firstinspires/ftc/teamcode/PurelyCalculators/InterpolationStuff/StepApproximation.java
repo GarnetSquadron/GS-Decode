@@ -21,6 +21,11 @@ public class StepApproximation
     public void put(double key,double value){
         m_map.put(getKeyFromValue(key),value);
     }
+    public void increment(double key,double increment){
+        if(increment!=0){
+            put(key, get(key) + increment);
+        }
+    }
     public double get(double key){
         Double val = m_map.get(key);
         if (val == null) {

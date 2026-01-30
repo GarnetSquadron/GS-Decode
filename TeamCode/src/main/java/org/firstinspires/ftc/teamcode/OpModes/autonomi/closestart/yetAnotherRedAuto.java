@@ -362,7 +362,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
 //                bot.launcher.launcherPIDF.resetPid();
 //            }
         }
-        bot.updatePID(getLaunchPosition());
+        bot.updateSpeedMeasure(getLaunchPosition());
         updateSteps();
     }
 
