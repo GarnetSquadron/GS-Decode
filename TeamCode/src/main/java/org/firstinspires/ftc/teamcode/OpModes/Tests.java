@@ -30,7 +30,11 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.Telemetry.SectionedTelemetry;
 import org.firstinspires.ftc.teamcode.Telemetry.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
+import org.firstinspires.ftc.teamcode.logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 @Configurable
@@ -66,6 +70,7 @@ public class Tests extends SelectableOpMode
             s.add("light test",LightTest::new);
             s.add("simple telemetry", SectionedTelemetryTest::new);
             s.add("flywheel test",FlyWheelTest::new);
+            s.add("logger test", loggerTest::new);
         });
     }
 
@@ -187,10 +192,10 @@ class ServoTest extends OpMode
             servo.setPosition(1);//up
         }
         if (gamepad1.a) {
-            servo.setPosition(0.6);
+            servo.setPosition(0.66666);
         }
         if (gamepad1.b) {
-            servo.setPosition(0.14);
+            servo.setPosition(0.33333);
         }
         if (gamepad1.y) {
             servo.setPosition(0);//down
@@ -648,4 +653,22 @@ class FlyWheelTest extends OpMode{
         telemetry.clearAll();
     }
 
+}
+
+class loggerTest extends OpMode{
+    private static final Logger log = LoggerFactory.getLogger(loggerTest.class);
+    private logger logger;
+    String data = "none";
+    @Override
+    public void init(){
+        logger = new logger();
+        logger.connect();
+
+    }
+    @Override
+    public void loop(){
+        data = logger.networkConnection.latestData;
+        telemetry.addData("latest message: ", data);
+        telemetry.update();
+    }
 }
