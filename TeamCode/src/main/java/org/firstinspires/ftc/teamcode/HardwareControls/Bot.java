@@ -168,8 +168,14 @@ public class Bot
         public boolean isPausedToSpinUp = false;
         public double pauseStartTime = -1;
         double phaseStartTime = -1;
+
+        static final double REQUIRED_STABLE_TIME = 0.5; // Needs tuning
+
+        double stableSince = -1;
         public LaunchHandler(){
+
             phaseStartTime = -1;
+
         }
         public double getElapsedTime(){
             return TIME.getTime()- phaseStartTime;
@@ -242,15 +248,27 @@ public class Bot
                 case NULL: {
                     break;
                 }
-                case SPINNING_UP:{
+                case SPINNING_UP: {
                     intake.stop();
-                    if (launcher.spinFlyWheelWithinRange(velBounds[0],velBounds[1])&&getElapsedTime()>0.1)//wait for it to be in the right range
-                    {
+
+                    boolean stable = launcher.spinFlyWheelWithinRange(velBounds[0], velBounds[1]);
+
+                    if (stable) {
+                        if (stableSince < 0) stableSince = TIME.getTime();
+                    } else {
+                        stableSince = -1;
+                    }
+
+                    boolean minSpinTimePassed = getElapsedTime() > 0.30;
+
+                    if (minSpinTimePassed && stableSince > 0 && (TIME.getTime() - stableSince) > REQUIRED_STABLE_TIME) {
                         launchPhase = LaunchPhase.GATE_OPENING;
                         phaseStartTime = TIME.getTime();
+                        stableSince = -1;
                     }
                     break;
                 }
+
                 case GATE_OPENING:{
                     intake.stop();
                     intake.openGate();
