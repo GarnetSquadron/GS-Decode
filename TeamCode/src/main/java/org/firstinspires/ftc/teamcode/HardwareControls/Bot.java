@@ -111,8 +111,8 @@ public class Bot
         putConstant(72+adjustment,275,55);//84
         putConstant(78+adjustment,275,55);//
         putConstant(84+adjustment,274,55);//
-        putConstant(140,274,55);//140
-        putConstant(146,274,55);//146
+        //putConstant(140,274,55);//140
+        //putConstant(146,274,55);//146
         putConstant(138,274,55);
         putConstant(144,274,55);
         putConstant(132,274,55);
@@ -128,7 +128,10 @@ public class Bot
         putConstant(90,290,50);
         putConstant(96,300,55);
         putConstant(96,300,55);
-        putConstant(150,368,43);//
+        putConstant(132,340,55);
+        putConstant(138,355,55);
+        putConstant(144,360,45);
+        putConstant(150,368,43);
     }
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos,double turretPosition){
         this(hardwareMap,targetGoalPos);
