@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.HardwareControls;
 import static org.firstinspires.ftc.teamcode.HardwareControls.Launcher.flywheelToBallSpeedRatio;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.CoordinateSystem;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -36,6 +37,7 @@ public class Bot
     public StepApproximation heightRatioMap;
     public StepApproximation velMap;
     public StepApproximation angleMap;
+
 //    public boolean adjustingConstants = false;
     public void oldPutConstant(double distance, double radToInch, double velRatio, double height){
         radToInchRatioMap.put(distance,radToInch);
@@ -50,9 +52,15 @@ public class Bot
         String ret = "";
         for(Map.Entry<Double,Double> entry:velMap.m_map.entrySet()){
             double key = entry.getKey();
-            ret+="\n"+"dist: "+key+"\n"+"vel: "+entry.getValue()+"\n"+"angle: "+ angleMap.get(key)+"\n\n\n";
+            ret+=getConstantString(key);
         }
         return ret;
+    }
+    public String getConstantString(double key){
+        return"\n"+"dist: "+key+"\n"+"vel: "+velMap.get(key)+"\n"+"angle: "+ angleMap.get(key)+"\n\n\n";
+    }
+    public String getConstantString(){
+        return"\n"+"dist: "+getDistance()+"\n"+"vel: "+velMap.get(getDistance())+"\n"+"angle: "+ angleMap.get(getDistance())+"\n\n\n";
     }
     public Launcher launcher;
     public Intake intake;
@@ -92,15 +100,28 @@ public class Bot
 //        oldPutConstant(66+adjustment,1.2199,0.6,0.4);
 //        oldPutConstant(72+adjustment,1.313,0.5,0.1);
 //        oldPutConstant(78+adjustment,1.3121,0.5,0.2);
-        putConstant(36+adjustment,257,55);
-        putConstant(42+adjustment,251,55);
-        putConstant(48+adjustment,252,55);
-        putConstant(54+adjustment,257,55);
-        putConstant(60+adjustment,274,55);
-        putConstant(60+adjustment,275,55);
-        putConstant(72+adjustment,275,55);
-        putConstant(78+adjustment,275,55);
-        putConstant(84+adjustment,274,55);
+        //old values(I tuned them when the distances were measured from a different point so I needed
+        // to add adjustment to the distances)
+        putConstant(36+adjustment,257,55);//48
+        putConstant(42+adjustment,251,55);//54
+        putConstant(48+adjustment,252,55);//60
+        putConstant(54+adjustment,257,55);//66
+        putConstant(60+adjustment,274,55);//72
+        putConstant(66+adjustment,275,55);//78
+        putConstant(72+adjustment,275,55);//84
+        putConstant(78+adjustment,275,55);//
+        putConstant(84+adjustment,274,55);//
+        putConstant(140+adjustment,274,55);//
+        putConstant(146+adjustment,274,55);//
+        //replacing most of them with the new ones
+        putConstant(54,255,55);
+        putConstant(60,255,55);
+        putConstant(66,270,52);
+        putConstant(72,285,49);
+        putConstant(84,285,48);
+        putConstant(90,290,50);
+        putConstant(96,300,55);
+        putConstant(96,300,55);
     }
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos,double turretPosition){
         this(hardwareMap,targetGoalPos);

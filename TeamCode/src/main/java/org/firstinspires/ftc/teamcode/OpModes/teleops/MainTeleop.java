@@ -336,7 +336,11 @@ public class MainTeleop extends SettingSelectorOpMode
                 telemetry.addData("velocity ratio", bot.launcher.ratio);
                 telemetry.addData("height ratio", TrajectoryMath.ratio);
                 telemetry.addData("distance",distance);
-                telemetry.addLine(bot.getConstantList());
+//                if(gamepad1.a){
+//                    telemetry.addLine(bot.getConstantList());
+//                }else{
+//                    telemetry.addLine(bot.getConstantString());
+//                }
 //            }
 //            telemetry.addLine();
 //            telemetry.addData("target ratio",bot.launcher.ratio);
