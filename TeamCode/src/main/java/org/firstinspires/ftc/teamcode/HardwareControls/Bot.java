@@ -124,6 +124,7 @@ public class Bot
         putConstant(90,290,50);
         putConstant(96,300,55);
         putConstant(96,300,55);
+        putConstant(150,360,55);//
     }
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos,double turretPosition){
         this(hardwareMap,targetGoalPos);
