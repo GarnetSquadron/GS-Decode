@@ -361,7 +361,7 @@ public class Bot
                     intake.unKick();
                     intake.stop();
                     intake.closeGate();
-                    idleFlywheel();
+                    launcher.setPower(0);
                     launchPhase = LaunchPhase.NULL;
                     break;
                 }
