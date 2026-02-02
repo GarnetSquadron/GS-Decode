@@ -262,17 +262,10 @@ public class MainTeleop extends SettingSelectorOpMode
             if (spinUpFlywheelInput)
             {
                 bot.spinFlywheelToTunedSpeed();
-            }else{
-                if (releaseTheBallsInput)
-                {
-                    bot.launchHandler.initLaunch();
-                }else{
-                    if(Gpad.getRisingEdge("x")){
-                        bot.idleFlywheel();
-                    }else if(Gpad.getRisingEdge("y")){
-                        bot.launcher.setPower(0);
-                    }
-                }
+            }
+            if (releaseTheBallsInput)
+            {
+                bot.launchHandler.initLaunch();
             }
         }
         else {
