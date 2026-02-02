@@ -341,6 +341,11 @@ public class MainTeleop extends SettingSelectorOpMode
 //                }else{
 //                    telemetry.addLine(bot.getConstantString());
 //                }
+            telemetry.addLine("current distance");
+            telemetry.addLine(bot.getConstantString());
+            telemetry.addLine("constant list");
+            telemetry.addLine(bot.getConstantList());
+
 //            }
 //            telemetry.addLine();
 //            telemetry.addData("target ratio",bot.launcher.ratio);
