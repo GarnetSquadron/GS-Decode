@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.HardwareControls;
 import static org.firstinspires.ftc.teamcode.HardwareControls.Launcher.flywheelToBallSpeedRatio;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.CoordinateSystem;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -161,11 +160,15 @@ public class Bot
     public void updateConstants(){
         updateConstants(getDistance());
     }
-    public boolean spinFlyWheelWithinFeasibleRange(){
-        return launcher.spinFlyWheelWithinRange(getVelBounds(getDistance()));
+    public boolean spinFlywheelToTunedSpeed(){
+        return launcher.spinFlyWheelWithinRange(velMap.get(getDistance()));
     }
-    public void spinFlyWheelWithinFeasibleRange(Vector coords){
-        launcher.spinFlyWheelWithinRange(getVelBounds(getDistance(coords)));
+    public void spinFlywheelToTunedSpeed(Vector coords){
+        launcher.spinFlyWheelWithinRange(velMap.get(getDistance(coords)));
+    }
+    //idle power for flywheel
+    public void idleFlywheel(){
+        launcher.spinFlyWheelWithinRange(255);//minimum speed
     }
 
     /**
@@ -358,7 +361,7 @@ public class Bot
                     intake.unKick();
                     intake.stop();
                     intake.closeGate();
-                    launcher.setPower(0);
+                    idleFlywheel();
                     launchPhase = LaunchPhase.NULL;
                     break;
                 }

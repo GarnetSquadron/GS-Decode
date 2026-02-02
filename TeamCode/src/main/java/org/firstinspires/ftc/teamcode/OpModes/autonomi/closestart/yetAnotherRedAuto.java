@@ -338,7 +338,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
         setCurrentStep(0);
         bot.updateConstants(bot.getDistance(getLaunchPosition()));
         bot.launcher.resetPID();
-        bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
+        bot.spinFlywheelToTunedSpeed(getLaunchPosition());
 
 
     }
@@ -355,7 +355,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
         {
-            bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
+            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
 //            bot.launcher.setPower(-bot.launcher.PIDF.getFeedForward(300));
             //if almost spun up and still accelerating(basically a temporary bandaid solution to make the pid stabilize faster.)
 //            if(ExtraMath.closeTo0(bot.launcher.getFlywheelEncoder().getVelocity()-240,10)&&!bot.launcher.launcherPIDF.lowAcceleration()){

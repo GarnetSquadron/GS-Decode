@@ -188,14 +188,14 @@ public class RedTriangle extends AutoSuperClass {
         stopTimer.StartTimer(29);
         setCurrentStep(0);
         bot.launcher.resetPID();
-        bot.spinFlyWheelWithinFeasibleRange(farShootPose.getAsVector());
+        bot.spinFlywheelToTunedSpeed(farShootPose.getAsVector());
     }
 
     public void autonomousPathUpdate() {
         bot.update();
         bot.aimTurret();
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL) {
-            bot.spinFlyWheelWithinFeasibleRange(farShootPose.getAsVector());
+            bot.spinFlywheelToTunedSpeed(farShootPose.getAsVector());
         }
         bot.updateSpeedMeasure(farShootPose.getAsVector());
         updateSteps();

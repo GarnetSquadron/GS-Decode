@@ -316,7 +316,7 @@ public class BlueGoalAuto extends AutoSuperClass
 
         bot.updateConstants(bot.getDistance(getLaunchPosition()));
         bot.launcher.resetPID();
-        bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
+        bot.spinFlywheelToTunedSpeed(getLaunchPosition());
     }
 
     public Vector getLaunchPosition()
@@ -331,7 +331,7 @@ public class BlueGoalAuto extends AutoSuperClass
 
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)
         {
-            bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
+            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
         }
 
         bot.updateSpeedMeasure(getLaunchPosition());
