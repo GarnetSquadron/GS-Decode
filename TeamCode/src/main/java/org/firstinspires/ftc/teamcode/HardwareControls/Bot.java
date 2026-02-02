@@ -82,7 +82,7 @@ public class Bot
         follower = CompConstants.createFollower(hardwareMap);
         servoController = hardwareMap.get(ServoController.class, "Control Hub");
         telemetry = new SectTelemetryAdder("BOT");
-        double stepSize = 6;
+        double stepSize = 1;
 //        radToInchRatioMap = new StepApproximation(stepSize," rad to inch");
 //        rangeRatioMap = new StepApproximation(stepSize," range ratio");
 //        heightRatioMap = new StepApproximation(stepSize," height ratio");
@@ -113,6 +113,10 @@ public class Bot
         putConstant(84+adjustment,274,55);//
         putConstant(140,274,55);//140
         putConstant(146,274,55);//146
+        putConstant(138,274,55);
+        putConstant(144,274,55);
+        putConstant(132,274,55);
+        putConstant(138,274,55);
         putConstant(140+adjustment,274,55);//152
         putConstant(146+adjustment,274,55);//158
         //replacing most of them with the new ones
@@ -124,7 +128,7 @@ public class Bot
         putConstant(90,290,50);
         putConstant(96,300,55);
         putConstant(96,300,55);
-        putConstant(150,360,55);//
+        putConstant(150,368,43);//
     }
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos,double turretPosition){
         this(hardwareMap,targetGoalPos);
