@@ -13,7 +13,7 @@ public class Turret
 {
     SectTelemetryAdder telemetry = new SectTelemetryAdder("TURRET");
     public MOTOR turretRot;
-    final double[] turretRange = {Math.toRadians(-120),Math.toRadians(120)};
+    final double[] turretRange = {Math.toRadians(-135),Math.toRadians(135)};
     public Turret(HardwareMap hardwareMap){
         turretRot = new MOTOR(hardwareMap, "turretRot");
         turretRot.setMaxPower(0.7);
