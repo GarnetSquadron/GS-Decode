@@ -30,6 +30,7 @@ public class KickStand {
             return false;
         } else {
             setServoPower(0);
+            //change
             return false;
         }
     }
