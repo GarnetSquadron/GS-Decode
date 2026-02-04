@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
+import org.firstinspires.ftc.teamcode.HardwareControls.KickStand;
 import org.firstinspires.ftc.teamcode.OpModes.CurrentMonitor;
 import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
@@ -28,7 +29,7 @@ public class MainTeleop extends SettingSelectorOpMode
 {
     double driverAngle = 0;
     VoltageSensor voltageSensor;
-
+    KickStand stand;
     boolean adjustingConstants = false;
     Pose startingPose;
     double turretPos;
@@ -187,6 +188,9 @@ public class MainTeleop extends SettingSelectorOpMode
         handleSettings();
 
 
+        stand = new KickStand(hardwareMap);
+
+
         bot = new Bot(hardwareMap,targetGoalPos,turretPos);
 
 
@@ -236,6 +240,7 @@ public class MainTeleop extends SettingSelectorOpMode
 //        boolean turretZeroInput = gamepad1.x;
         boolean autoAimOn = Gpad.getCurrentValue(aimButtonName);
         boolean resetTurretPID = Gpad.getRisingEdge(aimButtonName);
+        boolean extendKickStand = (Gpad.getCurrentValue("a") && Gpad.getCurrentValue("x") && !stand.extended);
 
         distance=Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
         double minAngleVelSquared = TrajectoryMath.getVelSquared(distance, Math.toRadians(RobotDimensions.Hood.minAngle));
@@ -269,7 +274,7 @@ public class MainTeleop extends SettingSelectorOpMode
             }
         }
         else {
-            if(stopTheBallsInput){
+            if (stopTheBallsInput) {
                 bot.launchHandler.stopLaunch();
             }
         }
@@ -303,6 +308,11 @@ public class MainTeleop extends SettingSelectorOpMode
 //        if(!adjustingConstants){
         bot.updateConstants();
 //        }
+
+        //the time is 1700. this seems to work well but still might want to be tuned
+        if (extendKickStand) {
+            stand.extendStand(1700);
+        }
 
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
 

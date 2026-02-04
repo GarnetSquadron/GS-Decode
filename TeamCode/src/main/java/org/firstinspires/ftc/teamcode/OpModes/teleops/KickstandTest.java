@@ -15,8 +15,9 @@ public class KickstandTest extends OpMode {
 
     @Override
     public void loop(){
-        telemetry.addData("eached time", stand.extendStand(1700));
-        telemetry.addData("time", stand.time);
-        telemetry.update();
+        //the time is 1700. this seems to wrk well but still might want to be tuned
+        if (gamepad1.aWasPressed() & gamepad1.xWasPressed() & !stand.extended){
+            stand.extendStand(1700);
+        }
     }
 }

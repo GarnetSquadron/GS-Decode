@@ -15,7 +15,7 @@ public class KickStand {
     }
     CRServo servo1;
     CRServo servo2;
-
+    public boolean extended = false;
     public int time = 0;
     private void setServoPower(int power){
         servo1.setPower(power);
@@ -30,7 +30,7 @@ public class KickStand {
             return false;
         } else {
             setServoPower(0);
-            //change
+            extended = true;
             return false;
         }
     }
