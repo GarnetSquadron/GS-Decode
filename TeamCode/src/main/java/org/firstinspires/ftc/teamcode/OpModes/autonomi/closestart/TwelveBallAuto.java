@@ -23,7 +23,6 @@ import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 public class TwelveBallAuto extends AutoSuperClass
 {
     Follower follower;
-    Timer pathTimer;
     Bot bot;
     double launchY = 84.000;
     Pose launchPose = new Pose(90, launchY,Math.PI);
@@ -57,7 +56,7 @@ public class TwelveBallAuto extends AutoSuperClass
 
 
         shootClose = new Path(
-                new BezierCurve(
+                new BezierLine(
                         new Pose(125.154, 83.376),
                         AutoPoints.closeShootPose
                 )
@@ -75,7 +74,7 @@ public class TwelveBallAuto extends AutoSuperClass
 
 
         shootMiddle = new Path(
-                new BezierCurve(
+                new BezierLine(
                         new Pose(128.608, 59.328),
                         AutoPoints.closeShootPose
                 )
@@ -119,15 +118,14 @@ public class TwelveBallAuto extends AutoSuperClass
     public void init()
     {
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
-        bot.launcher.PIDF.setConstants(
-                /*bot.launcher.launcherPIDF.Kp*/0.002,
-                -0.0003,
-                bot.launcher.PIDF.Ki,
-                bot.launcher.PIDF.Ks,
-                bot.launcher.PIDF.Kv,
-                bot.launcher.PIDF.Ka
-        );
-        pathTimer = new Timer();
+//        bot.launcher.PIDF.setConstants(
+//                /*bot.launcher.launcherPIDF.Kp*/0.002,
+//                -0.0003,
+//                bot.launcher.PIDF.Ki,
+//                bot.launcher.PIDF.Ks,
+//                bot.launcher.PIDF.Kv,
+//                bot.launcher.PIDF.Ka
+//        );
         follower = bot.follower;
         initializePaths();
         follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
@@ -213,24 +211,33 @@ public class TwelveBallAuto extends AutoSuperClass
                 },
                 ()->{
                     bot.intake.setPower(1);
-                    if((!follower.isBusy())&& incrementingStep()){
+                    if((!follower.isBusy())){
+                        nextStep();
+                    }
+                },
+                ()->{
+                    bot.intake.setPower(1);
+                    if(pathTimer.getElapsedTime()>1000 && incrementingStep()){
                         bot.intake.setPower(0);
                         follower.followPath(shootGateBalls, true);
                         nextStep();
                     }
                 },
                 ()->{
-                    if((!follower.isBusy())&& incrementingStep()){
-                        bot.launchHandler.initLaunch();
-                        nextStep();
-                    }
-                },
-                ()->{
-                    if((!follower.isBusy())&& incrementingStep()){
-                        follower.followPath(leaveShootingZone, true);
 
-                    }
                 }
+//                ()->{
+//                    if((!follower.isBusy())&& incrementingStep()){
+//                        bot.launchHandler.initLaunch();
+//                        nextStep();
+//                    }
+//                },
+//                ()->{
+//                    if((!follower.isBusy())&& incrementingStep()){
+//                        follower.followPath(leaveShootingZone, true);
+//
+//                    }
+//                }
 
         );
     }
@@ -266,7 +273,7 @@ public class TwelveBallAuto extends AutoSuperClass
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
         {
-            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
+//            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
 //            bot.launcher.setPower(-bot.launcher.PIDF.getFeedForward(300));
             //if almost spun up and still accelerating(basically a temporary bandaid solution to make the pid stabilize faster.)
 //            if(ExtraMath.closeTo0(bot.launcher.getFlywheelEncoder().getVelocity()-240,10)&&!bot.launcher.launcherPIDF.lowAcceleration()){

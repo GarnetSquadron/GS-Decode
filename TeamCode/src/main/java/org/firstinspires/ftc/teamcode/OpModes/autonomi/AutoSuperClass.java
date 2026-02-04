@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  */
 public abstract class AutoSuperClass extends OpMode
 {
-    Timer pathTimer = new Timer();
+    public Timer pathTimer = new Timer();
     public int currentStep;
     Runnable[] steps;
 
