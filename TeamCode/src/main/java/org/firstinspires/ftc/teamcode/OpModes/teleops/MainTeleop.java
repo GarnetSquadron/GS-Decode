@@ -170,6 +170,12 @@ public class MainTeleop extends SettingSelectorOpMode
         if(selections.get("remember old position?")=="yes"){
             startingPose = Bot.currentPos[0];
             turretPos = Bot.currentTurretPosition;
+            if(Bot.redSide){
+                targetGoalPos = FieldDimensions.goalPositionRed;
+            }else{
+                targetGoalPos = FieldDimensions.goalPositionBlue;
+
+            }
         }
     }
     @Override
@@ -229,6 +235,7 @@ public class MainTeleop extends SettingSelectorOpMode
         boolean stopTheBallsInput = Gpad.getRisingEdge(stopLaunchName);
 //        boolean turretZeroInput = gamepad1.x;
         boolean autoAimOn = Gpad.getCurrentValue(aimButtonName);
+        boolean resetTurretPID = Gpad.getRisingEdge(aimButtonName);
 
         distance=Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
         double minAngleVelSquared = TrajectoryMath.getVelSquared(distance, Math.toRadians(RobotDimensions.Hood.minAngle));
@@ -236,12 +243,11 @@ public class MainTeleop extends SettingSelectorOpMode
         double[] velBounds = TrajectoryMath.getVelBoundsFromVelSquaredBounds(minAngleVelSquared,maxAngleVelSquared,distance);
 
 
-        bot.launcher.flywheelToBallSpeedRatio +=gamepad1.dpadRightWasPressed()?0.1:(gamepad1.dpadLeftWasPressed()?-0.1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
-        TrajectoryMath.ratio +=gamepad1.dpadUpWasPressed()?0.1:(gamepad1.dpadDownWasPressed()?-0.1:0); //Math.hypot(FieldDimensions.goalPositionBlue[0]-follower.getPose().getX(), FieldDimensions.goalPositionBlue[1]-follower.getPose().getY());
-        bot.launcher.ratio+=gamepad1.aWasPressed()?0.1:(gamepad1.yWasPressed()?-0.1:0);
+        bot.velMap.increment(bot.getDistance(),Gpad.getIncrement("dpad_up","dpad_down",1));
+        bot.angleMap.increment(bot.getDistance(),Gpad.getIncrement("dpad_right","dpad_left",1));
 
         adjustingConstants = Gpad.getToggleValue("b");
-        if(Gpad.getRisingEdge("x")&&adjustingConstants){bot.putConstant(bot.getDistance(),bot.launcher.flywheelToBallSpeedRatio,TrajectoryMath.ratio,bot.launcher.ratio);}
+        if(Gpad.getRisingEdge("x")&&adjustingConstants){bot.oldPutConstant(bot.getDistance(),bot.launcher.flywheelToBallSpeedRatio,TrajectoryMath.ratio,bot.launcher.ratio);}
 
         //servoPos = gamepad1.left_trigger*20+30;
 
@@ -255,7 +261,7 @@ public class MainTeleop extends SettingSelectorOpMode
             }
             if (spinUpFlywheelInput)
             {
-                bot.spinFlyWheelWithinFeasibleRange();
+                bot.spinFlywheelToTunedSpeed();
             }
             if (releaseTheBallsInput)
             {
@@ -280,6 +286,9 @@ public class MainTeleop extends SettingSelectorOpMode
 //            bot.turret.zero();
 //        }
 
+        if(resetTurretPID){
+            bot.turret.resetPID();
+        }
         if(autoAimOn){
             rotation = bot.turret.aimTowardsGoal(targetGoalPos, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading() /*Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw())*/);
 
@@ -289,7 +298,7 @@ public class MainTeleop extends SettingSelectorOpMode
 
         double launchAngle = bot.launcher.getAngle();
 
-        bot.updatePID(follower.getPose().getAsVector());
+        bot.updateSpeedMeasure(follower.getPose().getAsVector());
         Bot.LaunchPhase launchPhase = bot.update();
 //        if(!adjustingConstants){
         bot.updateConstants();
@@ -311,6 +320,7 @@ public class MainTeleop extends SettingSelectorOpMode
 //            telemetry.addData("voltage sensor",voltageSensor.getVoltage());
 //            if(bot.adjustingConstants){
             telemetry.addData("position",follower.getPose());
+            telemetry.addData("intake power",bot.intake.getPower());
                 telemetry.addData("loop time", TIME.getTime() - loopStartTime);
                 loopStartTime = TIME.getTime();
                 telemetry.addLine();
@@ -326,7 +336,16 @@ public class MainTeleop extends SettingSelectorOpMode
                 telemetry.addData("velocity ratio", bot.launcher.ratio);
                 telemetry.addData("height ratio", TrajectoryMath.ratio);
                 telemetry.addData("distance",distance);
-                //telemetry.addLine(bot.getConstantList());
+//                if(gamepad1.a){
+//                    telemetry.addLine(bot.getConstantList());
+//                }else{
+//                    telemetry.addLine(bot.getConstantString());
+//                }
+            telemetry.addLine("current distance");
+            telemetry.addLine(bot.getConstantString());
+            telemetry.addLine("constant list");
+            telemetry.addLine(bot.getConstantList());
+
 //            }
 //            telemetry.addLine();
 //            telemetry.addData("target ratio",bot.launcher.ratio);
@@ -387,8 +406,11 @@ public class MainTeleop extends SettingSelectorOpMode
         }
         //telemetry.addData("is auto clear",telemetry.isAutoClear());
         telemetry.updateSection();
+        telemetry.updateSection("TURRET");
         telemetry.updateSection("LAUNCHER");
-        telemetry.updateSection("BOT");
+        telemetry.updateSection("PIDF");
+//        telemetry.updateSection("BOT");
+//        telemetry.updateSection("TURRET");
 //        telemetry.updateSection();
 //        telemetry.updateSection();
         telemetry.display();

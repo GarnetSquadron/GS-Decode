@@ -1,9 +1,17 @@
 package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
 
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.farShootPose;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos2;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos3;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos1;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos3;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathChain;
+import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
@@ -18,86 +26,72 @@ public class RedTriangle extends AutoSuperClass {
     Follower follower;
     Bot bot;
     SectionedTelemetry telemetry;
-    Paths paths;
 
-    Pose startPose = new Pose(97.300, 9.540, Math.toRadians(90));
-    Pose shootPose = new Pose(84.000, 20.000, Math.toRadians(65));
+    public static Pose startPose = FieldDimensions.botOnTinyTriangleRedSide; //new Pose(97.300, 9.540, Math.toRadians(90));
 
-    public static class Paths {
-        public PathChain Path1;
-        public PathChain Path2;
-        public PathChain Path3;
-        public PathChain Path4;
-        public PathChain Path5;
-        public PathChain Path7;
-        public PathChain Path8;
-        public PathChain Path9;
-        public PathChain Path10;
+    static public Path intake1, launch2,intakePrep2,intake2, launch3,intakePrep3,intake3, launch4;
 
-        public Paths(Follower follower) {
-            Path1 = follower.pathBuilder().addPath(
-                    new BezierLine(
-                            new Pose(97.300, 9.540),
-                            new Pose(84.000, 20.000)
-                    )
-            ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(65)).build();
+    static  {
+        intake1 = new Path(
+                new BezierLine(
+                        startPose,
+                        intakingTargetPos3
+                )
+        );
+        intake1.setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(65));
 
-            Path5 = follower.pathBuilder().addPath(
-                    new BezierLine(
-                            new Pose(84.000, 20.000),
-                            new Pose(130.000, 20.000)
-                    )
-            ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0)).build();
+        launch2 = new Path(
+                new BezierLine(
+                        intakingTargetPos3,
+                        closeShootPose
+                )
+        );
+        launch2.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(65));
 
-            Path4 = follower.pathBuilder().addPath(
-                    new BezierLine(
-                            new Pose(130.000, 20.000),
-                            new Pose(84.000, 20.000)
-                    )
-            ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(65)).build();
+        intakePrep2 = new Path(
+                new BezierLine(
+                        closeShootPose,
+                        intakingPrepPos2
+                )
+        );
+        intake2 = new Path(
+                new BezierLine(
+                        intakingPrepPos2,
+                        intakingTargetPos2
+                )
+        );
+        intake2.setLinearHeadingInterpolation(Math.toRadians(65), Math.toRadians(0));
 
-            Path2 = follower.pathBuilder().addPath(
-                    new BezierLine(
-                            new Pose(84.000, 20.000),
-                            new Pose(103.000, 36.000)
-                    )
-            ).setLinearHeadingInterpolation(Math.toRadians(65), Math.toRadians(0)).build();
+        launch3 = new Path(
+                new BezierLine(
+                        intakingTargetPos2,
+                        closeShootPose
+                )
+        );
+        launch3.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(5));
 
-            Path3 = follower.pathBuilder().addPath(
-                    new BezierLine(
-                            new Pose(103.000, 36.000),
-                            new Pose(130.000, 36.000)
-                    )
-            ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(5)).build();
+        intakePrep3 = new Path(
+                new BezierLine(
+                        closeShootPose,
+                        intakingPrepPos3
+                )
+        );
 
-            Path7 = follower.pathBuilder().addPath(
-                    new BezierLine(
-                            new Pose(130.000, 36.000),
-                            new Pose(84.000, 20.000)
-                    )
-            ).setLinearHeadingInterpolation(Math.toRadians(5), Math.toRadians(65)).build();
+        intake3 = new Path(
+                new BezierLine(
+                        intakingPrepPos3,
+                        intakingTargetPos1
+                )
+        );
+        intake3.setLinearHeadingInterpolation(Math.toRadians(5), Math.toRadians(65));
 
-            Path8 = follower.pathBuilder().addPath(
-                    new BezierLine(
-                            new Pose(84.000, 20.000),
-                            new Pose(103.000, 60.000)
-                    )
-            ).setLinearHeadingInterpolation(Math.toRadians(65), Math.toRadians(0)).build();
-
-            Path9 = follower.pathBuilder().addPath(
-                    new BezierLine(
-                            new Pose(103.000, 60.000),
-                            new Pose(130.000, 60.000)
-                    )
-            ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0)).build();
-
-            Path10 = follower.pathBuilder().addPath(
-                    new BezierLine(
-                            new Pose(130.000, 60.000),
-                            new Pose(84.000, 20.000)
-                    )
-            ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(65)).build();
-        }
+        launch4 = new Path(
+                new BezierLine(
+                        intakingTargetPos1,
+                        closeShootPose
+                )
+        );
+        launch4.setLinearHeadingInterpolation(Math.toRadians(65), Math.toRadians(0));
     }
 
     public boolean incrementingStep() {
@@ -108,34 +102,26 @@ public class RedTriangle extends AutoSuperClass {
     public void init() {
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
         follower = bot.follower;
-
-        paths = new Paths(follower);
         follower.setStartingPose(startPose);
 
         telemetry = new SectionedTelemetry(super.telemetry);
 
         initSteps(
                 () -> {
-                    follower.followPath(paths.Path1, true);
+                    bot.launchHandler.initLaunch();
                     nextStep();
                 },
                 () -> {
-                    if (!follower.isBusy() && incrementingStep()) {
-                        bot.launchHandler.initLaunch();
-                        nextStep();
-                    }
-                },
-                () -> {
-                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL && incrementingStep()) {
+                    if(bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL){
                         bot.intake.setPower(1);
-                        follower.followPath(paths.Path5, true);
+                        follower.followPath(intake1, true);
                         nextStep();
                     }
                 },
                 () -> {
                     if (!follower.isBusy() && incrementingStep()) {
                         bot.intake.setPower(0);
-                        follower.followPath(paths.Path4, true);
+                        follower.followPath(launch2, true);
                         nextStep();
                     }
                 },
@@ -147,21 +133,21 @@ public class RedTriangle extends AutoSuperClass {
                 },
                 () -> {
                     if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL && incrementingStep()) {
-                        follower.followPath(paths.Path2, true);
+                        follower.followPath(intakePrep2, true);
                         nextStep();
                     }
                 },
                 () -> {
                     if (!follower.isBusy() && incrementingStep()) {
                         bot.intake.setPower(1);
-                        follower.followPath(paths.Path3, true);
+                        follower.followPath(intake2, true);
                         nextStep();
                     }
                 },
                 () -> {
                     if (!follower.isBusy() && incrementingStep()) {
                         bot.intake.setPower(0);
-                        follower.followPath(paths.Path7, true);
+                        follower.followPath(launch3, true);
                         nextStep();
                     }
                 },
@@ -172,28 +158,22 @@ public class RedTriangle extends AutoSuperClass {
                     }
                 },
                 () -> {
-                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL && incrementingStep()) {
-                        follower.followPath(paths.Path8, true);
+                    if (!follower.isBusy() && incrementingStep()) {
+                        follower.followPath(intakePrep3, true);
                         nextStep();
                     }
                 },
                 () -> {
                     if (!follower.isBusy() && incrementingStep()) {
                         bot.intake.setPower(1);
-                        follower.followPath(paths.Path9, true);
+                        follower.followPath(intake3, true);
                         nextStep();
                     }
                 },
                 () -> {
                     if (!follower.isBusy() && incrementingStep()) {
                         bot.intake.setPower(0);
-                        follower.followPath(paths.Path10, true);
-                        nextStep();
-                    }
-                },
-                () -> {
-                    if (!follower.isBusy() && incrementingStep()) {
-                        bot.launchHandler.initLaunch();
+                        follower.followPath(launch4, true);
                         nextStep();
                     }
                 },
@@ -208,16 +188,16 @@ public class RedTriangle extends AutoSuperClass {
         stopTimer.StartTimer(29);
         setCurrentStep(0);
         bot.launcher.resetPID();
-        bot.spinFlyWheelWithinFeasibleRange(shootPose.getAsVector());
+        bot.spinFlywheelToTunedSpeed(farShootPose.getAsVector());
     }
 
     public void autonomousPathUpdate() {
         bot.update();
         bot.aimTurret();
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL) {
-            bot.spinFlyWheelWithinFeasibleRange(shootPose.getAsVector());
+            bot.spinFlywheelToTunedSpeed(farShootPose.getAsVector());
         }
-        bot.updatePID(shootPose.getAsVector());
+        bot.updateSpeedMeasure(farShootPose.getAsVector());
         updateSteps();
     }
 

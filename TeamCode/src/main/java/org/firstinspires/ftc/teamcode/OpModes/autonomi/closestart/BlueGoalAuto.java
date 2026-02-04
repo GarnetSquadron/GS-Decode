@@ -186,7 +186,9 @@ public class BlueGoalAuto extends AutoSuperClass
     public void init()
     {
 
+        Bot.redSide = false;
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+
 
         bot.launcher.PIDF.setConstants(
                 0.002,
@@ -314,7 +316,7 @@ public class BlueGoalAuto extends AutoSuperClass
 
         bot.updateConstants(bot.getDistance(getLaunchPosition()));
         bot.launcher.resetPID();
-        bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
+        bot.spinFlywheelToTunedSpeed(getLaunchPosition());
     }
 
     public Vector getLaunchPosition()
@@ -329,10 +331,10 @@ public class BlueGoalAuto extends AutoSuperClass
 
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)
         {
-            bot.spinFlyWheelWithinFeasibleRange(getLaunchPosition());
+            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
         }
 
-        bot.updatePID(getLaunchPosition());
+        bot.updateSpeedMeasure(getLaunchPosition());
         updateSteps();
     }
 

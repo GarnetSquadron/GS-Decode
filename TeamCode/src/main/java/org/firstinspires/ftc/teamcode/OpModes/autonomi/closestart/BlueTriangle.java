@@ -116,6 +116,7 @@ public class BlueTriangle extends AutoSuperClass {
     @Override
     public void init() {
         bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        Bot.redSide = false;
         follower = bot.follower;
 
         paths = new Paths(follower);
@@ -217,16 +218,16 @@ public class BlueTriangle extends AutoSuperClass {
         stopTimer.StartTimer(29);
         setCurrentStep(0);
         bot.launcher.resetPID();
-        bot.spinFlyWheelWithinFeasibleRange(shootPose.getAsVector());
+        bot.spinFlywheelToTunedSpeed(shootPose.getAsVector());
     }
 
     public void autonomousPathUpdate() {
         bot.update();
         bot.aimTurret();
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL) {
-            bot.spinFlyWheelWithinFeasibleRange(shootPose.getAsVector());
+            bot.spinFlywheelToTunedSpeed(shootPose.getAsVector());
         }
-        bot.updatePID(shootPose.getAsVector());
+        bot.updateSpeedMeasure(shootPose.getAsVector());
         updateSteps();
     }
 

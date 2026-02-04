@@ -12,27 +12,24 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 
-@Autonomous(name = "\uD83E\uDD69 FINAL BOSS OF ALL AUTOS RED \uD83E\uDD69")
-public class yetAnotherRedAuto extends AutoSuperClass
+@Autonomous(name = "\uD83D\uDE2E WAIT IS THAT A 12 BALL AUTO?!?!?!?!? \uD83D\uDE2E")
+public class TwelveBallAuto extends AutoSuperClass
 {
     Follower follower;
     Timer pathTimer;
     Bot bot;
     double launchY = 84.000;
     Pose launchPose = new Pose(90, launchY,Math.PI);
-    double intakingTargetX = 120;
-    Pose intakingTargetPos1 = new Pose(intakingTargetX, launchY);
-    Pose intakingTargetPos2 = new Pose(intakingTargetX, 59.000);
-    Pose intakingTargetPos3 = new Pose(intakingTargetX, 34.8);
 
 
-    Path shootPreload, collectClose, shoot1, collectMiddle, pressGate, shoot2, collectFar, shoot3, launchPreload, intake1, launch2, intake2, launch3, intake3, launch4;
+    Path shootPreload, collectClose, shootClose, collectMiddle, shootMiddle, pressGateAndIntake, shootGateBalls, leaveShootingZone;
 
 
     SectionedTelemetry telemetry;
@@ -43,158 +40,73 @@ public class yetAnotherRedAuto extends AutoSuperClass
 
         shootPreload = new Path(
                 new BezierLine(
-                        new Pose(123.000, 123.000),
-                        new Pose(86.000, 86.000)
-                )
-        );/*.setLinearHeadingInterpolation(Math.toRadians(216), Math.toRadians(220));*/
-
-
-        collectClose = new Path(
-                new BezierCurve(
-                        new Pose(86.000, 86.000),
-                        new Pose(90.622, 81.069),
-                        new Pose(120.000, 84.039)
+                        FieldDimensions.botTouchingRedGoal,
+                        AutoPoints.closeShootPose
                 )
         );
 
 
-        shoot1 = new Path(
-                new BezierLine(
-                        new Pose(129.646, 84.039),
-                        new Pose(86.000, 86.000)
+        collectClose = new Path(
+                new BezierCurve(
+                        AutoPoints.closeShootPose,
+                        new Pose(98.275, 83.868),
+                        new Pose(125.154, 83.376)
+                )
+        );
+        collectClose.setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(0));
+
+
+        shootClose = new Path(
+                new BezierCurve(
+                        new Pose(125.154, 83.376),
+                        AutoPoints.closeShootPose
                 )
         );
 
 
         collectMiddle = new Path(
                 new BezierCurve(
-                        new Pose(86.000, 86.000),
-                        new Pose(93.635, 54.596),
-                        new Pose(120.000, 59.328)
+                        AutoPoints.closeShootPose,
+                        new Pose(92.154, 57.196),
+                        new Pose(125.016, 59.730)
                 )
         );
+        collectMiddle.setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(0));
 
 
-        pressGate = new Path(
+        shootMiddle = new Path(
                 new BezierCurve(
                         new Pose(128.608, 59.328),
-                        new Pose(116.682, 68.759),
-                        new Pose(125.740, 68.434)
+                        AutoPoints.closeShootPose
                 )
         );
 
 
-        shoot2 = new Path(
-                new BezierLine(
-                        new Pose(125.740, 68.434),
-                        new Pose(86.000, 86.000)
-                )
-        );
-
-
-        collectFar = new Path(
+        pressGateAndIntake = new Path(
                 new BezierCurve(
-                        new Pose(86.000, 86.000),
-                        new Pose(86.622, 20.783),
-                        new Pose(117.728, 38.452),
-                        new Pose(130.621, 35.186)
+                        AutoPoints.closeShootPose,
+                        new Pose(109.688, 37.357),
+                        new Pose(134.158, 58.232)
                 )
+        );
+        pressGateAndIntake.setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(45));
+
+        shootGateBalls = new Path(
+                new BezierCurve(
+                        new Pose(134.158, 58.232),
+                        new Pose(109.355, 37.444),
+                        AutoPoints.closeShootPose
+                        )
         );
 
 
-        shoot3 = new Path(
+        leaveShootingZone = new Path(
                 new BezierLine(
-                        new Pose(130.621, 35.186),
-                        new Pose(86.000, 86.000)
+                        AutoPoints.closeShootPose,
+                        new Pose(114.145, 76.138)
                 )
         );
-
-
-        launchPreload = new Path(
-
-
-                new BezierLine(
-                        FieldDimensions.botTouchingRedGoal,
-
-
-                        launchPose
-                )
-        );
-        intake1 = new Path(
-                new BezierLine(
-                        launchPose,
-
-
-                        intakingTargetPos1
-                )
-        );
-        intake1.setBrakingStrength(2);
-
-
-        launch2 = new Path(
-                new BezierLine(
-                        intakingTargetPos1,
-
-
-                        launchPose
-                )
-        );
-
-
-        intake2 = new Path(new BezierCurve(
-                launchPose,
-                new Pose(86.6, 57.9),
-                intakingTargetPos2
-        ));
-        intake1.setBrakingStrength(2);
-        //path4.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0));
-//                follower.pathBuilder().addPath(
-//                new BezierCurve(
-//                        launchPose,
-//                        new Pose(86.6, 57.9),
-//                        intakingTargetPos2
-//                )
-//        ).addPath(
-//                new BezierLine(
-//                        new Pose(98.000, 59.000),
-//
-//                        intakingTargetPos2
-//                )
-//        ).build();
-        //Path5.setVelocityConstraint(0.6);
-
-
-        launch3 = new Path(
-                new BezierLine(
-                        intakingTargetPos2,
-
-                        launchPose
-                )
-        );
-        launch3.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180));
-        //path6.setHeadingConstraint(0.1);
-
-
-        intake3 = new Path(
-                  new BezierCurve(
-                    launchPose,
-
-                    new Pose(75.3,33.97),
-
-
-                    intakingTargetPos3
-                  )
-                );
-
-        launch4 = new Path(
-                  new BezierLine(
-                    intakingTargetPos3,
-
-                    launchPose
-                  )
-                );
-        launch4.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180));
-        //path7.setVelocityConstraint(0.6);
+        leaveShootingZone.setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(-90));
 
 
     }
@@ -222,9 +134,9 @@ public class yetAnotherRedAuto extends AutoSuperClass
         this.telemetry = new SectionedTelemetry(super.telemetry);
         initSteps(
                 () ->
-                {//bot.spinFlyWheelWithinFeasibleRange();
+                {
                     bot.launcher.setPower(bot.launcher.PIDF.getFeedForward(300));
-                    follower.followPath(launchPreload, true);
+                    follower.followPath(shootPreload, true);
                     nextStep();
                 },
                 () ->
@@ -235,14 +147,13 @@ public class yetAnotherRedAuto extends AutoSuperClass
                         bot.launcher.resetPID();
                         bot.launchHandler.initLaunch();
                         nextStep();
-                        //bot.intake.setPower(1);
                     }
                 },
                 () ->
                 {
                     if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
                     {
-                        follower.followPath(intake1, true);
+                        follower.followPath(collectClose, true);
                         nextStep();
                     }
                 },
@@ -252,7 +163,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                     if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
                     {
 
-                        follower.followPath(launch2, true);
+                        follower.followPath(shootClose, true);
                         nextStep();
                     }
                 },
@@ -263,7 +174,6 @@ public class yetAnotherRedAuto extends AutoSuperClass
                     }
                     if ((!follower.isBusy())&& incrementingStep())
                     {
-                        //follower.followPath(Path4,true);
                         bot.launchHandler.initLaunch();
                         nextStep();
                     }
@@ -272,7 +182,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                 {
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
-                        follower.followPath(intake2, true);
+                        follower.followPath(collectMiddle, true);
                         nextStep();
                     }
                 },
@@ -281,15 +191,13 @@ public class yetAnotherRedAuto extends AutoSuperClass
                     bot.intake.setPower(1);
                     if ((!follower.isBusy())&& incrementingStep())
                     {
-                        //bot.launcher.launcherPIDF.resetPid();
                         bot.intake.setPower(0);
-                        follower.followPath(launch3, true);
+                        follower.followPath(shootMiddle, true);
                         nextStep();
                     }
                 },
                 () ->
                 {
-//                bot.spinFlyWheelWithinFeasibleRange();
                     if ((!follower.isBusy())&& incrementingStep())
                     {
                         bot.launchHandler.initLaunch();
@@ -299,8 +207,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
                 ()->{
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
-                        //bot.launcher.launcherPIDF.resetPid();
-                        follower.followPath(intake3, true);
+                        follower.followPath(pressGateAndIntake, true);
                         nextStep();
                     }
                 },
@@ -308,19 +215,23 @@ public class yetAnotherRedAuto extends AutoSuperClass
                     bot.intake.setPower(1);
                     if((!follower.isBusy())&& incrementingStep()){
                         bot.intake.setPower(0);
-//                        bot.launcher.launcherPIDF.resetPid();
-                        follower.followPath(launch4, true);
+                        follower.followPath(shootGateBalls, true);
                         nextStep();
                     }
                 },
                 ()->{
                     if((!follower.isBusy())&& incrementingStep()){
-//                        bot.launcher.launcherPIDF.resetPid();
-//                        follower.followPath(path8, true);
                         bot.launchHandler.initLaunch();
                         nextStep();
+                    }
+                },
+                ()->{
+                    if((!follower.isBusy())&& incrementingStep()){
+                        follower.followPath(leaveShootingZone, true);
+
                     }
                 }
+
         );
     }
 
@@ -400,5 +311,6 @@ public class yetAnotherRedAuto extends AutoSuperClass
 
     }
 }
+
 
 

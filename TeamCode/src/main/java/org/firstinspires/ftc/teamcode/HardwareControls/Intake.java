@@ -23,7 +23,7 @@ public class Intake {
         servoKicker = hardwareMap.get(Servo.class, "servoKicker");
         leftGate = hardwareMap.get(Servo.class, "leftGate");
         rightGate = hardwareMap.get(Servo.class, "rightGate");
-        intakeMotor.setBreak();
+//        intakeMotor.setBreak();
         intakeMotor.reverseMotor();
     }
     public boolean openGate(){

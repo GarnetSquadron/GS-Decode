@@ -77,12 +77,12 @@ public class Launcher {
         //getVelocity gets the rad/sec, so we divide that by rad/sec and then multiply by in/sec to get the inches per sec
         return getBallSpeedFromFlywheelSpeed(getFlywheelEncoder().getVelocity());
     }
-    public double[] aimAtGoal(double[] goalPos, double[] botPos, double vel,double heading) {
-        double distance =  Math.sqrt(Math.pow(goalPos[0] - botPos[0],2)+Math.pow(goalPos[1]-botPos[1],2));
-        double angle = aimServo(distance,vel);
-        turret.aimTowardsGoal(goalPos,botPos,heading);
-        return new double[] {angle,distance};
-    }
+//    public double[] aimAtGoal(double[] goalPos, double[] botPos, double vel,double heading) {
+//        double distance =  Math.sqrt(Math.pow(goalPos[0] - botPos[0],2)+Math.pow(goalPos[1]-botPos[1],2));
+//        double angle = aimServo(distance,vel);
+//        turret.aimTowardsGoal(goalPos,botPos,heading);
+//        return new double[] {angle,distance};
+//    }
 //    public void setAngle(double angle, Telemetry telemetry){
 //       setAngle(angle);
 //        telemetry.addData()
@@ -108,11 +108,10 @@ public class Launcher {
     public void resetPID(){
         PIDF.resetPID(motor1.getEncoder().getPos());
     }
-    public void updatePID(double minVel, double maxVel){
-        double targetVel = getFlywheelSpeedFromBallSpeed(betweenVel(minVel,maxVel));
+    public void updateSpeedMeasurements(double flyVel){
         double currentVel = motor1.getEncoder().getVelocity();
-        PIDF.updateArrays(currentVel,targetVel);
-        telemetry.addData("target speed",targetVel);
+        PIDF.updateArrays(currentVel,flyVel);
+        telemetry.addData("target speed",flyVel);
         telemetry.addData("actual speed",currentVel);
         telemetry.addData("power", power);
         telemetry.addData("acceleration", PIDF.getAcceleration());
@@ -120,7 +119,7 @@ public class Launcher {
         telemetry.addData("acceleration good", PIDF.lowAcceleration());
         telemetry.addData("velocity good", PIDF.closeToTarget());
         telemetry.addData("velocity difference", PIDF.differences[0]);
-        telemetry.addData("supposed velocity difference", currentVel-targetVel);
+        telemetry.addData("supposed velocity difference", currentVel-flyVel);
         telemetry.addData("target ratio", ratio);
         telemetry.addData("rad/inches ratio", flywheelToBallSpeedRatio);
     }
@@ -138,6 +137,23 @@ public class Launcher {
         //it doesn't exist anymore mb
 
         return PIDF.hasStabilized();
+    }
+    public boolean spinFlyWheelWithinRange(double flyVel){
+        //spin up the flywheel to get it within the provided range
+        //if its in the range return true otherwise
+
+        //pid code
+        double currentVel = motor1.getEncoder().getVelocity();
+        double power = PIDF.getPidNewWay(currentVel,flyVel,motor1.getEncoder().getPos());
+
+        spinUpFlywheel(power);
+        //temporary flywheel code, just guesses the velocity.
+        //it doesn't exist anymore mb
+
+        return PIDF.hasStabilized();
+    }
+    public void fightMomentumLoss(){
+        setPower(motor1.getPower()+0.2);
     }
 //    public boolean SpinUpFlywheelWithPid(double minVel, double maxVel){
 //        //pd code
