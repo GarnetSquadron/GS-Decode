@@ -85,8 +85,9 @@ public class TwelveBallAuto extends AutoSuperClass
 
 
         shootMiddle = new Path(
-                new BezierLine(
+                new BezierCurve(
                         intakingTargetPos2,
+                        new Pose(92.154, 57.196),
                         shootPose2
                 )
         );
@@ -100,7 +101,7 @@ public class TwelveBallAuto extends AutoSuperClass
                         pressingGate
                 )
         );
-        pressGateAndIntake.setLinearHeadingInterpolation(intakingTargetPos1.getHeading()-Math.PI/5,Math.toRadians(55));
+        pressGateAndIntake.setLinearHeadingInterpolation(intakingTargetPos1.getHeading()-Math.PI/5,pressingGate.getHeading());
 
         shootGateBalls = new Path(
                 new BezierCurve(
@@ -109,7 +110,7 @@ public class TwelveBallAuto extends AutoSuperClass
                         gateShootPose
                         )
         );
-        shootGateBalls.setLinearHeadingInterpolation(Math.toRadians(45),pressingGate.getHeading());
+        shootGateBalls.setLinearHeadingInterpolation(pressingGate.getHeading(),intakingTargetPos1.getHeading()-Math.PI/5);
 
 
         leaveShootingZone = new Path(
@@ -118,9 +119,7 @@ public class TwelveBallAuto extends AutoSuperClass
                         closeShootPose
                 )
         );
-        leaveShootingZone.setConstantHeadingInterpolation(gateShootPose.getHeading());
-
-
+        leaveShootingZone.setConstantHeadingInterpolation(gateShootPose.getHeading()-Math.PI/5);
     }
     public boolean incrementingStep(){
         return !gamepad1.b;
@@ -293,7 +292,7 @@ public class TwelveBallAuto extends AutoSuperClass
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
         {
-//            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
+            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
 //            bot.launcher.setPower(-bot.launcher.PIDF.getFeedForward(300));
             //if almost spun up and still accelerating(basically a temporary bandaid solution to make the pid stabilize faster.)
 //            if(ExtraMath.closeTo0(bot.launcher.getFlywheelEncoder().getVelocity()-240,10)&&!bot.launcher.launcherPIDF.lowAcceleration()){
