@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.MO
 import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.PIDCon;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.PIDPlus;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
 public class Turret
@@ -20,7 +21,7 @@ public class Turret
         turretRot.getEncoder().setCPR(384.5*4.5);//motor is 435, which has a 384.5 ticks per rotation. The belt is belted at a 4.5:1 ratio
         turretRot.getEncoder().scaleToAngleUnit(AngleUnitV2.RADIANS);
         turretRot.reverseMotor();
-        turretRot.setPID(4,0/*0.05*/,0);
+        turretRot.setPositionController(new PIDPlus(4,0,0,0.4));//setPID(4,00.5,0);
         zero();
     }
 
@@ -44,12 +45,16 @@ public class Turret
     }
     public double getRotation(double rotation) {
         double rangeSize =  turretRange[1]-turretRange[0];
+        telemetry.addData("rotation", Math.toDegrees(rotation));
 
         // theta
         rotation = angleMod(rotation);
+        telemetry.addData("modded rotation", Math.toDegrees(rotation));
         if(rotation< turretRange[1]){
+            telemetry.addLine("in range");
             return rotation;
         }else {
+            telemetry.addLine("out of range");
             return turretRange[0]+(turretRange[0]-rotation+ExtraMath.Tau)*rangeSize/(ExtraMath.Tau-rangeSize);
         }
     }

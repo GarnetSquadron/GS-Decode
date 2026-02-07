@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.HardwareControls;
 
+import static org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions.Hood.turretOffset;
 import static org.firstinspires.ftc.teamcode.HardwareControls.Launcher.flywheelToBallSpeedRatio;
 
 import com.pedropathing.follower.Follower;
@@ -108,7 +109,7 @@ public class Bot
         putConstant(60+adjustment,274,55);//72
         putConstant(66+adjustment,275,55);//78
         putConstant(72+adjustment,275,55);//84
-        putConstant(78+adjustment,275,55);//
+        putConstant(78+adjustment,277,52);//
         putConstant(84+adjustment,274,55);//
         //putConstant(140,274,55);//140
         //putConstant(146,274,55);//146
@@ -137,7 +138,7 @@ public class Bot
         turret.turretRot.getEncoder().setPosition(turretPosition);
     }
     public double getDistance(){
-        return Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
+        return Math.hypot(targetGoalPos[0]-getTurretPos().getX(), targetGoalPos[1]-getTurretPos().getY());
     }
     public double getDistance(Vector coords){
         return Math.hypot(targetGoalPos[0]-coords.getXComponent(), targetGoalPos[1]-coords.getYComponent());
@@ -202,7 +203,11 @@ public class Bot
         turret.aimTowardsGoal(targetGoalPos, new double[] {botPose.getX(), botPose.getY()},botPose.getHeading());
     }
     public void aimTurret(){
-        aimTurret(follower.getPose());
+        aimTurret(getTurretPos());
+    }
+    public Pose getTurretPos(){
+        double[] offset = Pose.polarToCartesian(-turretOffset,follower.getHeading());
+        return follower.getPose().plus(new Pose(offset[0],offset[1]));
     }
     public enum LaunchPhase
     {

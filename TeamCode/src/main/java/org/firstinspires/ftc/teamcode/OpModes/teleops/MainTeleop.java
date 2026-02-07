@@ -37,7 +37,6 @@ public class MainTeleop extends SettingSelectorOpMode
     public DcMotorEx lf,rf,lb,rb,intakeMotor;
     public double loopStartTime = 0;
     Bot bot;
-    double rotation = 0;
     double[] targetGoalPos;
     double distance = 100;
     double vel = 400;
@@ -295,8 +294,7 @@ public class MainTeleop extends SettingSelectorOpMode
             bot.turret.resetPID();
         }
         if(autoAimOn){
-            rotation = bot.turret.aimTowardsGoal(targetGoalPos, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading() /*Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw())*/);
-
+            bot.aimTurret();
         } else {
             bot.turret.setPower(0);
         }
@@ -323,13 +321,14 @@ public class MainTeleop extends SettingSelectorOpMode
         if(selections.get("telemetry")=="on"){
 
 
-//            telemetry.addData("left stick x",gamepad1.left_stick_x);
-//            telemetry.addData("left stick y",gamepad1.left_stick_y);
-//            telemetry.addData("right stick x",gamepad1.right_stick_x);
+            telemetry.addData("left stick x",gamepad1.left_stick_x);
+            telemetry.addData("left stick y",gamepad1.left_stick_y);
+            telemetry.addData("right stick x",gamepad1.right_stick_x);
 //            telemetry.addData("loop time",bot.launcher.launcherPIDF.times[0]-bot.launcher.launcherPIDF.times[1]);
-//            telemetry.addData("voltage sensor",voltageSensor.getVoltage());
+            telemetry.addData("voltage sensor",voltageSensor.getVoltage());
 //            if(bot.adjustingConstants){
             telemetry.addData("position",follower.getPose());
+            telemetry.addData("turret position",bot.getTurretPos());
             telemetry.addData("intake power",bot.intake.getPower());
                 telemetry.addData("loop time", TIME.getTime() - loopStartTime);
                 loopStartTime = TIME.getTime();
@@ -416,9 +415,9 @@ public class MainTeleop extends SettingSelectorOpMode
         }
         //telemetry.addData("is auto clear",telemetry.isAutoClear());
         telemetry.updateSection();
-        telemetry.updateSection("TURRET");
+//        telemetry.updateSection("TURRET");
         telemetry.updateSection("LAUNCHER");
-        telemetry.updateSection("PIDF");
+//        telemetry.updateSection("PIDF");
 //        telemetry.updateSection("BOT");
 //        telemetry.updateSection("TURRET");
 //        telemetry.updateSection();

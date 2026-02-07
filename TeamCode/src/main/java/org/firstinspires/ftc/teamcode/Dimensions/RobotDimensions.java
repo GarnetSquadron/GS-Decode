@@ -19,5 +19,6 @@ public class RobotDimensions
          */
         public static final double maxAngle = 56;
         public static final double approxBallExitHeight = 14.68331709;
+        public static final double turretOffset = 2.362;
     }
 }

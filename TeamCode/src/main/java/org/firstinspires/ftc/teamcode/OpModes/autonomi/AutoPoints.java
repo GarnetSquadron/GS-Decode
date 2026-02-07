@@ -8,7 +8,7 @@ public class AutoPoints
 {
 
     public static double farLaunchY = 20;
-    public static double closeLaunchY = 84;
+    public static double closeLaunchY = 100;
     public static double intakingTargetX = 120;
     public static Pose farShootPose =  new Pose(84, farLaunchY,Math.PI);
     public static Pose closeShootPose = new Pose(90.000, closeLaunchY, Math.toRadians(65));
@@ -19,6 +19,7 @@ public class AutoPoints
     public static Pose intakingTargetPos2 = new Pose(intakingTargetX, 59.000);
     public static Pose intakingPrepPos3 = new Pose(intakiningPrepX, 34);
     public static Pose intakingTargetPos3 = new Pose(intakingTargetX, 34.8);
+    public static Pose pressingGate = new Pose(134, 62);//new Pose(134.158, 58.232);
 
 
 }
