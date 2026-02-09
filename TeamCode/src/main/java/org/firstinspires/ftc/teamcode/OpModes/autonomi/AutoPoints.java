@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes.autonomi;
 
 import com.pedropathing.geometry.Pose;
 
-import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
-
 public class AutoPoints
 {
 
@@ -19,7 +17,8 @@ public class AutoPoints
     public static Pose intakingTargetPos2 = new Pose(intakingTargetX, 59.000);
     public static Pose intakingPrepPos3 = new Pose(intakiningPrepX, 34);
     public static Pose intakingTargetPos3 = new Pose(intakingTargetX, 34.8);
-    public static Pose pressingGate = new Pose(134, 62,Math.toRadians(55));//new Pose(134.158, 58.232);
+    public static Pose pressingAndIntakingGate = new Pose(134, 62,Math.toRadians(55));//new Pose(134.158, 58.232);
+    public static Pose justPressingGate = new Pose(128, 66.5);//new Pose(134.158, 58.232);
 
 
 }

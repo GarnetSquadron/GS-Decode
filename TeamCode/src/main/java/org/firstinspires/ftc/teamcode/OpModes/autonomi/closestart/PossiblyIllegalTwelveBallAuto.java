@@ -4,8 +4,7 @@ package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos3;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.pressingGate;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.pressingAndIntakingGate;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -13,12 +12,10 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.pedropathing.paths.Path;
-import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
-import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
@@ -26,7 +23,7 @@ import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 
 @Autonomous(name = "\uD83D\uDE2E WAIT IS THAT A 12 BALL AUTO?!?!?!?!? \uD83D\uDE2E")
-public class TwelveBallAuto extends AutoSuperClass
+public class PossiblyIllegalTwelveBallAuto extends AutoSuperClass
 {
     Follower follower;
     Bot bot;
@@ -34,7 +31,7 @@ public class TwelveBallAuto extends AutoSuperClass
     Pose launchPose = new Pose(90, launchY,Math.PI);
     Pose shootPose1 = closeShootPose.setHeading(intakingTargetPos1.getHeading());
     Pose shootPose2 = closeShootPose.setHeading(intakingTargetPos2.getHeading());
-    Pose gateShootPose = closeShootPose.setHeading(pressingGate.getHeading());
+    Pose gateShootPose = closeShootPose.setHeading(pressingAndIntakingGate.getHeading());
 
 
     Path shootPreload, collectClose, shootClose, collectMiddle, shootMiddle, pressGateAndIntake, shootGateBalls, leaveShootingZone;
@@ -98,19 +95,19 @@ public class TwelveBallAuto extends AutoSuperClass
                 new BezierCurve(
                         shootPose2,
                         new Pose(70.688, 37.357),
-                        pressingGate
+                        pressingAndIntakingGate
                 )
         );
-        pressGateAndIntake.setLinearHeadingInterpolation(intakingTargetPos1.getHeading()-Math.PI/5,pressingGate.getHeading());
+        pressGateAndIntake.setLinearHeadingInterpolation(intakingTargetPos1.getHeading()-Math.PI/5, pressingAndIntakingGate.getHeading());
 
         shootGateBalls = new Path(
                 new BezierCurve(
-                        pressingGate,
+                        pressingAndIntakingGate,
                         new Pose(70.355, 37.444),
                         gateShootPose
                         )
         );
-        shootGateBalls.setLinearHeadingInterpolation(pressingGate.getHeading(),intakingTargetPos1.getHeading()-Math.PI/5);
+        shootGateBalls.setLinearHeadingInterpolation(pressingAndIntakingGate.getHeading(),intakingTargetPos1.getHeading()-Math.PI/5);
 
 
         leaveShootingZone = new Path(
