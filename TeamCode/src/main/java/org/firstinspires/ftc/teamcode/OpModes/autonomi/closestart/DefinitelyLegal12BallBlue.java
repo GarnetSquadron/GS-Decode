@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
-@Autonomous(name = "12 BALLS DEFFINITELY LEGAL I PROMISE RED \uD83D\uDC4D \uD83D\uDC4D \uD83D\uDC4D")
+@Autonomous(name = "12 BALLS DEFFINITELY LEGAL I PROMISE BLUE \uD83D\uDC4D \uD83D\uDC4D \uD83D\uDC4D")
 
 public class DefinitelyLegal12BallBlue extends AutoSuperClass
 {
