@@ -389,17 +389,19 @@ class HoodTest extends OpMode{
 class loggerTest extends OpMode{
     private static final Logger log = LoggerFactory.getLogger(loggerTest.class);
     private logger logger;
-    String data = "none";
+    int i = 0;
+    String error = "none";
     @Override
     public void init(){
         logger = new logger();
         logger.connect();
-
     }
     @Override
     public void loop(){
-        data = logger.networkConnection.latestData;
-        telemetry.addData("latest message: ", data);
+        i++;
+        error = logger.c.latestError;
+        logger.send("this is a message"+i);
+        telemetry.addData("error: ", error);
         telemetry.update();
     }
 }
