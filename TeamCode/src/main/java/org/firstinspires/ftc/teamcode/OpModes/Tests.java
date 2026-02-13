@@ -349,14 +349,12 @@ class TurretMathTest extends OpMode{
 }
 class HoodTest extends OpMode{
     Launcher launcher;
-    ColorSensor colorSensor;
     double distance = 48;
     double vel = 273;
     @Override
     public void init()
     {
         launcher = new Launcher(hardwareMap);
-        colorSensor = hardwareMap.get(ColorSensor.class,"sensor");
     }
 
     @Override
