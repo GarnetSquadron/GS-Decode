@@ -24,7 +24,7 @@ public class AutoSuperClassTest extends AutoSuperClass
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
         bot.follower.setStartingPose(new Pose());
         initPaths();
         initSteps(

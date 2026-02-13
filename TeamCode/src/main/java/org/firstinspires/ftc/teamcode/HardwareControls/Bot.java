@@ -8,6 +8,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
@@ -37,8 +38,9 @@ public class Bot
     public StepApproximation heightRatioMap;
     public StepApproximation velMap;
     public StepApproximation angleMap;
+    VoltageSensor voltageSensor;
 
-//    public boolean adjustingConstants = false;
+    //    public boolean adjustingConstants = false;
     public void oldPutConstant(double distance, double radToInch, double velRatio, double height){
         radToInchRatioMap.put(distance,radToInch);
         velRangeRatioMap.put(distance,velRatio);
@@ -74,6 +76,7 @@ public class Bot
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
         //Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);
         lights = new Lights(hardwareMap);
+        voltageSensor = hardwareMap.voltageSensor.get("Control Hub");
         this.targetGoalPos = targetGoalPos;
         launcher = new Launcher(hardwareMap);
         intake = new Intake(hardwareMap);
@@ -265,6 +268,29 @@ public class Bot
         public boolean shouldSpinUp(){
             return pauseBetweenShots()? launcher.PIDF.hasDestabilized():/*!launcher.PIDF.closeToTarget()*/false;
         }
+        public void displayBatteryInLeftLight(){
+            Light.Color color;
+            switch ((int)Math.floor(voltageSensor.getVoltage())){
+                case 10:
+                    color = Light.Color.RED;
+                    break;
+                case 11:
+                    color = Light.Color.Orange;
+                    break;
+                case 12:
+                    color = Light.Color.Yellow;
+                    break;
+                case 13:
+                    color = Light.Color.Sage;
+                    break;
+                case 14:
+                    color = Light.Color.Green;
+                    break;
+                default:
+                    color = Light.Color.BLUE;
+            }
+            lights.leftLight.setColor(color);
+        }
         public LaunchPhase update(){
             targetSpeed = velMap.get(getDistance());//launcher.betweenVel(velBounds[0],velBounds[1]);
             launcher.setAngle(Math.toRadians(angleMap.get(getDistance())));
@@ -273,8 +299,9 @@ public class Bot
 
 
             boolean velInRange = false;
-            lights.leftLight.setColor(!launcher.PIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
+//            lights.leftLight.setColor(!launcher.PIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
             lights.rightLight.setColor(launcher.PIDF.hasDestabilized()? Light.Color.Orange:Light.Color.Green);
+            displayBatteryInLeftLight();
 //            telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             //once you get to kicking the servo its far gone imo

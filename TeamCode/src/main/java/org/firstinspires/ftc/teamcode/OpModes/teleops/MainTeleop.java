@@ -130,7 +130,7 @@ public class MainTeleop extends SettingSelectorOpMode
         {
             case "red":
             {
-                targetGoalPos = FieldDimensions.goalPositionRed;
+                targetGoalPos = FieldDimensions.goalVectorRed;
                 switch (selections.get("position"))
                 {
                     case "goal":
@@ -148,7 +148,7 @@ public class MainTeleop extends SettingSelectorOpMode
             }
             case "blue":
             {
-                targetGoalPos = FieldDimensions.goalPositionBlue;
+                targetGoalPos = FieldDimensions.goalVectorBlue;
                 switch (selections.get("position"))
                 {
                     case "goal":
@@ -171,9 +171,9 @@ public class MainTeleop extends SettingSelectorOpMode
             startingPose = Bot.currentPos[0];
             turretPos = Bot.currentTurretPosition;
             if(Bot.redSide){
-                targetGoalPos = FieldDimensions.goalPositionRed;
+                targetGoalPos = FieldDimensions.goalVectorRed;
             }else{
-                targetGoalPos = FieldDimensions.goalPositionBlue;
+                targetGoalPos = FieldDimensions.goalVectorBlue;
 
             }
         }
@@ -352,8 +352,8 @@ public class MainTeleop extends SettingSelectorOpMode
 //                }
             telemetry.addLine("current distance");
             telemetry.addLine(bot.getConstantString());
-            telemetry.addLine("constant list");
-            telemetry.addLine(bot.getConstantList());
+//            telemetry.addLine("constant list");
+//            telemetry.addLine(bot.getConstantList());
 
 //            }
 //            telemetry.addLine();
@@ -414,9 +414,9 @@ public class MainTeleop extends SettingSelectorOpMode
 //            }
         }
         //telemetry.addData("is auto clear",telemetry.isAutoClear());
-        telemetry.updateSection();
-//        telemetry.updateSection("TURRET");
-        telemetry.updateSection("LAUNCHER");
+//        telemetry.updateSection();
+        telemetry.updateSection("TURRET");
+//        telemetry.updateSection("LAUNCHER");
 //        telemetry.updateSection("PIDF");
 //        telemetry.updateSection("BOT");
 //        telemetry.updateSection("TURRET");

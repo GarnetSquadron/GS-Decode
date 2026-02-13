@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 @Autonomous(name = "🥩 BLUE TRIANGLE! 🥩")
 public class BlueTriangle extends AutoSuperClass {
@@ -26,7 +25,7 @@ public class BlueTriangle extends AutoSuperClass {
 
     Follower follower;
     Bot bot;
-    SectionedTelemetry telemetry;
+//    SectionedTelemetry telemetry;
     Paths paths;
 
     Pose startPose = m(97.300, 9.540, Math.toRadians(90));
@@ -115,14 +114,14 @@ public class BlueTriangle extends AutoSuperClass {
 
     @Override
     public void init() {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
         Bot.redSide = false;
         follower = bot.follower;
 
         paths = new Paths(follower);
         follower.setStartingPose(startPose);
 
-        telemetry = new SectionedTelemetry(super.telemetry);
+//        telemetry = new SectionedTelemetry(super.telemetry);
 
         initSteps(
                 () -> {

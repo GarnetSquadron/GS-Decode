@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakin
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos3;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetX;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.justPressingGate;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.middleJustPressingGate;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 @Autonomous(name = "12 BALLS DEFFINITELY LEGAL I PROMISE RED \uD83D\uDC4D \uD83D\uDC4D \uD83D\uDC4D")
 
@@ -34,15 +33,14 @@ public class DefinitelyLegal12BallRed extends AutoSuperClass
     Pose launchPose = new Pose(90, launchY,Math.PI);
     Pose shootPose1 = closeShootPose.setHeading(intakingTargetPos1.getHeading());
     Pose shootPose2 = closeShootPose.setHeading(intakingTargetPos2.getHeading());
-    Pose gateShootPose = closeShootPose.setHeading(justPressingGate.getHeading());
+    Pose gateShootPose = closeShootPose.setHeading(middleJustPressingGate.getHeading());
     Pose pressPrep = new Pose(intakingTargetX,66.5);
-
 
     Path shootPreload, collectClose, shootClose, collectMiddle, shootMiddle, pressGatePrep, pressGatePrep2,pressGate, collectFar, shootFar, shootGateBalls, intakeEnd, shootEnd, leaveShootingZone;
 
 
     PathChain pressGateAndCollectMiddle;
-    SectionedTelemetry telemetry;
+//    SectionedTelemetry telemetry;
 
 
     public void initializePaths()
@@ -95,7 +93,7 @@ public class DefinitelyLegal12BallRed extends AutoSuperClass
                 new BezierLine(
                         pressPrep,
 //                        new Pose(120, 67.124694376528105),
-                        justPressingGate.minus(new Pose(3,1))
+                        middleJustPressingGate.minus(new Pose(3,1))
                 )
         );
         pressGate.setLinearHeadingInterpolation(0,0);
@@ -131,7 +129,7 @@ public class DefinitelyLegal12BallRed extends AutoSuperClass
                 new BezierLine(
                         intakingTargetPos3,
 
-                        launchPose
+                        closeShootPose
                 )
         );
         shootFar.setLinearHeadingInterpolation(intakingTargetPos2.getHeading(),intakingTargetPos2.getHeading()-Math.PI/5);
@@ -144,7 +142,7 @@ public class DefinitelyLegal12BallRed extends AutoSuperClass
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
 //        bot.launcher.PIDF.setConstants(
 //                /*bot.launcher.launcherPIDF.Kp*/0.002,
 //                -0.0003,
@@ -157,7 +155,7 @@ public class DefinitelyLegal12BallRed extends AutoSuperClass
         follower.setMaxPower(0.4);
         initializePaths();
         follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
-        this.telemetry = new SectionedTelemetry(super.telemetry);
+//        this.telemetry = new SectionedTelemetry(super.telemetry);
         initSteps(
 //                ()->{
 //

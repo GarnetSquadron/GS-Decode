@@ -67,18 +67,22 @@ public class Turret
      * @return
      */
     public double aimTowardsGoal(double[] goalPos, double[] botPos, double heading){
-        double rotAngle = Math.atan((goalPos[1] - botPos[1]) /(goalPos[0] - botPos[0]))-heading+Math.PI;
+        double deltaX = goalPos[0] - botPos[0];
+        double deltaY = goalPos[1] - botPos[1];
+        double rotAngle = ExtraMath.atan2(deltaX,deltaY)-heading+Math.PI;
 //        double rotAngle = ExtraMath.angleFromCoords( (goalPos[0] - botPos[0]),(goalPos[1] - botPos[1]))-heading+Math.PI;
         setRotation(rotAngle);
-        telemetry.addData("integral",((PIDCon)turretRot.getController()).getIntegral());
-//        telemetry.addData("angle",Math.toDegrees(rotAngle));
-//        telemetry.addData("atan",Math.toDegrees(Math.atan((goalPos[0] - botPos[0])/(goalPos[1] - botPos[1]))));
-//        telemetry.addData("heading",Math.toDegrees(heading));
-//        telemetry.addData("GoalX",goalPos[0]);
-//        telemetry.addData("botX", botPos[0]);
-//        telemetry.addData("deltaX", goalPos[0] - botPos[0]);
-//        telemetry.addData("deltaY",goalPos[1] - botPos[1]);
-//        telemetry.addData("deltaY/deltaX",(goalPos[1] - botPos[1]) /(goalPos[0] - botPos[0]));
+//        telemetry.addData("integral",((PIDCon)turretRot.getController()).getIntegral());
+        telemetry.addData("angle",Math.toDegrees(rotAngle));
+        telemetry.addData("atan",Math.toDegrees(Math.atan(deltaY/deltaX)));
+        telemetry.addData("atan2",Math.toDegrees(ExtraMath.atan2(deltaX,deltaY)));
+        telemetry.addData("atan2-atan",Math.toDegrees(ExtraMath.atan2(deltaX,deltaY)-Math.atan(deltaY/deltaX)));
+        telemetry.addData("heading",Math.toDegrees(heading));
+        telemetry.addData("GoalX",goalPos[0]);
+        telemetry.addData("botX", botPos[0]);
+        telemetry.addData("deltaX", deltaX);
+        telemetry.addData("deltaY",deltaY);
+        telemetry.addData("deltaY/deltaX",(deltaY) /(deltaX));
         return rotAngle;
     }
     public void zero(){

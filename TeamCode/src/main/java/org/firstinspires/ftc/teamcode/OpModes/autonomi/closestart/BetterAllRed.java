@@ -112,7 +112,7 @@ public class BetterAllRed extends OpMode
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
         pathTimer = new Timer();
         follower = bot.follower;
         initializePaths();

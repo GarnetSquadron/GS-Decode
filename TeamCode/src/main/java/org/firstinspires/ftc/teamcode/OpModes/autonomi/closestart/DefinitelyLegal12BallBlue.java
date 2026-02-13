@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakin
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos3;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetX;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.justPressingGate;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.middleJustPressingGate;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 @Autonomous(name = "12 BALLS DEFFINITELY LEGAL I PROMISE BLUE \uD83D\uDC4D \uD83D\uDC4D \uD83D\uDC4D")
 
@@ -31,10 +30,10 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
     Follower follower;
     Bot bot;
     double launchY = 84.000;
-    Pose launchPose = new Pose(90, launchY,Math.PI);
-    Pose shootPose1 = closeShootPose.setHeading(intakingTargetPos1.getHeading());
-    Pose shootPose2 = closeShootPose.setHeading(intakingTargetPos2.getHeading());
-    Pose gateShootPose = closeShootPose.setHeading(justPressingGate.getHeading());
+    Pose launchPose = new Pose(90, launchY,-Math.PI/5);
+    Pose shootPose1 = closeShootPose.setHeading(-Math.PI/5);
+    Pose shootPose2 = closeShootPose.setHeading(-Math.PI/5);
+    Pose gateShootPose = closeShootPose.setHeading(-Math.PI/5);
     Pose pressPrep = new Pose(intakingTargetX,66.5);
 
 
@@ -42,13 +41,12 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
 
 
     PathChain pressGateAndCollectMiddle;
-    SectionedTelemetry telemetry;
+//    SectionedTelemetry telemetry;
 
 
     public void initializePaths()
     {
-
-        shootPreload = new Path(
+        shootPreload = getPathFromBezierCurve(
                 new BezierLine(
                         FieldDimensions.botTouchingBlueGoal,
                         closeShootPose.mirror()
@@ -56,44 +54,44 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
         );
 
 
-        collectClose = new Path(
+        collectClose = getPathFromBezierCurve(
                 new BezierCurve(
                         closeShootPose.mirror(),
                         new Pose(98.275, 83.868).mirror(),
                         intakingTargetPos1.mirror()
                 )
         );
-        collectClose.setLinearHeadingInterpolation(intakingTargetPos1.mirror().getHeading()-Math.PI/5, Math.toRadians(0));
+//        collectClose.setLinearHeadingInterpolation(intakingTargetPos1.mirror().getHeading()-Math.PI/5, Math.toRadians(0));
 
 
-        shootClose = new Path(
+        shootClose = getPathFromBezierCurve(
                 new BezierLine(
                         intakingTargetPos1.mirror(),
                         shootPose1.mirror()
                 )
         );
-        shootClose.setLinearHeadingInterpolation(intakingTargetPos1.mirror().getHeading(),intakingTargetPos1.mirror().getHeading()-Math.PI/5);
+//        shootClose.setLinearHeadingInterpolation(intakingTargetPos1.mirror().getHeading(),intakingTargetPos1.mirror().getHeading()-Math.PI/5);
 
-        collectMiddle = new Path(
+        collectMiddle = getPathFromBezierCurve(
                 new BezierCurve(
                         shootPose1.mirror(),
                         new Pose(92.154, 57.196).mirror(),
                         intakingTargetPos2.mirror()
                 )
         );
-        collectMiddle.setLinearHeadingInterpolation(intakingTargetPos1.mirror().getHeading()-Math.PI/5, 0);
+//        collectMiddle.setLinearHeadingInterpolation(intakingTargetPos1.mirror().getHeading()-Math.PI/5, 0);
         collectMiddle.setBrakingStrength(0.1);
-        pressGatePrep = new Path(
+        pressGatePrep = getPathFromBezierCurve(
                 new BezierLine(
                         intakingTargetPos2.mirror(),
                         pressPrep.mirror()
                 )
         );
-        pressGatePrep.setLinearHeadingInterpolation(0,0);
-        pressGate = new Path(
+//        pressGatePrep.setLinearHeadingInterpolation(0,0);
+        pressGate = getPathFromBezierCurve(
                 new BezierLine(
                         pressPrep.mirror(),
-                        justPressingGate.mirror().minus(new Pose(3,1))
+                        middleJustPressingGate.mirror().minus(new Pose(3,1))
                 )
         );
         pressGate.setLinearHeadingInterpolation(0,0);
@@ -105,30 +103,30 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
                 pressGate
         );
 
-        shootMiddle = new Path(
+        shootMiddle = getPathFromBezierCurve(
                 new BezierCurve(
                         intakingTargetPos2.mirror(),
                         new Pose(92.154, 57.196).mirror(),
                         shootPose2.mirror()
                 )
         );
-        shootMiddle.setLinearHeadingInterpolation(intakingTargetPos2.mirror().getHeading(),intakingTargetPos2.mirror().getHeading()-Math.PI/5);
-        collectFar = new Path(
+//        shootMiddle.setLinearHeadingInterpolation(intakingTargetPos2.mirror().getHeading(),intakingTargetPos2.mirror().getHeading()-Math.PI/5);
+        collectFar = getPathFromBezierCurve(
                 new BezierCurve(
                         launchPose.mirror(),
                         new Pose(75.3,33.97).mirror(),
                         intakingTargetPos3.mirror()
                 )
         );
-        collectFar.setLinearHeadingInterpolation(intakingTargetPos3.mirror().getHeading()-Math.PI/5,0);
+//        collectFar.setLinearHeadingInterpolation(intakingTargetPos3.mirror().getHeading()-Math.PI/5,0);
 
-        shootFar = new Path(
+        shootFar = getPathFromBezierCurve(
                 new BezierLine(
                         intakingTargetPos3.mirror(),
                         launchPose.mirror()
                 )
         );
-        shootFar.setLinearHeadingInterpolation(intakingTargetPos2.mirror().getHeading(),intakingTargetPos2.mirror().getHeading()-Math.PI/5);
+//        shootFar.setLinearHeadingInterpolation(intakingTargetPos2.mirror().getHeading(),intakingTargetPos2.mirror().getHeading()-Math.PI/5);
     }
     public boolean incrementingStep(){
         return !gamepad1.b;
@@ -138,12 +136,13 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorBlue);
         follower = bot.follower;
         follower.setMaxPower(0.4);
         initializePaths();
-        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
-        this.telemetry = new SectionedTelemetry(super.telemetry);
+        follower.setStartingPose(FieldDimensions.botTouchingBlueGoal);
+        bot.redSide = false;
+//        this.telemetry = new SectionedTelemetry(super.telemetry);
         initSteps(
                 () ->
                 {

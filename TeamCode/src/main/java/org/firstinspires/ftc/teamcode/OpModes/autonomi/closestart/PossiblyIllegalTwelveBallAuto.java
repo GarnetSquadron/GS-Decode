@@ -19,7 +19,6 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 
 @Autonomous(name = "\uD83D\uDE2E WAIT IS THAT A 12 BALL AUTO?!?!?!?!? \uD83D\uDE2E")
@@ -37,7 +36,7 @@ public class PossiblyIllegalTwelveBallAuto extends AutoSuperClass
     Path shootPreload, collectClose, shootClose, collectMiddle, shootMiddle, pressGateAndIntake, shootGateBalls, leaveShootingZone;
 
 
-    SectionedTelemetry telemetry;
+//    SectionedTelemetry telemetry;
 
 
     public void initializePaths()
@@ -126,7 +125,7 @@ public class PossiblyIllegalTwelveBallAuto extends AutoSuperClass
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
 //        bot.launcher.PIDF.setConstants(
 //                /*bot.launcher.launcherPIDF.Kp*/0.002,
 //                -0.0003,
@@ -139,7 +138,7 @@ public class PossiblyIllegalTwelveBallAuto extends AutoSuperClass
         follower.setMaxPower(0.4);
         initializePaths();
         follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
-        this.telemetry = new SectionedTelemetry(super.telemetry);
+//        this.telemetry = new SectionedTelemetry(super.telemetry);
         initSteps(
 //                ()->{
 //
@@ -303,34 +302,36 @@ public class PossiblyIllegalTwelveBallAuto extends AutoSuperClass
 
     @Override public void loop()
     {
-        follower.update();
-
-        if(/*stopTimer.timeover()||*/ gamepad1.a){//TODO: also remove this because it is illegal for a real match
-            follower.breakFollowing();
-            bot.launcher.setPower(0);
-            bot.updateCurrentPos();
-        }else{
-            autonomousPathUpdate();
-        }
-
-        if(bot.launcher.PIDF.hasStabilized()&&!prevStabilized){
-            spunUpTime = TIME.getTime();
-        }
-        telemetry.addData("max power scale",follower.getMaxPowerScaling());
-        try {
-            telemetry.addData("vector ", follower.getDriveVector());
-        }catch (Exception ignored){
-            telemetry.addLine("unable to get vector");
-        }
-        telemetry.addData("spinup time",spunUpTime-startTime);
-//        telemetry.addArray("times",times);
-        telemetry.addData("current position",bot.currentPos);
-        prevStabilized = bot.launcher.PIDF.hasStabilized();
-        telemetry.addData("step", currentStep);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
-//        telemetry.a
+//        follower.update();
+//
+//        if(/*stopTimer.timeover()||*/ gamepad1.a){//TODO: also remove this because it is illegal for a real match
+//            follower.breakFollowing();
+//            bot.launcher.setPower(0);
+//            bot.updateCurrentPos();
+//        }else{
+//            autonomousPathUpdate();
+//        }
+//
+//        if(bot.launcher.PIDF.hasStabilized()&&!prevStabilized){
+//            spunUpTime = TIME.getTime();
+//        }
+//        telemetry.addData("max power scale",follower.getMaxPowerScaling());
+//        try {
+//            telemetry.addData("vector ", follower.getDriveVector());
+//        }catch (Exception ignored){
+//            telemetry.addLine("unable to get vector");
+//        }
+//        telemetry.addData("spinup time",spunUpTime-startTime);
+////        telemetry.addArray("times",times);
+//        telemetry.addData("current position",bot.currentPos);
+//        prevStabilized = bot.launcher.PIDF.hasStabilized();
+//        telemetry.addData("step", currentStep);
+//        telemetry.addData("x", follower.getPose().getX());
+//        telemetry.addData("y", follower.getPose().getY());
+//        telemetry.addData("heading", follower.getPose().getHeading());
+////        telemetry.a
+        telemetry.addData("color", selections.get("color"));
+        telemetry.addData("selections", selections);
 //        telemetry.updateSection();
 //        telemetry.updateSection("BOT");
 //        telemetry.updateSection("LAUNCHER");

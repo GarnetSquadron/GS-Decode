@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 @Autonomous(name = "\uD83E\uDD69 FINAL BOSS OF ALL AUTOS BLUE \uD83E\uDD69")
 public class BlueGoalAuto extends AutoSuperClass
@@ -50,7 +49,7 @@ public class BlueGoalAuto extends AutoSuperClass
     Path shootPreload, collectClose, shoot1, collectMiddle, pressGate, shoot2, collectFar, shoot3,
             launchPreload, intake1, launch2, intake2, launch3, intake3, launch4;
 
-    SectionedTelemetry telemetry;
+//    SectionedTelemetry telemetry;
 
     public void initializePaths()
     {
@@ -187,7 +186,7 @@ public class BlueGoalAuto extends AutoSuperClass
     {
 
         Bot.redSide = false;
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
 
 
         bot.launcher.PIDF.setConstants(
@@ -206,7 +205,7 @@ public class BlueGoalAuto extends AutoSuperClass
 
         follower.setStartingPose(m(FieldDimensions.botTouchingRedGoal));
 
-        this.telemetry = new SectionedTelemetry(super.telemetry);
+//        this.telemetry = new SectionedTelemetry(super.telemetry);
 
 
         initSteps(

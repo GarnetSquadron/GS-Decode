@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
 
 @Autonomous(name = "\uD83E\uDD69 FINAL BOSS OF ALL AUTOS RED \uD83E\uDD69")
@@ -35,7 +34,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
     Path shootPreload, collectClose, shoot1, collectMiddle, pressGate, shoot2, collectFar, shoot3, launchPreload, intake1, launch2, intake2, launch3, intake3, launch4;
 
 
-    SectionedTelemetry telemetry;
+//    SectionedTelemetry telemetry;
 
 
     public void initializePaths()
@@ -206,7 +205,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
         bot.launcher.PIDF.setConstants(
                 /*bot.launcher.launcherPIDF.Kp*/0.002,
                 -0.0003,
@@ -219,7 +218,7 @@ public class yetAnotherRedAuto extends AutoSuperClass
         follower = bot.follower;
         initializePaths();
         follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
-        this.telemetry = new SectionedTelemetry(super.telemetry);
+//        this.telemetry = new SectionedTelemetry(super.telemetry);
         initSteps(
                 () ->
                 {//bot.spinFlyWheelWithinFeasibleRange();
