@@ -30,4 +30,8 @@ public class loggerTest extends OpMode {
         telemetry.addData("error: ", error);
         telemetry.update();
     }
+    @Override
+    public void stop(){
+        logger.close();
+    }
 }

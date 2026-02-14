@@ -48,11 +48,11 @@ public class Client {
             }
             // Keep reading until "Over" is input
             if (!m.equals("Over")) {
-//                try {
-//                    out.writeUTF(m);
-//                } catch (IOException i) {
-//                    latestError = i.getMessage();
-//                }
+                try {
+                    out.writeUTF(m);
+                } catch (IOException i) {
+                    latestError = i.getMessage();
+                }
             }
             else{ // Close the connection
                 try {
