@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 public class logger {
     private int t = 0;
-    public Client c = new Client("192.168.43.164", 5000);;
+    public Client c = new Client("192.168.43.164", 5050);
 
-    public logger() {;
+    public logger() {
 
     }
 
