@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.PurelyCalculators.controllers;
 
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.Encoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 
 public abstract class Controller
 {
@@ -12,4 +12,8 @@ public abstract class Controller
     }
 
     public abstract double calculate();
+    /**
+     * should reset all state that changes in a nonintuitive meeting
+     */
+    public void resetState(){}
 }

@@ -1,25 +1,28 @@
 package org.firstinspires.ftc.teamcode.PurelyCalculators.controllers;
 
-import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.SmoothVelocityEncoder;
+import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.SmoothVelocityEncoder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ValueAtTimeStamp;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 
 public class PIDCon extends PositionController
 {
+    SectTelemetryAdder telemetry = new SectTelemetryAdder("TURRET");
     double kp, ki, kd;
     ValueAtTimeStamp prevPos;
-    double integral;
+    double integral = 0;
 
     public PIDCon(double kp, double ki, double kd)
     {
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
-        reset();
+        resetState();
     }
 
-    public void reset()
+
+    @Override
+    public void resetState()
     {
         integral = 0;
         prevPos = new ValueAtTimeStamp(0, TIME.getTime());
@@ -29,7 +32,7 @@ public class PIDCon extends PositionController
     public void setTargetPosition(double targetPosition)
     {
         this.targetPosition = targetPosition;
-        reset();
+        telemetry.addLine("reset!!");
     }
     public double getIntegral(){
         return integral;
@@ -41,7 +44,9 @@ public class PIDCon extends PositionController
         double error = getDistanceToTarget();
         if (ki != 0) {
             double currentTime = TIME.getTime();
-            integral += ExtraMath.integration.trapazoid(prevPos, new ValueAtTimeStamp(error, currentTime));
+            double increment = -(error)*(prevPos.getTimeStamp()-currentTime);
+            integral += increment;//ExtraMath.integration.trapazoid(prevPos, new ValueAtTimeStamp(error, currentTime));
+            telemetry.addData("increment",increment);
             prevPos = new ValueAtTimeStamp(error, currentTime);
         }
         double velocity;

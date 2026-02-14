@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.getAngles;
-import static org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder.targetHeight;
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath.getAngles;
+import static org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath.getTargetHeight;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.telemetry.SelectableOpMode;
@@ -12,16 +12,23 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
+import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
 import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
+import org.firstinspires.ftc.teamcode.HardwareControls.Light;
+import org.firstinspires.ftc.teamcode.HardwareControls.Lights;
 import org.firstinspires.ftc.teamcode.HardwareControls.Turret;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.AngleFinder;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses.BetterControllerClass;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
+import org.firstinspires.ftc.teamcode.SectionedTelemetry;
+import org.firstinspires.ftc.teamcode.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 import org.firstinspires.ftc.teamcode.logger;
 import org.slf4j.Logger;
@@ -52,6 +59,7 @@ public class Tests extends SelectableOpMode
             s.folder("Vision", v->{
                 v.add("Obelisk Id Test",ObeliskIdTest::new);
             });
+            s.add("launcher test", LauncherTest::new);
             s.add("intake stall test",IntakeStallDetectTest::new);
             s.add("motor test",MotorTest::new);
             s.add("servo test",ServoTest::new);
@@ -59,6 +67,9 @@ public class Tests extends SelectableOpMode
             s.add("intake Tests", IntakeTests::new);
             s.add("turret math", TurretMathTest::new);
             s.add("hood test",HoodTest::new);
+            s.add("light test",LightTest::new);
+            s.add("simple telemetry", SectionedTelemetryTest::new);
+            s.add("flywheel test",FlyWheelTest::new);
         });
     }
 
@@ -180,10 +191,10 @@ class ServoTest extends OpMode
             servo.setPosition(1);//up
         }
         if (gamepad1.a) {
-            servo.setPosition(0.66666);
+            servo.setPosition(0.6);
         }
         if (gamepad1.b) {
-            servo.setPosition(0.33333);
+            servo.setPosition(0.14);
         }
         if (gamepad1.y) {
             servo.setPosition(0);//down
@@ -365,10 +376,10 @@ class HoodTest extends OpMode{
         launcher.aimServo(distance,vel);
         telemetry.addData("distance", distance);
         telemetry.addData("vel",vel);
-        telemetry.addData("angle",Math.toDegrees( AngleFinder.getOptimumAngle(vel,distance)));
+        telemetry.addData("angle",Math.toDegrees( TrajectoryMath.getOptimumAngle(vel,distance)));
         double a = 386.09*386.09/4;
-        double b = 386.09*targetHeight-vel*vel;
-        double c = distance*distance+targetHeight*targetHeight;
+        double b = 386.09*getTargetHeight()-vel*vel;
+        double c = distance*distance+getTargetHeight()*getTargetHeight();
         double[] tSquared = ExtraMath.quadraticFormula(a,b,c);
         double[] angles = getAngles(vel,distance);
         telemetry.addData("a", a);
@@ -383,4 +394,259 @@ class HoodTest extends OpMode{
         }
         telemetry.update();
     }
+}
+class LightTest extends OpMode{
+//    Servo light1,light2;
+    Lights lights;
+    BetterControllerClass Gpad1;
+    double freq1 = 0.279,freq2 = 0.666;
+
+    @Override
+    public void init()
+    {
+        lights = new Lights(hardwareMap);
+//        light1 = hardwareMap.get(Servo.class,"light1");
+//        light2 = hardwareMap.get(Servo.class,"light2");
+        Gpad1 = new BetterControllerClass(gamepad1);
+    }
+    double volt = 0;
+
+    Light.Color color = Light.Color.BLUE;
+    @Override
+    public void loop()
+    {
+//        double sin = Math.sin(TIME.getTime()*Math.PI*2*2);
+//        if(sin>0){
+//            light1.setPosition(freq1);
+//            light2.setPosition(0);
+//        } else{
+//            light1.setPosition(0);
+//            light2.setPosition(freq2);
+//        }
+//        double step = 0.01;
+//        if(gamepad1.dpadUpWasPressed()){
+//            freq1+=step;
+//        }
+//        if(gamepad1.dpadDownWasPressed()){
+//            freq1-=step;
+//        }
+//        if(gamepad1.dpadRightWasPressed()){
+//            freq2+=step;
+//        }
+//        if(gamepad1.dpadLeftWasPressed()){
+//            freq2-=step;
+//        }
+//        Gpad1.update();
+//        telemetry.addData("freq1",freq1);
+//        telemetry.addData("freq2",freq2);
+//        telemetry.addData("time",TIME.getTime());
+        telemetry.addData("volt", volt);
+        telemetry.addData("color", color);
+        telemetry.update();
+        switch ((int)Math.floor(volt)){
+            case 10:
+                color = Light.Color.RED;
+                break;
+            case 11:
+                color = Light.Color.Orange;
+                break;
+            case 12:
+                color = Light.Color.Yellow;
+                break;
+            case 13:
+                color = Light.Color.Sage;
+                break;
+            case 14:
+                color = Light.Color.Green;
+                break;
+            case 15:
+                color = Light.Color.Teal;
+                break;
+            default:
+                color = Light.Color.BLUE;
+        }
+        if(gamepad1.aWasReleased()){
+            volt++;
+        }
+        lights.leftLight.setColor(color);
+    }
+}
+class SectionedTelemetryTest extends OpMode{
+    SectionedTelemetry telemetry;
+    double count = 0;
+    @Override
+    public void init()
+    {
+        this.telemetry = new SectionedTelemetry(super.telemetry);
+    }
+
+    @Override
+    public void loop()
+    {
+        telemetry.addLine("this works?");
+        telemetry.addLine("maybe?");
+        telemetry.addLine(String.valueOf(count));
+        telemetry.addData("count",count);
+        telemetry.addLine("do you like this section?","cool section");
+        telemetry.updateAllSections();
+        telemetry.display();
+        telemetry.clearAll();
+        count++;
+    }
+}
+class LauncherTest extends OpMode{
+
+    SimplerTelemetry telemetry;
+    Bot bot;
+    VoltageSensor voltageSensor;
+    BetterControllerClass gpad;
+    double power = 1;
+    double angle = 40;
+    double batteryLevel,speed;
+    @Override
+    public void init()
+    {
+        voltageSensor = hardwareMap.voltageSensor.get("Control Hub");
+        this.telemetry = new SimplerTelemetry(super.telemetry);
+        gpad = new BetterControllerClass(gamepad1);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorBlue);
+    }
+
+    @Override
+    public void loop()
+    {
+        if(gpad.getCurrentValue("right_trigger")){
+            bot.launcher.spinUpFlywheel(power);
+        }
+        else{
+            bot.launcher.setPower(0);
+        }
+        if(gpad.getCurrentValue("left_trigger")){
+            bot.intake.setPower(1);
+            bot.intake.kickBall();
+        }
+        else{
+            bot.intake.setPower(0);
+            bot.intake.unKick();
+        }
+        if(gpad.getRisingEdge("left_trigger")){
+            batteryLevel = voltageSensor.getVoltage();
+            speed = bot.launcher.getFlywheelEncoder().getVelocity();
+        }
+        power+=gamepad1.dpadRightWasPressed()?0.1:(gamepad1.dpadLeftWasPressed()?-0.1:0);
+        angle+=gamepad1.dpadUpWasPressed()?1:(gamepad1.dpadDownWasPressed()?-1:0);
+        bot.launcher.setAngle(Math.toRadians(angle));
+        telemetry.addData("power",power);
+        telemetry.addData("angle",angle);
+        telemetry.addLine();
+        telemetry.addData("recorded battery", batteryLevel);
+        telemetry.addData("recorded Rad/sec", speed);
+        telemetry.addLine();
+        telemetry.addData("launcher velocity",bot.launcher.getFlywheelEncoder().getVelocity());
+        telemetry.addData("predicted ball velocity",bot.launcher.getExitVel());
+        telemetry.addData("",bot.launcher.getAngle());
+        telemetry.display();
+        telemetry.clear();
+        gpad.update();
+    }
+}
+class FlyWheelTest extends OpMode{
+    SectionedTelemetry telemetry;
+    public double target=100;
+    double forceDamp = 0.01;
+    Launcher launcher;
+    double startTime = 0;
+    int oscilCount;
+    Lights lights;
+    BetterControllerClass gpad;
+    @Override
+    public void init(){
+        launcher = new Launcher(hardwareMap);
+        gpad = new BetterControllerClass(gamepad1);
+        lights = new Lights(hardwareMap);
+        this.telemetry = new SectionedTelemetry(super.telemetry);
+    }
+    double[] numbers = new double[5];
+    boolean prevStabilized = false;
+    double spunUpTime = 0;
+
+    @Override
+    public void loop(){
+//        if (gamepad1.aWasPressed()){
+//            Kp += 0.001;
+//        }if (gamepad1.bWasPressed()){
+//            Kp -= 0.001;
+//        }
+//        if (gamepad1.yWasPressed()){
+//            Kd += 0.01;
+//        }
+//        if (gamepad1.xWasPressed()){
+//            Kd -= 0.01;
+//        }
+//        if (gamepad1.dpadDownWasPressed()){
+//            Kp += 0.001;
+//        }if (gamepad1.dpadUpWasPressed()){
+//            Kp -= 0.001;
+//        }
+//        if (gamepad1.dpadLeftWasPressed()){
+//            Kd += 0.01;
+//        }
+//        if (gamepad1.dpadRightWasPressed()){
+//            Kd -= 0.01;
+//        }
+        gpad.update();
+        launcher.PIDF.Kp += gpad.getIncrement("dpad_up","dpad_down",0.001);
+        launcher.PIDF.Ki += gpad.getIncrement("dpad_right","dpad_left",0.00001);
+        launcher.PIDF.Kd += gpad.getIncrement("a","y",0.00001);
+        launcher.PIDF.Kv += gpad.getIncrement("b","x",0.001);
+        target += gpad.getIncrement("left_bumper","right_bumper",10);
+        launcher.updateSpeedMeasurements(target);
+        if(gpad.getCurrentValue("right_trigger")||gpad.getCurrentValue("left_trigger")) {
+            //launcher.launcherPIDF.setConstants(Kp, Kd,0, Ks,Kv,Ka);
+            telemetry.addData("stabilized at target",launcher.spinFlyWheelWithinRange(target));
+        }else{
+            launcher.setPower(0);
+        }
+        if(gpad.getRisingEdge("right_trigger")){
+            launcher.resetPID();
+            startTime = TIME.getTime();
+            oscilCount = 0;
+        }
+//        telemetry.addData("target ", target);
+//        telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
+        if(launcher.PIDF.hasStabilized()&&!prevStabilized) {
+            spunUpTime = TIME.getTime();
+            oscilCount++;
+        }
+        prevStabilized = launcher.PIDF.hasStabilized();
+        lights.leftLight.setColor(prevStabilized? Light.Color.Orange: Light.Color.Green);
+
+
+        telemetry.addData("count",oscilCount);
+
+        telemetry.addData("spinup time",spunUpTime-startTime);
+
+
+        telemetry.addData("force damo ", forceDamp);
+        telemetry.addData("force", launcher.motor1.getPower());
+        telemetry.addData("kp", launcher.PIDF.Kp);
+        telemetry.addData("ki", launcher.PIDF.Ki);
+        telemetry.addData("kd", launcher.PIDF.Kd);
+        telemetry.addData("ks", launcher.PIDF.Ks);
+        telemetry.addData("kv", launcher.PIDF.Kv);
+//        telemetry.addData("p",launcher.launcherPIDF.p);
+//        telemetry.addData("d",launcher.launcherPIDF.d);
+//        telemetry.addData("supposed force",launcher.launcherPIDF.force);
+        telemetry.addData("supposed feed forward",launcher.PIDF.getFeedForward(target));
+        telemetry.addData("acceleration",launcher.PIDF.getAcceleration());
+        telemetry.addArray("diffs",launcher.PIDF.differences,"arrays");
+        telemetry.addArray("times",launcher.PIDF.times,"arrays");
+        telemetry.addData("loop time",launcher.PIDF.times[0]-launcher.PIDF.times[1]);
+        telemetry.updateSection();
+        telemetry.updateSection("LAUNCHER");
+        telemetry.updateSection("PIDF");
+        telemetry.display();
+        telemetry.clearAll();
+    }
+
 }

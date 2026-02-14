@@ -23,6 +23,7 @@ public class Intake {
         servoKicker = hardwareMap.get(Servo.class, "servoKicker");
         leftGate = hardwareMap.get(Servo.class, "leftGate");
         rightGate = hardwareMap.get(Servo.class, "rightGate");
+//        intakeMotor.setBreak();
         intakeMotor.reverseMotor();
     }
     public boolean openGate(){
@@ -55,8 +56,8 @@ public class Intake {
 //        }
 //    }
     public boolean closeGate(){
-        leftGate.setPosition(0.15);
-        rightGate.setPosition(0.65);
+        leftGate.setPosition(0.05);
+        rightGate.setPosition(0.55);
         if (leftGate.getPosition() >-0.1&& leftGate.getPosition() <0.1 && rightGate.getPosition()>-0.1 && rightGate.getPosition()<0.1){return true;}else return false;
     }
     public double getCurrent(){
@@ -90,17 +91,26 @@ public class Intake {
     public void setPower(double power) {
         intakeMotor.setPower(power);
     }
+    public double getPower(){
+        return intakeMotor.getPower();
+    }
     public void stop() {
         intakeMotor.stop();
     }
     public boolean kickBall(){
-        servoKicker.setPosition(0.64);
+        servoKicker.setPosition(0.6);
         if (servoKicker.getPosition() ==0.64){return true;}else return false;
     }
     public boolean unKick(){
-        servoKicker.setPosition(0.2);
+        servoKicker.setPosition(0.14);
         if (servoKicker.getPosition() ==0.2){return true;}else return false;
     }
-
+    /**
+     * please do not misunderstand this function, it only tells you where it is trying to go, not where it actually is
+     * Ie, you cannot run openGate() and then wait for gateIsOpen to be true
+     */
+    public boolean gateIsOpen(){
+        return (leftGate.getPosition()==0.4&&rightGate.getPosition()==0.95);
+    }
 
 }

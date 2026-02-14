@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
 
 import com.pedropathing.follower.Follower;
@@ -7,7 +7,6 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
@@ -15,14 +14,13 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.TestConstants;
 
 
-@Autonomous(name = "AutoRedAll")
+//@Autonomous(name = "AutoRedAll")
 public class AllRed extends LinearOpMode
 {
     Follower follower;
 
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() throws InterruptedException {
         follower = TestConstants.createFollower(hardwareMap);
         follower.setStartingPose(new Pose());
         follower.update();
@@ -40,13 +38,13 @@ public class AllRed extends LinearOpMode
 
         PathChain CollectClose = builder
                 .addPath(
-            // Path 2, Go to collect closest pattern
-            new BezierCurve(
-                    new Pose(80.000, 20.000),
-                    new Pose(83.155, 37.521),
-                    new Pose(134.113, 32.451)
-            )
-    )
+                        // Path 2, Go to collect closest pattern
+                        new BezierCurve(
+                                new Pose(80.000, 20.000),
+                                new Pose(83.155, 37.521),
+                                new Pose(134.113, 32.451)
+                        )
+                )
                 .setLinearHeadingInterpolation(Math.toRadians(65), Math.toRadians(0))
                 .build();
 
@@ -106,46 +104,49 @@ public class AllRed extends LinearOpMode
         waitForStart();
         follower.followPath(ShootPreload);
 
-        while(follower.isBusy()){
-            follower.update();
+//        while(follower.isBusy()){
+//            follower.update();
+//            follower.followPath(ShootPreload);
 
-            if(follower.getChainIndex()==1){
-                follower.pausePathFollowing();
-                launcher.setPower(-0.7);
-            }
 
-            if(follower.getChainIndex()==2){
-                intake.setPower(1);
-            }
+//            if(follower.getChainIndex()==1){
+//                follower.pausePathFollowing();
+//                launcher.setPower(-0.7);
+//            }
+//
+//            if(follower.getChainIndex()==2){
+//                intake.setPower(1);
+//            }
+//
+//            if(follower.getChainIndex()==3){
+//                follower.pausePathFollowing();
+//                intake.setPower(0);
+//                launcher.setPower(0.7);
+//            }
+//
+//            if(follower.getChainIndex()==4){
+//                intake.setPower(1);
+//            }
+//
+//            if(follower.getChainIndex()==5){
+//                follower.pausePathFollowing();
+//                intake.setPower(0);
+//                launcher.setPower(0.7);
+//            }
+//
+//            if(follower.getChainIndex()==6){
+//                intake.setPower(1);
+//            }
+//
+//            if(follower.getChainIndex()==7){
+//                follower.pausePathFollowing();
+//                intake.setPower(0);
+//                launcher.setPower(0.7);
+//            }
 
-            if(follower.getChainIndex()==3){
-                follower.pausePathFollowing();
-                intake.setPower(0);
-                launcher.setPower(0.7);
-            }
-
-            if(follower.getChainIndex()==4){
-                intake.setPower(1);
-            }
-
-            if(follower.getChainIndex()==5){
-                follower.pausePathFollowing();
-                intake.setPower(0);
-                launcher.setPower(0.7);
-            }
-
-            if(follower.getChainIndex()==6){
-                intake.setPower(1);
-            }
-
-            if(follower.getChainIndex()==7){
-                follower.pausePathFollowing();
-                intake.setPower(0);
-                launcher.setPower(0.7);
-            }
-
-            telemetry.addData("path", follower.getChainIndex());
-            telemetry.update();
-        }
+//            telemetry.addData("path", follower.getChainIndex());
+//            telemetry.update();
+//        }
     }
 }
+

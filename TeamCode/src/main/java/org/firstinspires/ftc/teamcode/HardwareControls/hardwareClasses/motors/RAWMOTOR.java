@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.Encoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 
 public class RAWMOTOR
 {
@@ -88,5 +88,9 @@ public class RAWMOTOR
 
     public double getCurrentMilliamps(){return currentGettter.getCurrent(CurrentUnit.MILLIAMPS);}
     public double getCurrentAmps(){return currentGettter.getCurrent(CurrentUnit.AMPS);}
+
+    public void setBreak(){
+        motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+    }
 
 }

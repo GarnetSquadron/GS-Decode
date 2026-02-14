@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 
 public abstract class PositionController extends Controller
 {
-    double targetPosition, tolerance = 0;
+    double targetPosition = 0, tolerance = 0;
 
     public void setTargetPosition(double targetPosition)
     {
@@ -44,4 +44,8 @@ public abstract class PositionController extends Controller
             return calculate();
         }
     }
+    /**
+     * should reset all state that changes in a nonintuitive meeting
+     */
+    public void resetState(){}
 }

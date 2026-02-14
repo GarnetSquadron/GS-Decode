@@ -10,8 +10,15 @@ public class RobotDimensions
      */
     public static class Hood
     {
-        public static final double minAngle = 30;
-        public static final double maxAngle = 50;
-        public static final double approxBallExitHeight = 0.372957;
+        /**
+         * This is based on <a href="https://discord.com/channels/1033203025805840385/1033204218942726154/1458204861052227678">this</a>
+         */
+        public static final double minAngle = 37;
+        /**
+         * This is based on <a href="https://discord.com/channels/1033203025805840385/1033204218942726154/1458204960947966085">this</a>
+         */
+        public static final double maxAngle = 56;
+        public static final double approxBallExitHeight = 14.68331709;
+        public static final double turretOffset = 2.362;
     }
 }

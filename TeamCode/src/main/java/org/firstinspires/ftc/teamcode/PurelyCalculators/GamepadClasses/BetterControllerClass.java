@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.GamepadClasses;
+package org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -23,7 +23,7 @@ public class BetterControllerClass
     }
     public BetterControllerClass(Gamepad gamepad)
     {
-        this(gamepad,new String[]{"a", "b", "x", "y","right_bumper","left_bumper","left_trigger","right_trigger"});
+        this(gamepad,new String[]{"a", "b", "x", "y","right_bumper","left_bumper","left_trigger","right_trigger","dpad_up","dpad_down","dpad_right","dpad_left"});
     }
 
     /**
@@ -69,5 +69,8 @@ public class BetterControllerClass
     }
     public boolean getToggleValue(String buttonName){
         return Boolean.TRUE.equals(toggles.get(buttonName));
+    }
+    public double getIncrement(String upButton, String downButton, double increment){
+        return getRisingEdge(upButton)?increment:(getRisingEdge(downButton)?-increment:0);
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders;
+package org.firstinspires.ftc.teamcode.HardwareControls.encoders;
 
 import static org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath.getAverageTimeDerivative;
 

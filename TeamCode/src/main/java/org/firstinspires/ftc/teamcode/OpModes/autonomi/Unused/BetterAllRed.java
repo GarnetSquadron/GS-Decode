@@ -1,0 +1,163 @@
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
+
+
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathBuilder;
+import com.pedropathing.paths.PathChain;
+import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
+import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
+
+
+//@Autonomous(name = "\uD83E\uDD69 DJ's Sweaty 21 BALL AUTO \uD83E\uDD69")
+public class BetterAllRed extends OpMode
+{
+    Follower follower;
+    Timer pathTimer;
+    private int pathState;
+    Bot bot;
+
+    PathChain ShootPreload,CollectClose,Shoot1,CollectMiddle,PressGate,Shoot2,CollectFar,Shoot3;
+
+    PathBuilder builder;
+
+    public void initializePaths(){
+
+        builder = follower.pathBuilder();
+
+        ShootPreload = builder
+                .addPath(
+                        new BezierLine(
+                                new Pose(123.000, 123.000),
+                                new Pose(86.000, 86.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(216), Math.toRadians(220))
+                .build();
+
+        CollectClose = builder
+                .addPath(
+                        new BezierCurve(
+                                new Pose(86.000, 86.000),
+                                new Pose(90.622, 81.069),
+                                new Pose(129.646, 84.039)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(340), Math.toRadians(360))
+                .build();
+
+        Shoot1 = builder
+                .addPath(
+                        new BezierLine(
+                                new Pose(129.646, 84.039),
+                                new Pose(86.000, 86.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(220))
+                .build();
+
+        CollectMiddle = builder
+                .addPath(
+                        new BezierCurve(
+                                new Pose(86.000, 86.000),
+                                new Pose(93.635, 54.596),
+                                new Pose(128.608, 59.328)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(290), Math.toRadians(360))
+                .build();
+
+        PressGate = builder
+                .addPath(
+                        new BezierCurve(
+                                new Pose(128.608, 59.328),
+                                new Pose(116.682, 68.759),
+                                new Pose(125.740, 68.434)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(325))
+                .build();
+
+        Shoot2 = builder
+                .addPath(
+                        new BezierLine(
+                                new Pose(125.740, 68.434),
+                                new Pose(86.000, 86.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(325), Math.toRadians(220))
+                .build();
+
+        CollectFar = builder
+                .addPath(
+                        new BezierCurve(
+                                new Pose(86.000, 86.000),
+                                new Pose(86.622, 20.783),
+                                new Pose(117.728, 38.452),
+                                new Pose(130.621, 35.186)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(300), Math.toRadians(360))
+                .build();
+
+        Shoot3 = builder
+                .addPath(
+                        new BezierLine(
+                                new Pose(130.621, 35.186),
+                                new Pose(86.000, 86.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(220))
+                .build();
+
+    }
+
+    @Override
+    public void init()
+    {
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
+        pathTimer = new Timer();
+        follower = bot.follower;
+        initializePaths();
+        follower.setStartingPose((new Pose(123, 123, Math.toRadians(216))));
+    }
+
+    public void start(){
+        follower.followPath(ShootPreload);
+    }
+    public void autonomousPathUpdate() {
+        bot.update();
+        switch (pathState) {
+
+            case 0:
+                follower.followPath(ShootPreload);
+                incrementPathState();
+                break;
+
+            case 1:
+                if(!follower.isBusy()){
+                    incrementPathState();
+                }
+
+            case 2:
+                bot.launchHandler.initLaunch();
+
+        }
+    }
+
+    @Override
+    public void loop()
+    {
+        follower.update();
+        autonomousPathUpdate();
+        telemetry.addData("path state", pathState);
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.update();
+
+    }
+    public void setPathState(int pState) {
+        pathState = pState;
+        pathTimer.resetTimer();
+    }
+    public void incrementPathState(){
+        setPathState(pathState+1);
+    }
+}

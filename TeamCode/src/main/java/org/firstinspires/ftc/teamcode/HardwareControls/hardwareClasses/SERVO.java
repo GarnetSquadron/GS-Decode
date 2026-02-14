@@ -17,18 +17,18 @@ public class SERVO
     double runtimeCoefficient;
     private boolean powered = false;
 
-    public SERVO(HardwareMap hardwareMap, String name, double min, double max, DoubleSupplier time, double runtimeCoefficient/*the time it takes for the servo to rotate to its maximum position*/)
+    public SERVO(HardwareMap hardwareMap, String name, double min, double max, double runtimeCoefficient/*the time it takes for the servo to rotate to its maximum position*/)
     {
         servo = hardwareMap.get(ServoImplEx.class, name);
         this.max = max;
         this.min = min;
-        timer = new TTimer(time);
+        timer = new TTimer();
         this.runtimeCoefficient = runtimeCoefficient;
     }
 
     public SERVO(HardwareMap hardwareMap, String name, double min, double max, DoubleSupplier time)
     {
-        this(hardwareMap, name, min, max, time, 2);
+        this(hardwareMap, name, min, max, 2);
 
     }
 

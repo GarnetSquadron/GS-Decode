@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.PurelyCalculators.controllers;
 
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.SmoothVelocityEncoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.SmoothVelocityEncoder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ValueAtTimeStamp;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 
@@ -21,10 +21,10 @@ public class PIDFCon extends PositionController
         this.kd = kd;
         this.kf = kf;
         this.velocitySupplier = velocitySupplier;
-        reset();
+        resetState();
     }
 
-    public void reset() {
+    public void resetState() {
         integral = 0;
         double now = TIME.getTime();
         double currentError = getDistanceToTarget();
@@ -35,7 +35,7 @@ public class PIDFCon extends PositionController
     public void setTargetPosition(double targetPosition)
     {
         this.targetPosition = targetPosition;
-        reset();
+        resetState();
     }
     public double getIntegral(){
         return integral;

@@ -2,17 +2,20 @@ package org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.Controller;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.MaxSpeedController;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.NullController;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.PIDCon;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.PositionController;
-import org.firstinspires.ftc.teamcode.HardwareControls.encoders.encoders.Encoder;
+import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 
 public class MOTOR extends RAWMOTOR
 {
     Controller extTorqueController = new NullController();
     PositionController positionController;
+    SectTelemetryAdder telemetry = new SectTelemetryAdder("TURRET");
 
     public MOTOR(HardwareMap hardwareMap, String name)
     {
@@ -88,9 +91,11 @@ public class MOTOR extends RAWMOTOR
 
     public void runToPos(double tgtPos)
     {
-        if (positionController.getTargetPosition() != tgtPos) {
-            setTargetPosition(tgtPos);
-        }
+        telemetry.addLine(positionController.getTargetPosition()+"!="+tgtPos);
+        setTargetPosition(tgtPos);
+//        if (!ExtraMath.closeTo0(positionController.getTargetPosition()- tgtPos,0.001)) {
+//            positionController.resetState();
+//        }
         runToTargetPosition();
     }
 
@@ -101,6 +106,9 @@ public class MOTOR extends RAWMOTOR
     public boolean targetReached()
     {
         return positionController.targetReached();
+    }
+    public PositionController getController(){
+        return positionController;
     }
 
 }
