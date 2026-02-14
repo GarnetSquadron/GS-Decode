@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.OpModes.autonomi;
 
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
-import com.pedropathing.geometry.Curve;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.util.Timer;
@@ -38,7 +37,7 @@ public abstract class AutoSuperClass extends SettingSelectorOpMode
     public AutoSuperClass(Pair<String[],String>[] settingsMap, HashMap<String,String> selections){
         super(settingsMap,selections);
     }
-    public Timer pathTimer = new Timer();
+    public Timer stepTimer = new Timer();
     public int currentStep;
     Runnable[] steps;
 
@@ -134,9 +133,9 @@ public abstract class AutoSuperClass extends SettingSelectorOpMode
     }
     public void setCurrentStep(int step)
     {
-        times[currentStep] = pathTimer.getElapsedTime();
+        times[currentStep] = stepTimer.getElapsedTime();
         currentStep = step;
-        pathTimer.resetTimer();
+        stepTimer.resetTimer();
     }
     public void nextStep(){
         setCurrentStep(currentStep + 1);

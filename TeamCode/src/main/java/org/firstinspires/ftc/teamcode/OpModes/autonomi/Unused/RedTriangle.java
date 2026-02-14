@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.farShootPose;
@@ -12,14 +12,13 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
-@Autonomous(name = "🥩 RED TRIANGLE! 🥩")
+//@Autonomous(name = "🥩 RED TRIANGLE! 🥩")
 public class RedTriangle extends AutoSuperClass {
 
     Follower follower;

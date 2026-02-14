@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos1;
@@ -14,7 +14,6 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
@@ -22,22 +21,21 @@ import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
-@Autonomous(name = "12 BALLS DEFFINITELY LEGAL I PROMISE BLUE \uD83D\uDC4D \uD83D\uDC4D \uD83D\uDC4D")
+//@Autonomous(name = "12 BALLS DEFFINITELY LEGAL I PROMISE RED \uD83D\uDC4D \uD83D\uDC4D \uD83D\uDC4D")
 
-public class DefinitelyLegal12BallBlue extends AutoSuperClass
+public class DefinitelyLegal12BallRed extends AutoSuperClass
 {
 
     Follower follower;
     Bot bot;
     double launchY = 84.000;
-    Pose launchPose = new Pose(90, launchY,-Math.PI/5);
-    Pose shootPose1 = closeShootPose.setHeading(-Math.PI/5);
-    Pose shootPose2 = closeShootPose.setHeading(-Math.PI/5);
-    Pose gateShootPose = closeShootPose.setHeading(-Math.PI/5);
+    Pose launchPose = new Pose(90, launchY,Math.PI);
+    Pose shootPose1 = closeShootPose.setHeading(intakingTargetPos1.getHeading());
+    Pose shootPose2 = closeShootPose.setHeading(intakingTargetPos2.getHeading());
+    Pose gateShootPose = closeShootPose.setHeading(middleJustPressingGate.getHeading());
     Pose pressPrep = new Pose(intakingTargetX,66.5);
 
-
-    Path shootPreload, collectClose, shootClose, collectMiddle, shootMiddle, pressGatePrep,pressGate, collectFar, shootFar;
+    Path shootPreload, collectClose, shootClose, collectMiddle, shootMiddle, pressGatePrep, pressGatePrep2,pressGate, collectFar, shootFar, shootGateBalls, intakeEnd, shootEnd, leaveShootingZone;
 
 
     PathChain pressGateAndCollectMiddle;
@@ -46,52 +44,55 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
 
     public void initializePaths()
     {
-        shootPreload = getPathFromBezierCurve(
+
+        shootPreload = new Path(
                 new BezierLine(
-                        FieldDimensions.botTouchingBlueGoal,
-                        closeShootPose.mirror()
+                        FieldDimensions.botTouchingRedGoal,
+                        closeShootPose
                 )
         );
+//        shootPreload.setBrakingStrength(0.5);
 
 
-        collectClose = getPathFromBezierCurve(
+        collectClose = new Path(
                 new BezierCurve(
-                        closeShootPose.mirror(),
-                        new Pose(98.275, 83.868).mirror(),
-                        intakingTargetPos1.mirror()
+                        closeShootPose,
+                        new Pose(98.275, 83.868),
+                        intakingTargetPos1
                 )
         );
-//        collectClose.setLinearHeadingInterpolation(intakingTargetPos1.mirror().getHeading()-Math.PI/5, Math.toRadians(0));
+        collectClose.setLinearHeadingInterpolation(intakingTargetPos1.getHeading()-Math.PI/5, Math.toRadians(0));
 
 
-        shootClose = getPathFromBezierCurve(
+        shootClose = new Path(
                 new BezierLine(
-                        intakingTargetPos1.mirror(),
-                        shootPose1.mirror()
+                        intakingTargetPos1,
+                        shootPose1
                 )
         );
-//        shootClose.setLinearHeadingInterpolation(intakingTargetPos1.mirror().getHeading(),intakingTargetPos1.mirror().getHeading()-Math.PI/5);
+        shootClose.setLinearHeadingInterpolation(intakingTargetPos1.getHeading(),intakingTargetPos1.getHeading()-Math.PI/5);
 
-        collectMiddle = getPathFromBezierCurve(
+        collectMiddle = new Path(
                 new BezierCurve(
-                        shootPose1.mirror(),
-                        new Pose(92.154, 57.196).mirror(),
-                        intakingTargetPos2.mirror()
+                        shootPose1,
+                        new Pose(92.154, 57.196),
+                        intakingTargetPos2
                 )
         );
-//        collectMiddle.setLinearHeadingInterpolation(intakingTargetPos1.mirror().getHeading()-Math.PI/5, 0);
+        collectMiddle.setLinearHeadingInterpolation(intakingTargetPos1.getHeading()-Math.PI/5, 0);
         collectMiddle.setBrakingStrength(0.1);
-        pressGatePrep = getPathFromBezierCurve(
+        pressGatePrep = new Path(
                 new BezierLine(
-                        intakingTargetPos2.mirror(),
-                        pressPrep.mirror()
+                        intakingTargetPos2,
+                        pressPrep
                 )
         );
-//        pressGatePrep.setLinearHeadingInterpolation(0,0);
-        pressGate = getPathFromBezierCurve(
+        pressGatePrep.setLinearHeadingInterpolation(0,0);
+        pressGate = new Path(
                 new BezierLine(
-                        pressPrep.mirror(),
-                        middleJustPressingGate.mirror().minus(new Pose(3,1))
+                        pressPrep,
+//                        new Pose(120, 67.124694376528105),
+                        middleJustPressingGate.minus(new Pose(3,1))
                 )
         );
         pressGate.setLinearHeadingInterpolation(0,0);
@@ -103,30 +104,34 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
                 pressGate
         );
 
-        shootMiddle = getPathFromBezierCurve(
+        shootMiddle = new Path(
                 new BezierCurve(
-                        intakingTargetPos2.mirror(),
-                        new Pose(92.154, 57.196).mirror(),
-                        shootPose2.mirror()
+                        intakingTargetPos2,
+                        new Pose(92.154, 57.196),
+                        shootPose2
                 )
         );
-//        shootMiddle.setLinearHeadingInterpolation(intakingTargetPos2.mirror().getHeading(),intakingTargetPos2.mirror().getHeading()-Math.PI/5);
-        collectFar = getPathFromBezierCurve(
+        shootMiddle.setLinearHeadingInterpolation(intakingTargetPos2.getHeading(),intakingTargetPos2.getHeading()-Math.PI/5);
+        collectFar = new Path(
                 new BezierCurve(
-                        launchPose.mirror(),
-                        new Pose(75.3,33.97).mirror(),
-                        intakingTargetPos3.mirror()
-                )
-        );
-//        collectFar.setLinearHeadingInterpolation(intakingTargetPos3.mirror().getHeading()-Math.PI/5,0);
+                        launchPose,
 
-        shootFar = getPathFromBezierCurve(
-                new BezierLine(
-                        intakingTargetPos3.mirror(),
-                        launchPose.mirror()
+                        new Pose(75.3,33.97),
+
+
+                        intakingTargetPos3
                 )
         );
-//        shootFar.setLinearHeadingInterpolation(intakingTargetPos2.mirror().getHeading(),intakingTargetPos2.mirror().getHeading()-Math.PI/5);
+        collectFar.setLinearHeadingInterpolation(intakingTargetPos3.getHeading()-Math.PI/5,0);
+
+        shootFar = new Path(
+                new BezierLine(
+                        intakingTargetPos3,
+
+                        closeShootPose
+                )
+        );
+        shootFar.setLinearHeadingInterpolation(intakingTargetPos2.getHeading(),intakingTargetPos2.getHeading()-Math.PI/5);
     }
     public boolean incrementingStep(){
         return !gamepad1.b;
@@ -136,19 +141,34 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalVectorBlue);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
+//        bot.launcher.PIDF.setConstants(
+//                /*bot.launcher.launcherPIDF.Kp*/0.002,
+//                -0.0003,
+//                bot.launcher.PIDF.Ki,
+//                bot.launcher.PIDF.Ks,
+//                bot.launcher.PIDF.Kv,
+//                bot.launcher.PIDF.Ka
+//        );
         follower = bot.follower;
         follower.setMaxPower(0.4);
         initializePaths();
-        follower.setStartingPose(FieldDimensions.botTouchingBlueGoal);
-        bot.redSide = false;
+        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
 //        this.telemetry = new SectionedTelemetry(super.telemetry);
         initSteps(
+//                ()->{
+//
+//                    if(gamepad1.b){//TODO: remove this because it is illegal for a real match
+//                        telemetry.addLine("next step");
+//                        nextStep();
+//                    }
+//                },
                 () ->
                 {
                     bot.intake.setPower(0);
                     bot.launcher.setPower(bot.launcher.PIDF.getFeedForward(300));
                     follower.setMaxPower(1);
+//                    follower.setMaxPower(1);
                     follower.followPath(shootPreload, true);
                     nextStep();
                 },
@@ -156,6 +176,8 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
                 {
                     if ((!follower.isBusy())&& incrementingStep())
                     {
+                        //follower.setMaxPower(1);
+//                        bot.launcher.resetPID();
                         bot.launchHandler.initLaunch();
                         nextStep();
                     }
@@ -187,6 +209,12 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
                         nextStep();
                     }
                 },
+//                ()->{
+//                    if(!bot.follower.isBusy()){
+//                        follower.setMaxPower(0.8);
+//                        nextStep();
+//                    }
+//                },
                 ()->{
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
@@ -204,7 +232,8 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
                     }
                 },
                 ()->{
-                    if(incrementingStep()){
+//                    bot.intake.setPower(1);
+                    if(/*pathTimer.getElapsedTime()>1000 &&*/ incrementingStep()){
                         bot.intake.setPower(0);
                         follower.followPath(shootMiddle, true);
                         nextStep();
@@ -227,7 +256,7 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
                 () ->
                 {
                     bot.intake.setPower(1);
-                    if ((!follower.isBusy())&& incrementingStep())
+                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
                     {
                         bot.intake.setPower(0);
                         follower.followPath(shootFar, true);
@@ -236,12 +265,23 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
                 },
                 () ->
                 {
+//                    if(pathTimer.getElapsedTime()>300){
+//                        bot.intake.setPower(0);
+//                    }
                     if ((!follower.isBusy())&& incrementingStep())
                     {
                         bot.launchHandler.initLaunch();
                         nextStep();
                     }
                 }
+
+//                ()->{
+//                    if((!follower.isBusy())&& incrementingStep()){
+//                        follower.followPath(leaveShootingZone, true);
+//
+//                    }
+//                }
+
         );
     }
 
@@ -255,6 +295,7 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
         startTime = TIME.getTime();
         stopTimer = new TTimer();
         stopTimer.StartTimer(30);
+        //follower.followPath(ShootPreload);
         setCurrentStep(0);
         bot.updateConstants(bot.getDistance(getLaunchPosition()));
         bot.launcher.resetPID();
@@ -271,9 +312,16 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
     {
         bot.update();
         bot.aimTurret();
+//        if(currentStep == 1){
+//        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
         {
             bot.spinFlywheelToTunedSpeed(getLaunchPosition());
+//            bot.launcher.setPower(-bot.launcher.PIDF.getFeedForward(300));
+            //if almost spun up and still accelerating(basically a temporary bandaid solution to make the pid stabilize faster.)
+//            if(ExtraMath.closeTo0(bot.launcher.getFlywheelEncoder().getVelocity()-240,10)&&!bot.launcher.launcherPIDF.lowAcceleration()){
+//                bot.launcher.launcherPIDF.resetPid();
+//            }
         }
         bot.updateSpeedMeasure(getLaunchPosition());
         updateSteps();
@@ -284,7 +332,7 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
     {
         follower.update();
 
-        if(gamepad1.a){//TODO: also remove this because it is illegal for a real match
+        if(/*stopTimer.timeover()||*/ gamepad1.a){//TODO: also remove this because it is illegal for a real match
             follower.breakFollowing();
             bot.launcher.setPower(0);
             bot.updateCurrentPos();
@@ -295,15 +343,29 @@ public class DefinitelyLegal12BallBlue extends AutoSuperClass
         if(bot.launcher.PIDF.hasStabilized()&&!prevStabilized){
             spunUpTime = TIME.getTime();
         }
+//        telemetry.addData("max power scale",follower.getMaxPowerScaling());
+//        try {
+//            telemetry.addData("vector ", follower.getDriveVector());
+//        }catch (Exception ignored){
+//            telemetry.addLine("unable to get vector");
+//        }
+//        telemetry.addData("spinup time",spunUpTime-startTime);
+//        telemetry.addArray("times",times);
         telemetry.addData("current position",bot.currentPos);
         prevStabilized = bot.launcher.PIDF.hasStabilized();
         telemetry.addData("step", currentStep);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
+//        telemetry.addData("");
+//        telemetry.a
         telemetry.updateSection();
+//        telemetry.updateSection("BOT");
+//        telemetry.updateSection("LAUNCHER");
         telemetry.updateSection("TURRET");
         telemetry.display();
         telemetry.clearAll();
+
+
     }
 }

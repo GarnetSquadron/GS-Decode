@@ -125,7 +125,7 @@ public class Bot
         //replacing most of them with the new ones
         putConstant(54,255,55);
         putConstant(60,255,55);
-        putConstant(66,270,52);
+        putConstant(66,260,52);
         putConstant(72,285,49);
         putConstant(84,285,48);
         putConstant(90,290,50);

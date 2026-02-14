@@ -111,8 +111,6 @@ public class Launcher {
     public void updateSpeedMeasurements(double flyVel){
         double currentVel = motor1.getEncoder().getVelocity();
         PIDF.updateArrays(currentVel,flyVel);
-        telemetry.addData("target speed",flyVel);
-        telemetry.addData("actual speed",currentVel);
         telemetry.addData("power", power);
         telemetry.addData("acceleration", PIDF.getAcceleration());
         telemetry.addData("has stabilized", PIDF.hasStabilized());
@@ -122,6 +120,8 @@ public class Launcher {
         telemetry.addData("supposed velocity difference", currentVel-flyVel);
         telemetry.addData("target ratio", ratio);
         telemetry.addData("rad/inches ratio", flywheelToBallSpeedRatio);
+        telemetry.addData("target speed",flyVel);
+        telemetry.addData("actual speed",currentVel);
     }
     public boolean spinFlyWheelWithinRange(double minVel,double maxVel){
         //spin up the flywheel to get it within the provided range

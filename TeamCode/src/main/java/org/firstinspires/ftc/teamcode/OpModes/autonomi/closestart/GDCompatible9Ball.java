@@ -30,18 +30,17 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterCon
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
-@Autonomous(name = "definitely legal 15")
-
-public class SideSwitchingDefinitelyLegal15Ball extends AutoSuperClass
+@Autonomous(name = " \\uD83D\\uDC09 \\uD83D\\uDC09 \\uD83D\\uDC09 772 9 ball \\uD83D\\uDC09 \\uD83D\\uDC09 \\uD83D\\uDC09")
+public class GDCompatible9Ball extends AutoSuperClass
 {
 
-//    public SideSwitchingDefinitelyLegal15Ball(){
+    //    public SideSwitchingDefinitelyLegal15Ball(){
 //        super(new Pair[]{colorSelections,new Pair(new String[]{""},"in")});
 //    }
     Follower follower;
     Bot bot;
     double launchY = 84.000;
-    Pose launchPose = new Pose(90, launchY,Math.PI-Math.PI/5);
+    //    Pose launchPose = new Pose(90, launchY,Math.PI-Math.PI/5);
     Pose shootPose0 = closeShootPose.setHeading(FieldDimensions.botTouchingRedGoal.getHeading());
     Pose shootPose1 = closeShootPose.setHeading(-Math.PI/5);
     Pose shootPose2 = closeShootPose.setHeading(-Math.PI/5);
@@ -53,7 +52,7 @@ public class SideSwitchingDefinitelyLegal15Ball extends AutoSuperClass
     Path shootPreload, prepCloseIntake,collectClose,intakeCloseAndOpenGate, closePrepGate, closeOpenGate, shootClose, collectMiddle, shootMiddle, pressGatePrep, pressGatePrep2,pressGate, collectFar, shootFar, LEAVE, prepHP, collectHP,shootHP;
 
     PathChain goGetClose,collectCloseAndPressGate, collectMiddleAndPressGate, goGetHP;
-//    SectionedTelemetry telemetry;
+    //    SectionedTelemetry telemetry;
     BetterControllerClass Gpad;
 
 
@@ -280,13 +279,17 @@ public class SideSwitchingDefinitelyLegal15Ball extends AutoSuperClass
                 {
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
-                        follower.followPath(collectCloseAndPressGate, true);
+                        follower.followPath(goGetClose, true);
                         nextStep();
                     }
                 },
                 () ->
                 {
-                    bot.intake.setPower(1);
+                    if(bot.follower.getChainIndex()==1){
+                        bot.intake.setPower(1);
+                    }else{
+                        bot.intake.setPower(0);
+                    }
                     if ((!follower.isBusy())&& incrementingStep())
                     {
                         bot.intake.setPower(0);
@@ -312,21 +315,22 @@ public class SideSwitchingDefinitelyLegal15Ball extends AutoSuperClass
                 ()->{
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
-                        follower.followPath(collectMiddle, true);
+                        follower.followPath(collectMiddleAndPressGate, true);
                         nextStep();
                         bot.intake.setPower(1);
                     }
                 },
                 ()->{
-                    if(follower.getPose().getX()>124){
-                        bot.intake.setPower(0);
-                    }
                     if((!follower.isBusy())){
                         nextStep();
                     }
                 },
                 ()->{
-//                    bot.intake.setPower(1);
+                    if(stepTimer.getElapsedTime()>300){
+                        bot.intake.setPower(0);
+                    }else {
+                        bot.intake.setPower(1);
+                    }
                     if(/*pathTimer.getElapsedTime()>1000 &&*/ incrementingStep()){
                         bot.intake.setPower(0);
                         follower.followPath(shootMiddle, true);
@@ -334,48 +338,58 @@ public class SideSwitchingDefinitelyLegal15Ball extends AutoSuperClass
                     }
                 },
                 ()->{
+                    if(stepTimer.getElapsedTime()>300){
+                        bot.intake.setPower(0);
+                    }else {
+                        bot.intake.setPower(1);
+                    }
                     if((!follower.isBusy())&& incrementingStep()){
                         bot.launchHandler.initLaunch();
                         nextStep();
                     }
-                },
-                () ->
-                {
-                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
-                    {
-                        follower.followPath(collectFar, true);
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-                    bot.intake.setPower(1);
-                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
-                    {
-                        bot.intake.setPower(0);
-                        follower.followPath(shootFar, true);
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-//                    if(pathTimer.getElapsedTime()>300){
-//                        bot.intake.setPower(0);
-//                    }
-                    if ((!follower.isBusy())&& incrementingStep())
-                    {
-                        bot.launchHandler.initLaunch();
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
-                    {
-                        follower.followPath(LEAVE, true);
-                        nextStep();
-                    }
                 }
+//                () ->
+//                {
+//                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
+//                    {
+//                        follower.followPath(collectFar, true);
+//                        nextStep();
+//                    }
+//                },
+//                () ->
+//                {
+//                    bot.intake.setPower(1);
+//                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
+//                    {
+//                        follower.followPath(shootFar, true);
+//                        nextStep();
+//                    }
+//                },
+//                () ->
+//                {
+////                    if(pathTimer.getElapsedTime()>300){
+////                        bot.intake.setPower(0);
+////                    }
+//                    //keep spinning intake while it is reversing direction, because this is when the ball tends to come out.
+//                    if(stepTimer.getElapsedTime()>300){
+//                        bot.intake.setPower(0);
+//                    }else {
+//                        bot.intake.setPower(1);
+//                    }
+//                    if ((!follower.isBusy())&& incrementingStep())
+//                    {
+//                        bot.launchHandler.initLaunch();
+//                        nextStep();
+//                    }
+//                },
+//                () ->
+//                {
+//                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
+//                    {
+//                        follower.followPath(LEAVE, true);
+//                        nextStep();
+//                    }
+//                }
 //                () ->
 //                {
 //                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
@@ -465,7 +479,7 @@ public class SideSwitchingDefinitelyLegal15Ball extends AutoSuperClass
 
     public Vector getLaunchPosition()
     {
-        return launchPose.getAsVector();
+        return correctPose(closeShootPose).getAsVector();
     }
     public void autonomousPathUpdate()
     {

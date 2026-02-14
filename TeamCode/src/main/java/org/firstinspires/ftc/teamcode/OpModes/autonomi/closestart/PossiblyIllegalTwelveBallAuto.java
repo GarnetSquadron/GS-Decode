@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
 
-@Autonomous(name = "\uD83D\uDE2E WAIT IS THAT A 12 BALL AUTO?!?!?!?!? \uD83D\uDE2E")
+@Autonomous(name = "\uD83D\uDE2E This is possibly illegal \uD83D\uDE2E")
 public class PossiblyIllegalTwelveBallAuto extends AutoSuperClass
 {
     Follower follower;
@@ -205,7 +205,7 @@ public class PossiblyIllegalTwelveBallAuto extends AutoSuperClass
                 },
                 ()->{
                     bot.intake.setPower(1);
-                    if(pathTimer.getElapsedTime()>1000 && incrementingStep()){
+                    if(stepTimer.getElapsedTime()>1000 && incrementingStep()){
                         bot.intake.setPower(0);
                         follower.followPath(shootGateBalls, true);
                         nextStep();
@@ -237,7 +237,7 @@ public class PossiblyIllegalTwelveBallAuto extends AutoSuperClass
                 },
                 () ->
                 {
-                    if(pathTimer.getElapsedTime()>300){
+                    if(stepTimer.getElapsedTime()>300){
                         bot.intake.setPower(0);
                     }
                     if ((!follower.isBusy())&& incrementingStep())

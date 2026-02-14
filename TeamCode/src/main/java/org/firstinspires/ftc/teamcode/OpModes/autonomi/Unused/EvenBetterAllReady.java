@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
 
 import com.pedropathing.follower.Follower;
@@ -8,21 +8,20 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 
 
-@Autonomous(name = "\uD83E\uDD69 DJ's Sweaty 21 BALL AUTO \uD83E\uDD69")
-public class BetterAllRed extends OpMode
+//@Autonomous(name = "Indubitally")
+public class EvenBetterAllReady extends OpMode
 {
     Follower follower;
     Timer pathTimer;
     private int pathState;
     Bot bot;
 
-    PathChain ShootPreload,CollectClose,Shoot1,CollectMiddle,PressGate,Shoot2,CollectFar,Shoot3;
+    PathChain ShootPreload,CollectClose,Shoot1,CollectMiddle,PressGate,Shoot2,CollectFar,Shoot3,Path1,Path2,Path3,Path4,Path5,Path6;
 
     PathBuilder builder;
 
@@ -107,6 +106,74 @@ public class BetterAllRed extends OpMode
                 ).setLinearHeadingInterpolation(Math.toRadians(360), Math.toRadians(220))
                 .build();
 
+        Path1 = builder
+                .addPath(
+
+                        new BezierLine(
+                                new Pose(126.000, 118.700),
+
+                                new Pose(83.000, 83.000)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(216), Math.toRadians(300))
+
+                .build();
+         Path2 = builder
+                .addPath(
+                        new BezierLine(
+                                new Pose(83.000, 83.000),
+
+                                new Pose(130.000, 83.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+
+                .build();
+
+         Path3 = builder
+                .addPath(
+                        new BezierLine(
+                                new Pose(130.000, 83.000),
+
+                                new Pose(83.000, 83.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(300))
+
+                .build();
+
+        PathChain Path4 = builder
+                .addPath(
+                        new BezierCurve(
+                                new Pose(83.000, 83.000),
+                                new Pose(89.603, 65.774),
+                                new Pose(105.000, 59.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(300), Math.toRadians(0))
+
+                .build();
+
+         Path5 = builder
+                .addPath(
+                        new BezierCurve(
+                                new Pose(105.000, 59.000),
+                                new Pose(120.478, 57.533),
+                                new Pose(132.000, 63.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(30))
+
+                .build();
+
+         Path6 = builder
+                .addPath(
+                        new BezierLine(
+                                new Pose(132.000, 63.000),
+
+                                new Pose(83.000, 83.000)
+                        )
+                ).setLinearHeadingInterpolation(Math.toRadians(30), Math.toRadians(300))
+
+                .build();
+
+
     }
 
     @Override
@@ -124,21 +191,45 @@ public class BetterAllRed extends OpMode
     }
     public void autonomousPathUpdate() {
         bot.update();
+        setPathState(0);
         switch (pathState) {
 
             case 0:
-                follower.followPath(ShootPreload);
-                incrementPathState();
+                follower.followPath(Path1);
+                setPathState(1);
                 break;
 
             case 1:
                 if(!follower.isBusy()){
-                    incrementPathState();
+                    follower.followPath(Path2);
+                    setPathState(2);
                 }
+                break;
 
             case 2:
-                bot.launchHandler.initLaunch();
+                if(!follower.isBusy()){
+                    follower.followPath(Path3);
+                    setPathState(3);
+                }
+                break;
+            case 3:
+                follower.followPath(Path4);
+                setPathState(4);
+                break;
 
+            case 4:
+                if(!follower.isBusy()){
+                    follower.followPath(Path5);
+                    setPathState(5);
+                }
+                break;
+
+            case 5:
+                if(!follower.isBusy()){
+                    follower.followPath(Path6);
+                    setPathState(6);
+                }
+                break;
         }
     }
 
