@@ -4,9 +4,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.HardwareControls.encoders.Encoder;
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.MOTOR;
-import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
+import org.firstinspires.ftc.teamcode.Telemetry.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.PIDCon;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.PIDPlus;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 

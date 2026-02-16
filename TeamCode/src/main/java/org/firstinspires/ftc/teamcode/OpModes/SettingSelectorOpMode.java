@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.LoggerSectionedTelemetry;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
+import org.firstinspires.ftc.teamcode.Telemetry.SectionedTelemetry;
 
 import java.util.HashMap;
 

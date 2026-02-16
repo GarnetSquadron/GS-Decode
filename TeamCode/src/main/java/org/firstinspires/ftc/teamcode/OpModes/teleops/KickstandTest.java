@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.HardwareControls.KickStand;
 
-@TeleOp(name = "kickstand test")
+//@TeleOp(name = "kickstand test")
 public class KickstandTest extends OpMode {
     KickStand stand;
     @Override

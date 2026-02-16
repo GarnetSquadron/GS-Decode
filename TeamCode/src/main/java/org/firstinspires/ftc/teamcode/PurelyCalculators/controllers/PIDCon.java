@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.PurelyCalculators.controllers;
 
-import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
+import org.firstinspires.ftc.teamcode.Telemetry.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.HardwareControls.encoders.SmoothVelocityEncoder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ValueAtTimeStamp;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;

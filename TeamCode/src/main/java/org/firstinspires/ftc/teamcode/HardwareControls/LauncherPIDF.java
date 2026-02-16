@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.HardwareControls;
 
 import com.pedropathing.geometry.Pose;
 
-import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
+import org.firstinspires.ftc.teamcode.Telemetry.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.StopWatch;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;

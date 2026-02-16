@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes;
-
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
+package org.firstinspires.ftc.teamcode.Telemetry;
 
 /**
  * pretty much the sole purpose of this class is to let me avoid typing the same string for 15 lines in a row

@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.OpModes.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.OpModes.autonomi.NullAuto;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused.NullAuto;
 
-@TeleOp
+//@TeleOp
 public class NullTeleop extends OpMode
 {
     @Override

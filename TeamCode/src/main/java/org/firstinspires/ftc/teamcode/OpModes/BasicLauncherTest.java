@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 
-@TeleOp(name = "Basic Launcher test")
+//@TeleOp(name = "Basic Launcher test")
 public class BasicLauncherTest extends OpMode {
     Launcher launcher;
     @Override
