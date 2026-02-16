@@ -30,8 +30,11 @@ public class AutoPoints
     public final static double intakeHPX = 135.5;
     public static Pose intakeHPPrep = new Pose(intakeHPX,24,-Math.PI/2);
     public static Pose intakeHP = new Pose(intakeHPX,9,-Math.PI/2);
-    public static Pose getStart(boolean blueSide){
+    public static Pose getGoalStart(boolean blueSide){
         return blueSide?FieldDimensions.botTouchingBlueGoal:FieldDimensions.botTouchingRedGoal;
+    }
+    public static Pose getFarStart(boolean blueSide){
+        return blueSide?FieldDimensions.botOnTinyTriangleBlueSide:FieldDimensions.botOnTinyTriangleRedSide;
     }
 //    public static double[] targetPose = FieldDimensions.goalPositionRed;
 //    public static double[]

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.controllers.FlyWheelMath
 import org.firstinspires.ftc.teamcode.HardwareControls.hardwareClasses.motors.RAWMOTOR;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 
-@TeleOp(name = "launcher")
+//@TeleOp(name = "launcher")
 public class TestLauncher extends OpMode {
     Servo angleServo;
     RAWMOTOR motor1;

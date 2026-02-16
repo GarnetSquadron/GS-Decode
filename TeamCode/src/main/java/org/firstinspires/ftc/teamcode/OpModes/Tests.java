@@ -27,8 +27,8 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
-import org.firstinspires.ftc.teamcode.SimplerTelemetry;
+import org.firstinspires.ftc.teamcode.Telemetry.SectionedTelemetry;
+import org.firstinspires.ftc.teamcode.Telemetry.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 
 import java.util.List;

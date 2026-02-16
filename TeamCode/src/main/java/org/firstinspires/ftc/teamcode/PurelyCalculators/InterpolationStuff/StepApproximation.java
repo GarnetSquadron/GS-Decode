@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.PurelyCalculators.InterpolationStuff;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
+import org.firstinspires.ftc.teamcode.Telemetry.SectTelemetryAdder;
 
 import java.util.TreeMap;
 

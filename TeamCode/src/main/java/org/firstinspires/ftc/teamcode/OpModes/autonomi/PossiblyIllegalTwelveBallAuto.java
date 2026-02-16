@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi;
 
 
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
@@ -16,7 +16,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
-import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 

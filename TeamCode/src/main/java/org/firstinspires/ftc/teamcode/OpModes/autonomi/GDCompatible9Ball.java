@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi;
 
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeJustPressingGate;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closePressPrep;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.getStart;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.getGoalStart;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakeHP;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakeHPPrep;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos1;
@@ -24,23 +24,21 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
-import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints;
-import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
-@Autonomous(name = "12 BALLS DEFFINITELY LEGAL I PROMISE \uD83D\uDC4D \uD83D\uDC4D \uD83D\uDC4D")
-public class DefinitelyLegal12Ball extends AutoSuperClass
+@Autonomous(name = " \\uD83D\\uDC09 \\uD83D\\uDC09 \\uD83D\\uDC09 772 9 ball \\uD83D\\uDC09 \\uD83D\\uDC09 \\uD83D\\uDC09")
+public class GDCompatible9Ball extends AutoSuperClass
 {
 
-//    public SideSwitchingDefinitelyLegal15Ball(){
+    //    public SideSwitchingDefinitelyLegal15Ball(){
 //        super(new Pair[]{colorSelections,new Pair(new String[]{""},"in")});
 //    }
     Follower follower;
     Bot bot;
     double launchY = 84.000;
-//    Pose launchPose = new Pose(90, launchY,Math.PI-Math.PI/5);
+    //    Pose launchPose = new Pose(90, launchY,Math.PI-Math.PI/5);
     Pose shootPose0 = closeShootPose.setHeading(FieldDimensions.botTouchingRedGoal.getHeading());
     Pose shootPose1 = closeShootPose.setHeading(-Math.PI/5);
     Pose shootPose2 = closeShootPose.setHeading(-Math.PI/5);
@@ -52,7 +50,7 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
     Path shootPreload, prepCloseIntake,collectClose,intakeCloseAndOpenGate, closePrepGate, closeOpenGate, shootClose, collectMiddle, shootMiddle, pressGatePrep, pressGatePrep2,pressGate, collectFar, shootFar, LEAVE, prepHP, collectHP,shootHP;
 
     PathChain goGetClose,collectCloseAndPressGate, collectMiddleAndPressGate, goGetHP;
-//    SectionedTelemetry telemetry;
+    //    SectionedTelemetry telemetry;
     BetterControllerClass Gpad;
 
 
@@ -61,7 +59,7 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
 
         shootPreload = getPathFromBezierCurve(
                 correctBezierLine(new BezierLine(
-                        getStart(blueSide()),
+                        getGoalStart(blueSide()),
                         shootPose0
                 ))
         );
@@ -279,7 +277,7 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
                 {
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
-                        follower.followPath(collectCloseAndPressGate, true);
+                        follower.followPath(goGetClose, true);
                         nextStep();
                     }
                 },
@@ -315,7 +313,7 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
                 ()->{
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
-                        follower.followPath(collectMiddle, true);
+                        follower.followPath(collectMiddleAndPressGate, true);
                         nextStep();
                         bot.intake.setPower(1);
                     }
@@ -347,49 +345,49 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
                         bot.launchHandler.initLaunch();
                         nextStep();
                     }
-                },
-                () ->
-                {
-                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
-                    {
-                        follower.followPath(collectFar, true);
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-                    bot.intake.setPower(1);
-                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
-                    {
-                        follower.followPath(shootFar, true);
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-//                    if(pathTimer.getElapsedTime()>300){
-//                        bot.intake.setPower(0);
-//                    }
-                    //keep spinning intake while it is reversing direction, because this is when the ball tends to come out.
-                    if(stepTimer.getElapsedTime()>300){
-                        bot.intake.setPower(0);
-                    }else {
-                        bot.intake.setPower(1);
-                    }
-                    if ((!follower.isBusy())&& incrementingStep())
-                    {
-                        bot.launchHandler.initLaunch();
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
-                    {
-                        follower.followPath(LEAVE, true);
-                        nextStep();
-                    }
                 }
+//                () ->
+//                {
+//                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
+//                    {
+//                        follower.followPath(collectFar, true);
+//                        nextStep();
+//                    }
+//                },
+//                () ->
+//                {
+//                    bot.intake.setPower(1);
+//                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
+//                    {
+//                        follower.followPath(shootFar, true);
+//                        nextStep();
+//                    }
+//                },
+//                () ->
+//                {
+////                    if(pathTimer.getElapsedTime()>300){
+////                        bot.intake.setPower(0);
+////                    }
+//                    //keep spinning intake while it is reversing direction, because this is when the ball tends to come out.
+//                    if(stepTimer.getElapsedTime()>300){
+//                        bot.intake.setPower(0);
+//                    }else {
+//                        bot.intake.setPower(1);
+//                    }
+//                    if ((!follower.isBusy())&& incrementingStep())
+//                    {
+//                        bot.launchHandler.initLaunch();
+//                        nextStep();
+//                    }
+//                },
+//                () ->
+//                {
+//                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
+//                    {
+//                        follower.followPath(LEAVE, true);
+//                        nextStep();
+//                    }
+//                }
 //                () ->
 //                {
 //                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
@@ -461,7 +459,7 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
         follower = bot.follower;
         follower.setMaxPower(0.4);
         initializePaths();
-        follower.setStartingPose(AutoPoints.getStart(blueSide()));
+        follower.setStartingPose(AutoPoints.getGoalStart(blueSide()));
 //        this.telemetry = new SectionedTelemetry(super.telemetry);
         initSteps();
         Bot.redSide = !blueSide();//TODO: um this is kinda not ideal I think. probably need to get an enum system going or something

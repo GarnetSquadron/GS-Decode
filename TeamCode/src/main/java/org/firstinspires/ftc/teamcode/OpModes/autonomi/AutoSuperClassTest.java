@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 
-@Autonomous
+//@Autonomous
 public class AutoSuperClassTest extends AutoSuperClass
 {
     Bot bot;
