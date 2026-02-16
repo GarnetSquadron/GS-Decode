@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Telemetry;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.firstinspires.ftc.teamcode.logger;
 
 public class LoggerSectionedTelemetry extends SectionedTelemetry
 {
