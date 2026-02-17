@@ -28,8 +28,8 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterCon
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
-@Autonomous(name = " \uD83D\uDC09 \uD83D\uDC09 \uD83D\uDC09 772 9 ball \uD83D\uDC09 \uD83D\uDC09 \uD83D\uDC09")
-public class GDCompatible9Ball extends AutoSuperClass
+@Autonomous(name = " \uD83D\uDC09 \uD83D\uDC09 \uD83D\uDC09 772 12 ball \uD83D\uDC09 \uD83D\uDC09 \uD83D\uDC09")
+public class GDCompat12Ball extends AutoSuperClass
 {
 
     //    public SideSwitchingDefinitelyLegal15Ball(){

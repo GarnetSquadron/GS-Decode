@@ -125,16 +125,16 @@ public class Bot
         //replacing most of them with the new ones
         putConstant(54,255,55);
         putConstant(60,255,55);
-        putConstant(66,260,52);
+        putConstant(66,265,52);
         putConstant(72,285,49);
         putConstant(84,285,48);
         putConstant(90,290,50);
         putConstant(96,300,55);
         putConstant(96,300,55);
         putConstant(132,340,55);
-        putConstant(138,355,55);
-        putConstant(144,360,45);
-        putConstant(150,368,43);
+//        putConstant(138,340,55);
+//        putConstant(144,340,45);
+//        putConstant(150,350,43);
     }
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos,double turretPosition){
         this(hardwareMap,targetGoalPos);
@@ -305,30 +305,30 @@ public class Bot
 //            telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             //once you get to kicking the servo its far gone imo
-//            if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){
-//                //velInRange = launcher.launcherPIDF.hasStabilized();
-////                telemetry.addData("vel has stabilized",launcher.launcherPIDF.hasStabilized());
-////                telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
-//
-//                if(shouldSpinUp()&&launchPhase!=LaunchPhase.SPINNING_UP&&!isPausedToSpinUp){
-//                    isPausedToSpinUp = true;
-//                    pauseStartTime = TIME.getTime();
-//                    intake.setPower(pauseBetweenShots()?-0.5:0);
-//                }
-//                if(isPausedToSpinUp){
-//                    launcher.spinFlyWheelWithinRange(targetSpeed);
-////                    telemetry.addLine("paused");
-//                    intake.setPower(0);
-//                    if(isUpToSpeed()){
-//                        isPausedToSpinUp = false;
-//                        //change the phase start time so that there is the correct time remaining in that phase.
-//                        phaseStartTime = TIME.getTime();
-//                        if(launchPhase==LaunchPhase.RELEASING_BALLS){powerIntake();}
-//                    }
-//                    //if paused, do not carry out the instructions in the switch case
-//                    return launchPhase;
-//                }
-//            }
+            if(pauseBetweenShots()&&launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){
+                //velInRange = launcher.launcherPIDF.hasStabilized();
+//                telemetry.addData("vel has stabilized",launcher.launcherPIDF.hasStabilized());
+//                telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
+
+                if(shouldSpinUp()&&launchPhase!=LaunchPhase.SPINNING_UP&&!isPausedToSpinUp){
+                    isPausedToSpinUp = true;
+                    pauseStartTime = TIME.getTime();
+                    intake.setPower(pauseBetweenShots()?-0.5:0);
+                }
+                if(isPausedToSpinUp){
+                    launcher.spinFlyWheelWithinRange(targetSpeed);
+//                    telemetry.addLine("paused");
+                    intake.setPower(0);
+                    if(isUpToSpeed()){
+                        isPausedToSpinUp = false;
+                        //change the phase start time so that there is the correct time remaining in that phase.
+                        phaseStartTime = TIME.getTime();
+                        if(launchPhase==LaunchPhase.RELEASING_BALLS){powerIntake();}
+                    }
+                    //if paused, do not carry out the instructions in the switch case
+                    return launchPhase;
+                }
+            }
 //            telemetry.addLine("going to switch case");
             switch (launchPhase){
                 case NULL: {
