@@ -5,6 +5,9 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import static org.firstinspires.ftc.teamcode.pathing.pedroPathing.Tuning.follower;
+import com.pedropathing.geometry.Pose;
+
 
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 //Adds telemetry
@@ -39,8 +42,7 @@ public class AprilTagPosManager {
         telemetry.addLine("RBE = Bearing");
         for(AprilTagDetection detection : aprilTagProcessor.getDetections()){
             telemetry.addLine(String.format("RBE %6.1f  (deg)", detection.ftcPose.bearing));
-
-            follower.poseTracker.setCurrentPoseWithOffset(pose);
+            follower.poseTracker.setCurrentPoseWithOffset(new Pose(0,0,detection.ftcPose.bearing));
         }
     }
 }
