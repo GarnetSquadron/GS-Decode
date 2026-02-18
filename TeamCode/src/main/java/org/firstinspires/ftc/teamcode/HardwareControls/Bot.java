@@ -105,33 +105,34 @@ public class Bot
 //        oldPutConstant(78+adjustment,1.3121,0.5,0.2);
         //old values(I tuned them when the distances were measured from a different point so I needed
         // to add adjustment to the distances)
-        putConstant(36+adjustment,257,55);//48
-        putConstant(42+adjustment,251,55);//54
-        putConstant(48+adjustment,252,55);//60
-        putConstant(54+adjustment,257,55);//66
-        putConstant(60+adjustment,274,55);//72
-        putConstant(66+adjustment,275,55);//78
-        putConstant(72+adjustment,275,55);//84
-        putConstant(78+adjustment,277,52);//
-        putConstant(84+adjustment,274,55);//
-        //putConstant(140,274,55);//140
-        //putConstant(146,274,55);//146
-        putConstant(138,274,55);
-        putConstant(144,274,55);
-        putConstant(132,274,55);
-        putConstant(138,274,55);
-        putConstant(140+adjustment,274,55);//152
-        putConstant(146+adjustment,274,55);//158
+//        putConstant(36+adjustment,257,55);//48
+//        putConstant(42+adjustment,251,55);//54
+//        putConstant(48+adjustment,252,55);//60
+//        putConstant(54+adjustment,257,55);//66
+//        putConstant(60+adjustment,274,55);//72
+//        putConstant(66+adjustment,275,55);//78
+//        putConstant(72+adjustment,275,55);//84
+//        putConstant(78+adjustment,277,52);//
+//        putConstant(84+adjustment,274,55);//
+//        //putConstant(140,274,55);//140
+//        //putConstant(146,274,55);//146
+//        putConstant(138,274,55);
+//        putConstant(144,274,55);
+//        putConstant(132,274,55);
+//        putConstant(138,274,55);
+//        putConstant(140+adjustment,274,55);//152
+//        putConstant(146+adjustment,274,55);//158
         //replacing most of them with the new ones
         putConstant(54,255,55);
         putConstant(60,255,55);
-        putConstant(66,265,52);
+        putConstant(66,260,52);
         putConstant(72,285,49);
         putConstant(84,285,48);
         putConstant(90,290,50);
         putConstant(96,300,55);
         putConstant(96,300,55);
         putConstant(132,340,55);
+        putConstant(130,325,55);
 //        putConstant(138,340,55);
 //        putConstant(144,340,45);
 //        putConstant(150,350,43);
