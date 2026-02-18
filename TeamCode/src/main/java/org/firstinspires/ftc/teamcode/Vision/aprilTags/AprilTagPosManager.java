@@ -38,7 +38,7 @@ public class AprilTagPosManager {
     }
 
     //Prints the position of every tag
-    public void GetTagPos(){
+    public void resetPos(){
         telemetry.addLine("RBE = Bearing");
         for(AprilTagDetection detection : aprilTagProcessor.getDetections()){
             telemetry.addLine(String.format("RBE %6.1f  (deg)", detection.ftcPose.bearing));
