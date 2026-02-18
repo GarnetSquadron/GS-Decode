@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.InterpolationStuff.StepApproximation;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
+import org.firstinspires.ftc.teamcode.Vision.aprilTags.AprilTagPosManager;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
 import java.util.Arrays;
@@ -69,6 +70,7 @@ public class Bot
     double[] targetGoalPos;
     public ServoController servoController;
     public double targetSpeed = 0;
+    public AprilTagPosManager resetCam;
     SectTelemetryAdder telemetry;
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
         //Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);
@@ -81,6 +83,7 @@ public class Bot
         follower = CompConstants.createFollower(hardwareMap);
         servoController = hardwareMap.get(ServoController.class, "Control Hub");
         telemetry = new SectTelemetryAdder("BOT");
+        resetCam = new AprilTagPosManager(hardwareMap);
         double stepSize = 1;
 //        radToInchRatioMap = new StepApproximation(stepSize," rad to inch");
 //        rangeRatioMap = new StepApproximation(stepSize," range ratio");

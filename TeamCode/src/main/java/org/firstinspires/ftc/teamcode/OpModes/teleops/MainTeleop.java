@@ -241,6 +241,7 @@ public class MainTeleop extends SettingSelectorOpMode
         boolean autoAimOn = Gpad.getCurrentValue(aimButtonName);
         boolean resetTurretPID = Gpad.getRisingEdge(aimButtonName);
         boolean extendKickStand = (Gpad.getCurrentValue("a") && Gpad.getCurrentValue("x") && !stand.extended);
+        boolean resetVision = Gpad.getCurrentValue("y");
 
         distance=Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
         double minAngleVelSquared = TrajectoryMath.getVelSquared(distance, Math.toRadians(RobotDimensions.Hood.minAngle));
@@ -312,6 +313,10 @@ public class MainTeleop extends SettingSelectorOpMode
         //the time is 1700. this seems to work well but still might want to be tuned
         if (extendKickStand) {
             stand.extendStand(1700);
+        }
+
+        if (resetVision) {
+            bot.resetCam.resetPos();
         }
 
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
