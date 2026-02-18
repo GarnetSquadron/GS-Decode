@@ -14,7 +14,7 @@ import com.pedropathing.geometry.Pose;
 
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 //Adds telemetry
-import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
+import org.firstinspires.ftc.teamcode.Telemetry.SectTelemetryAdder;
 
 //tracks april tags with webcam
 public class AprilTagPosManager {
