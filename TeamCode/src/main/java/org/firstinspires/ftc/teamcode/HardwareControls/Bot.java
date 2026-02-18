@@ -71,6 +71,9 @@ public class Bot
     public ServoController servoController;
     public double targetSpeed = 0;
     public AprilTagPosManager resetCam;
+    public void resetPos(){
+        follower.poseTracker.setCurrentPoseWithOffset(resetCam.getOffset());
+    }
     SectTelemetryAdder telemetry;
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
         //Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);

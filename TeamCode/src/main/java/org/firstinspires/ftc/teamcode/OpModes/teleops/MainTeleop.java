@@ -316,7 +316,7 @@ public class MainTeleop extends SettingSelectorOpMode
         }
 
         if (resetVision) {
-            bot.resetCam.resetPos();
+            bot.resetPos();
         }
 
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
