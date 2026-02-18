@@ -37,7 +37,6 @@ public class MainTeleop extends SettingSelectorOpMode
     public DcMotorEx lf,rf,lb,rb,intakeMotor;
     public double loopStartTime = 0;
     Bot bot;
-    double rotation = 0;
     double[] targetGoalPos;
     double distance = 100;
     double vel = 400;
@@ -131,7 +130,7 @@ public class MainTeleop extends SettingSelectorOpMode
         {
             case "red":
             {
-                targetGoalPos = FieldDimensions.goalPositionRed;
+                targetGoalPos = FieldDimensions.goalVectorRed;
                 switch (selections.get("position"))
                 {
                     case "goal":
@@ -149,7 +148,7 @@ public class MainTeleop extends SettingSelectorOpMode
             }
             case "blue":
             {
-                targetGoalPos = FieldDimensions.goalPositionBlue;
+                targetGoalPos = FieldDimensions.goalVectorBlue;
                 switch (selections.get("position"))
                 {
                     case "goal":
@@ -172,9 +171,9 @@ public class MainTeleop extends SettingSelectorOpMode
             startingPose = Bot.currentPos[0];
             turretPos = Bot.currentTurretPosition;
             if(Bot.redSide){
-                targetGoalPos = FieldDimensions.goalPositionRed;
+                targetGoalPos = FieldDimensions.goalVectorRed;
             }else{
-                targetGoalPos = FieldDimensions.goalPositionBlue;
+                targetGoalPos = FieldDimensions.goalVectorBlue;
 
             }
         }
@@ -295,8 +294,7 @@ public class MainTeleop extends SettingSelectorOpMode
             bot.turret.resetPID();
         }
         if(autoAimOn){
-            rotation = bot.turret.aimTowardsGoal(targetGoalPos, new double[] {follower.getPose().getX(), follower.getPose().getY()},follower.getPose().getHeading() /*Math.toRadians(imu.getRobotYawPitchRollAngles().getYaw())*/);
-
+            bot.aimTurret();
         } else {
             bot.turret.setPower(0);
         }
@@ -323,13 +321,14 @@ public class MainTeleop extends SettingSelectorOpMode
         if(selections.get("telemetry")=="on"){
 
 
-//            telemetry.addData("left stick x",gamepad1.left_stick_x);
-//            telemetry.addData("left stick y",gamepad1.left_stick_y);
-//            telemetry.addData("right stick x",gamepad1.right_stick_x);
+            telemetry.addData("left stick x",gamepad1.left_stick_x);
+            telemetry.addData("left stick y",gamepad1.left_stick_y);
+            telemetry.addData("right stick x",gamepad1.right_stick_x);
 //            telemetry.addData("loop time",bot.launcher.launcherPIDF.times[0]-bot.launcher.launcherPIDF.times[1]);
-//            telemetry.addData("voltage sensor",voltageSensor.getVoltage());
+            telemetry.addData("voltage sensor",voltageSensor.getVoltage());
 //            if(bot.adjustingConstants){
             telemetry.addData("position",follower.getPose());
+            telemetry.addData("turret position",bot.getTurretPos());
             telemetry.addData("intake power",bot.intake.getPower());
                 telemetry.addData("loop time", TIME.getTime() - loopStartTime);
                 loopStartTime = TIME.getTime();
@@ -346,15 +345,15 @@ public class MainTeleop extends SettingSelectorOpMode
                 telemetry.addData("velocity ratio", bot.launcher.ratio);
                 telemetry.addData("height ratio", TrajectoryMath.ratio);
                 telemetry.addData("distance",distance);
-//                if(gamepad1.a){
-//                    telemetry.addLine(bot.getConstantList());
-//                }else{
-//                    telemetry.addLine(bot.getConstantString());
-//                }
+                if(gamepad1.a){
+                    telemetry.addLine(bot.getConstantList());
+                }else{
+                    telemetry.addLine(bot.getConstantString());
+                }
             telemetry.addLine("current distance");
             telemetry.addLine(bot.getConstantString());
-            telemetry.addLine("constant list");
-            telemetry.addLine(bot.getConstantList());
+//            telemetry.addLine("constant list");
+//            telemetry.addLine(bot.getConstantList());
 
 //            }
 //            telemetry.addLine();
@@ -417,8 +416,8 @@ public class MainTeleop extends SettingSelectorOpMode
         //telemetry.addData("is auto clear",telemetry.isAutoClear());
         telemetry.updateSection();
         telemetry.updateSection("TURRET");
-        telemetry.updateSection("LAUNCHER");
-        telemetry.updateSection("PIDF");
+//        telemetry.updateSection("LAUNCHER");
+//        telemetry.updateSection("PIDF");
 //        telemetry.updateSection("BOT");
 //        telemetry.updateSection("TURRET");
 //        telemetry.updateSection();

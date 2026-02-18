@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
 
-@TeleOp(name = "Intaking test")
+//@TeleOp(name = "Intaking test")
 public class TestIntake extends OpMode {
     Intake intake;
     @Override

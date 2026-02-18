@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.HardwareControls;
 
+import static org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions.Hood.turretOffset;
 import static org.firstinspires.ftc.teamcode.HardwareControls.Launcher.flywheelToBallSpeedRatio;
 
 import com.pedropathing.follower.Follower;
@@ -7,10 +8,11 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
-import org.firstinspires.ftc.teamcode.OpModes.SectTelemetryAdder;
+import org.firstinspires.ftc.teamcode.Telemetry.SectTelemetryAdder;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.InterpolationStuff.StepApproximation;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
@@ -36,8 +38,9 @@ public class Bot
     public StepApproximation heightRatioMap;
     public StepApproximation velMap;
     public StepApproximation angleMap;
+    VoltageSensor voltageSensor;
 
-//    public boolean adjustingConstants = false;
+    //    public boolean adjustingConstants = false;
     public void oldPutConstant(double distance, double radToInch, double velRatio, double height){
         radToInchRatioMap.put(distance,radToInch);
         velRangeRatioMap.put(distance,velRatio);
@@ -73,6 +76,7 @@ public class Bot
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
         //Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);
         lights = new Lights(hardwareMap);
+        voltageSensor = hardwareMap.voltageSensor.get("Control Hub");
         this.targetGoalPos = targetGoalPos;
         launcher = new Launcher(hardwareMap);
         intake = new Intake(hardwareMap);
@@ -108,7 +112,7 @@ public class Bot
         putConstant(60+adjustment,274,55);//72
         putConstant(66+adjustment,275,55);//78
         putConstant(72+adjustment,275,55);//84
-        putConstant(78+adjustment,275,55);//
+        putConstant(78+adjustment,277,52);//
         putConstant(84+adjustment,274,55);//
         //putConstant(140,274,55);//140
         //putConstant(146,274,55);//146
@@ -121,23 +125,23 @@ public class Bot
         //replacing most of them with the new ones
         putConstant(54,255,55);
         putConstant(60,255,55);
-        putConstant(66,270,52);
+        putConstant(66,265,52);
         putConstant(72,285,49);
         putConstant(84,285,48);
         putConstant(90,290,50);
         putConstant(96,300,55);
         putConstant(96,300,55);
         putConstant(132,340,55);
-        putConstant(138,355,55);
-        putConstant(144,360,45);
-        putConstant(150,368,43);
+//        putConstant(138,340,55);
+//        putConstant(144,340,45);
+//        putConstant(150,350,43);
     }
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos,double turretPosition){
         this(hardwareMap,targetGoalPos);
         turret.turretRot.getEncoder().setPosition(turretPosition);
     }
     public double getDistance(){
-        return Math.hypot(targetGoalPos[0]-follower.getPose().getX(), targetGoalPos[1]-follower.getPose().getY());
+        return Math.hypot(targetGoalPos[0]-getTurretPos().getX(), targetGoalPos[1]-getTurretPos().getY());
     }
     public double getDistance(Vector coords){
         return Math.hypot(targetGoalPos[0]-coords.getXComponent(), targetGoalPos[1]-coords.getYComponent());
@@ -202,7 +206,11 @@ public class Bot
         turret.aimTowardsGoal(targetGoalPos, new double[] {botPose.getX(), botPose.getY()},botPose.getHeading());
     }
     public void aimTurret(){
-        aimTurret(follower.getPose());
+        aimTurret(getTurretPos());
+    }
+    public Pose getTurretPos(){
+        double[] offset = Pose.polarToCartesian(-turretOffset,follower.getHeading());
+        return follower.getPose().plus(new Pose(offset[0],offset[1]));
     }
     public enum LaunchPhase
     {
@@ -260,6 +268,29 @@ public class Bot
         public boolean shouldSpinUp(){
             return pauseBetweenShots()? launcher.PIDF.hasDestabilized():/*!launcher.PIDF.closeToTarget()*/false;
         }
+        public void displayBatteryInLeftLight(){
+            Light.Color color;
+            switch ((int)Math.floor(voltageSensor.getVoltage())){
+                case 10:
+                    color = Light.Color.RED;
+                    break;
+                case 11:
+                    color = Light.Color.Orange;
+                    break;
+                case 12:
+                    color = Light.Color.Yellow;
+                    break;
+                case 13:
+                    color = Light.Color.Sage;
+                    break;
+                case 14:
+                    color = Light.Color.Green;
+                    break;
+                default:
+                    color = Light.Color.BLUE;
+            }
+            lights.leftLight.setColor(color);
+        }
         public LaunchPhase update(){
             targetSpeed = velMap.get(getDistance());//launcher.betweenVel(velBounds[0],velBounds[1]);
             launcher.setAngle(Math.toRadians(angleMap.get(getDistance())));
@@ -268,35 +299,36 @@ public class Bot
 
 
             boolean velInRange = false;
-            lights.leftLight.setColor(!launcher.PIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
+//            lights.leftLight.setColor(!launcher.PIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
             lights.rightLight.setColor(launcher.PIDF.hasDestabilized()? Light.Color.Orange:Light.Color.Green);
+            displayBatteryInLeftLight();
 //            telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
             //once you get to kicking the servo its far gone imo
-//            if(launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){
-//                //velInRange = launcher.launcherPIDF.hasStabilized();
-////                telemetry.addData("vel has stabilized",launcher.launcherPIDF.hasStabilized());
-////                telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
-//
-//                if(shouldSpinUp()&&launchPhase!=LaunchPhase.SPINNING_UP&&!isPausedToSpinUp){
-//                    isPausedToSpinUp = true;
-//                    pauseStartTime = TIME.getTime();
-//                    intake.setPower(pauseBetweenShots()?-0.5:0);
-//                }
-//                if(isPausedToSpinUp){
-//                    launcher.spinFlyWheelWithinRange(targetSpeed);
-////                    telemetry.addLine("paused");
-//                    intake.setPower(0);
-//                    if(isUpToSpeed()){
-//                        isPausedToSpinUp = false;
-//                        //change the phase start time so that there is the correct time remaining in that phase.
-//                        phaseStartTime = TIME.getTime();
-//                        if(launchPhase==LaunchPhase.RELEASING_BALLS){powerIntake();}
-//                    }
-//                    //if paused, do not carry out the instructions in the switch case
-//                    return launchPhase;
-//                }
-//            }
+            if(pauseBetweenShots()&&launchPhase!=LaunchPhase.NULL&&launchPhase!=LaunchPhase.KICKING_SERVO&&launchPhase!=LaunchPhase.SHUTDOWN){
+                //velInRange = launcher.launcherPIDF.hasStabilized();
+//                telemetry.addData("vel has stabilized",launcher.launcherPIDF.hasStabilized());
+//                telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
+
+                if(shouldSpinUp()&&launchPhase!=LaunchPhase.SPINNING_UP&&!isPausedToSpinUp){
+                    isPausedToSpinUp = true;
+                    pauseStartTime = TIME.getTime();
+                    intake.setPower(pauseBetweenShots()?-0.5:0);
+                }
+                if(isPausedToSpinUp){
+                    launcher.spinFlyWheelWithinRange(targetSpeed);
+//                    telemetry.addLine("paused");
+                    intake.setPower(0);
+                    if(isUpToSpeed()){
+                        isPausedToSpinUp = false;
+                        //change the phase start time so that there is the correct time remaining in that phase.
+                        phaseStartTime = TIME.getTime();
+                        if(launchPhase==LaunchPhase.RELEASING_BALLS){powerIntake();}
+                    }
+                    //if paused, do not carry out the instructions in the switch case
+                    return launchPhase;
+                }
+            }
 //            telemetry.addLine("going to switch case");
             switch (launchPhase){
                 case NULL: {

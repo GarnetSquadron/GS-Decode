@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.farShootPose;
@@ -12,20 +12,18 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
-@Autonomous(name = "🥩 RED TRIANGLE! 🥩")
+//@Autonomous(name = "🥩 RED TRIANGLE! 🥩")
 public class RedTriangle extends AutoSuperClass {
 
     Follower follower;
     Bot bot;
-    SectionedTelemetry telemetry;
+//    SectionedTelemetry telemetry;
 
     public static Pose startPose = FieldDimensions.botOnTinyTriangleRedSide; //new Pose(97.300, 9.540, Math.toRadians(90));
 
@@ -100,11 +98,11 @@ public class RedTriangle extends AutoSuperClass {
 
     @Override
     public void init() {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
         follower = bot.follower;
         follower.setStartingPose(startPose);
 
-        telemetry = new SectionedTelemetry(super.telemetry);
+//        telemetry = new SectionedTelemetry(super.telemetry);
 
         initSteps(
                 () -> {

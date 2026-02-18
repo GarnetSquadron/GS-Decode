@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
 
 import com.pedropathing.follower.Follower;
@@ -7,7 +7,6 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareControls.Intake;
@@ -15,7 +14,7 @@ import org.firstinspires.ftc.teamcode.HardwareControls.Launcher;
 import org.firstinspires.ftc.teamcode.pathing.pedroPathing.TestConstants;
 
 
-@Autonomous(name = "AutoRedAll")
+//@Autonomous(name = "AutoRedAll")
 public class AllRed extends LinearOpMode
 {
     Follower follower;

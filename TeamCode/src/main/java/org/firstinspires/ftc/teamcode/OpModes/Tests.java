@@ -27,8 +27,8 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
-import org.firstinspires.ftc.teamcode.SimplerTelemetry;
+import org.firstinspires.ftc.teamcode.Telemetry.SectionedTelemetry;
+import org.firstinspires.ftc.teamcode.Telemetry.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
 
 import java.util.List;
@@ -395,48 +395,79 @@ class HoodTest extends OpMode{
     }
 }
 class LightTest extends OpMode{
-    Servo light1,light2;
+//    Servo light1,light2;
+    Lights lights;
     BetterControllerClass Gpad1;
     double freq1 = 0.279,freq2 = 0.666;
 
     @Override
     public void init()
     {
-        light1 = hardwareMap.get(Servo.class,"light1");
-        light2 = hardwareMap.get(Servo.class,"light2");
+        lights = new Lights(hardwareMap);
+//        light1 = hardwareMap.get(Servo.class,"light1");
+//        light2 = hardwareMap.get(Servo.class,"light2");
         Gpad1 = new BetterControllerClass(gamepad1);
     }
+    double volt = 0;
 
+    Light.Color color = Light.Color.BLUE;
     @Override
     public void loop()
     {
-        double sin = Math.sin(TIME.getTime()*Math.PI*2*2);
-        if(sin>0){
-            light1.setPosition(freq1);
-            light2.setPosition(0);
-        } else{
-            light1.setPosition(0);
-            light2.setPosition(freq2);
-        }
-        double step = 0.01;
-        if(gamepad1.dpadUpWasPressed()){
-            freq1+=step;
-        }
-        if(gamepad1.dpadDownWasPressed()){
-            freq1-=step;
-        }
-        if(gamepad1.dpadRightWasPressed()){
-            freq2+=step;
-        }
-        if(gamepad1.dpadLeftWasPressed()){
-            freq2-=step;
-        }
-        Gpad1.update();
-        telemetry.addData("freq1",freq1);
-        telemetry.addData("freq2",freq2);
-        telemetry.addData("time",TIME.getTime());
-        telemetry.addData("sin",sin);
+//        double sin = Math.sin(TIME.getTime()*Math.PI*2*2);
+//        if(sin>0){
+//            light1.setPosition(freq1);
+//            light2.setPosition(0);
+//        } else{
+//            light1.setPosition(0);
+//            light2.setPosition(freq2);
+//        }
+//        double step = 0.01;
+//        if(gamepad1.dpadUpWasPressed()){
+//            freq1+=step;
+//        }
+//        if(gamepad1.dpadDownWasPressed()){
+//            freq1-=step;
+//        }
+//        if(gamepad1.dpadRightWasPressed()){
+//            freq2+=step;
+//        }
+//        if(gamepad1.dpadLeftWasPressed()){
+//            freq2-=step;
+//        }
+//        Gpad1.update();
+//        telemetry.addData("freq1",freq1);
+//        telemetry.addData("freq2",freq2);
+//        telemetry.addData("time",TIME.getTime());
+        telemetry.addData("volt", volt);
+        telemetry.addData("color", color);
         telemetry.update();
+        switch ((int)Math.floor(volt)){
+            case 10:
+                color = Light.Color.RED;
+                break;
+            case 11:
+                color = Light.Color.Orange;
+                break;
+            case 12:
+                color = Light.Color.Yellow;
+                break;
+            case 13:
+                color = Light.Color.Sage;
+                break;
+            case 14:
+                color = Light.Color.Green;
+                break;
+            case 15:
+                color = Light.Color.Teal;
+                break;
+            default:
+                color = Light.Color.BLUE;
+        }
+        if(gamepad1.aWasReleased()){
+            volt++;
+        }
+        lights.leftLight.setColor(color);
     }
 }
 class SectionedTelemetryTest extends OpMode{
@@ -477,7 +508,7 @@ class LauncherTest extends OpMode{
         voltageSensor = hardwareMap.voltageSensor.get("Control Hub");
         this.telemetry = new SimplerTelemetry(super.telemetry);
         gpad = new BetterControllerClass(gamepad1);
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionBlue);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorBlue);
     }
 
     @Override
