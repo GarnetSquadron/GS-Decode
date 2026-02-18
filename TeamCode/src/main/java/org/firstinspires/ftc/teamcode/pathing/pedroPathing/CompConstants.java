@@ -51,7 +51,7 @@ public class CompConstants
     public static PathConstraints pathConstraints = new PathConstraints(
             0.995,
             1,
-            1.14,
+            0.5,
             1.15
     );
 

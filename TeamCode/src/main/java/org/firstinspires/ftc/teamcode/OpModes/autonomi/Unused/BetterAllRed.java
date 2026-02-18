@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
 
 import com.pedropathing.follower.Follower;
@@ -8,13 +8,12 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 
 
-@Autonomous(name = "\uD83E\uDD69 DJ's Sweaty 21 BALL AUTO \uD83E\uDD69")
+//@Autonomous(name = "\uD83E\uDD69 DJ's Sweaty 21 BALL AUTO \uD83E\uDD69")
 public class BetterAllRed extends OpMode
 {
     Follower follower;
@@ -112,7 +111,7 @@ public class BetterAllRed extends OpMode
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
         pathTimer = new Timer();
         follower = bot.follower;
         initializePaths();

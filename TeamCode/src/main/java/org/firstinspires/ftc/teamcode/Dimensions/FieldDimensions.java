@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Dimensions;
 
 import com.pedropathing.geometry.Pose;
 
-import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
-
 public class FieldDimensions
 {
     public static double minGoalHeight = 38.75;//0.9645 meters
@@ -11,8 +9,10 @@ public class FieldDimensions
 
     //update later with real positions
     public static double[] fieldCenter = {72,72};//(0,0) is the corner of the field
-    public static double[] goalPositionRed = {142,142};
-    public static double[] goalPositionBlue = {5,142};
+
+    public static Pose goalPosition = new Pose(142,142);
+    public static double[] goalVectorRed = {goalPosition.getX(),goalPosition.getY()};
+    public static double[] goalVectorBlue = {goalPosition.mirror().getX(),goalPosition.mirror().getY()};
     /**
      * The position when the back of the robot is contacting the side of the red goal. Good starting position for tests I think
      */
@@ -32,4 +32,5 @@ public class FieldDimensions
      * blue side of the triangle
      */
     public static Pose botOnTinyTriangleBlueSide = botOnTinyTriangleRedSide.mirror();//new Pose(81,9,Math.toRadians(-90));
+//    public static Array
 }

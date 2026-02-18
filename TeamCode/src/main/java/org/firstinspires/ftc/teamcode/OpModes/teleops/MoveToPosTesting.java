@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
 
 
 
-@TeleOp(name = "MoveToPosTesting")
+//@TeleOp(name = "MoveToPosTesting")
 public class MoveToPosTesting extends OpMode
 {
     public static Follower follower;

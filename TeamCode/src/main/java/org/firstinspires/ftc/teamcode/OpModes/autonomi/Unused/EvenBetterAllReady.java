@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
 
 import com.pedropathing.follower.Follower;
@@ -8,13 +8,12 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 
 
-@Autonomous(name = "Indubitally")
+//@Autonomous(name = "Indubitally")
 public class EvenBetterAllReady extends OpMode
 {
     Follower follower;
@@ -180,7 +179,7 @@ public class EvenBetterAllReady extends OpMode
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
         pathTimer = new Timer();
         follower = bot.follower;
         initializePaths();

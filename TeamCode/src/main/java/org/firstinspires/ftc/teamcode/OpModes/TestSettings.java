@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import kotlin.Pair;
 
-@TeleOp(name = "settings test")
+//@TeleOp(name = "settings test")
 public class TestSettings extends SettingSelectorOpMode
 {
     public TestSettings()

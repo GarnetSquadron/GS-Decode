@@ -191,8 +191,26 @@ public class ExtraMath
         return ret;
     }
 
-    public static double angleFromCoords(double x, double y){
-        return Math.atan(y/x)+(x<0?Math.PI:0);
+    /**
+     * <a href="https://en.wikipedia.org/wiki/Atan2">atan2</a> is a function that takes the x and y
+     * and gives you the angle of the vector. You would think you can just return atan(y/x), however
+     * this only works for positive x, because (-x)/(-y)=x/y but the angle for (-x,-y) is PI plus
+     * the angle of (x,y).
+     * @param x
+     * @param y
+     * @return
+     */
+    public static double atan2(double x, double y){
+        double atan = Math.atan(y/x);
+        if(x>0){
+            return atan;
+        }else if(x==0){
+            return Math.signum(y)*Math.PI;
+        }else if(y<0){
+            return atan-Math.PI;
+        }else{
+            return atan+Math.PI;
+        }
     }
 
 

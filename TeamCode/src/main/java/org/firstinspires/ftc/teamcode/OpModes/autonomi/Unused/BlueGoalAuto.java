@@ -1,5 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi.closestart;
-
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -8,141 +7,216 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.pedropathing.paths.Path;
 import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
-import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
-import org.firstinspires.ftc.teamcode.SectionedTelemetry;
 
-
-@Autonomous(name = "\uD83D\uDE2E WAIT IS THAT A 12 BALL AUTO?!?!?!?!? \uD83D\uDE2E")
-public class TwelveBallAuto extends AutoSuperClass
+//@Autonomous(name = "\uD83E\uDD69 FINAL BOSS OF ALL AUTOS BLUE \uD83E\uDD69")
+public class BlueGoalAuto extends AutoSuperClass
 {
+
+    private static final double FIELD_SIZE = 144.0;
+
+    private static double mx(double x) { return FIELD_SIZE - x; }
+    private static double mh(double headingRad) { return Math.PI - headingRad; }
+
+    private static Pose m(Pose p) {
+        return new Pose(mx(p.getX()), p.getY(), mh(p.getHeading()));
+    }
+    private static Pose m(double x, double y) {
+        return new Pose(mx(x), y);
+    }
+    private static Pose m(double x, double y, double h) {
+        return new Pose(mx(x), y, mh(h));
+    }
+
     Follower follower;
+    Timer pathTimer;
     Bot bot;
-    double launchY = 84.000;
-    Pose launchPose = new Pose(90, launchY,Math.PI);
 
 
-    Path shootPreload, collectClose, shootClose, collectMiddle, shootMiddle, pressGateAndIntake, shootGateBalls, leaveShootingZone;
+    Pose launchPose = new Pose(mx(90), 83.000, mh(Math.PI)); // (54, 83, 0)
+    double intakingTargetX = mx(120); // 24
+    Pose intakingTargetPos1 = new Pose(intakingTargetX, 83.000);
+    Pose intakingTargetPos2 = new Pose(intakingTargetX, 59.000);
+    Pose intakingTargetPos3 = new Pose(intakingTargetX, 34.8);
 
 
-    SectionedTelemetry telemetry;
+    Path shootPreload, collectClose, shoot1, collectMiddle, pressGate, shoot2, collectFar, shoot3,
+            launchPreload, intake1, launch2, intake2, launch3, intake3, launch4;
 
+//    SectionedTelemetry telemetry;
 
     public void initializePaths()
     {
 
+
         shootPreload = new Path(
                 new BezierLine(
-                        FieldDimensions.botTouchingRedGoal,
-                        AutoPoints.closeShootPose
+                        m(123.000, 123.000),
+                        m(86.000, 86.000)
                 )
         );
-
 
         collectClose = new Path(
                 new BezierCurve(
-                        AutoPoints.closeShootPose,
-                        new Pose(98.275, 83.868),
-                        new Pose(125.154, 83.376)
+                        m(86.000, 86.000),
+                        m(90.622, 81.069),
+                        m(120.000, 84.039)
                 )
         );
-        collectClose.setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(0));
 
-
-        shootClose = new Path(
+        shoot1 = new Path(
                 new BezierLine(
-                        new Pose(125.154, 83.376),
-                        AutoPoints.closeShootPose
+                        m(129.646, 84.039),
+                        m(86.000, 86.000)
                 )
         );
-
 
         collectMiddle = new Path(
                 new BezierCurve(
-                        AutoPoints.closeShootPose,
-                        new Pose(92.154, 57.196),
-                        new Pose(125.016, 59.730)
-                )
-        );
-        collectMiddle.setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(0));
-
-
-        shootMiddle = new Path(
-                new BezierLine(
-                        new Pose(128.608, 59.328),
-                        AutoPoints.closeShootPose
+                        m(86.000, 86.000),
+                        m(93.635, 54.596),
+                        m(120.000, 59.328)
                 )
         );
 
-
-        pressGateAndIntake = new Path(
+        pressGate = new Path(
                 new BezierCurve(
-                        AutoPoints.closeShootPose,
-                        new Pose(109.688, 37.357),
-                        new Pose(134.158, 58.232)
+                        m(128.608, 59.328),
+                        m(116.682, 68.759),
+                        m(125.740, 68.434)
                 )
         );
-        pressGateAndIntake.setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(45));
 
-        shootGateBalls = new Path(
-                new BezierCurve(
-                        new Pose(134.158, 58.232),
-                        new Pose(109.355, 37.444),
-                        AutoPoints.closeShootPose
-                        )
-        );
-
-
-        leaveShootingZone = new Path(
+        shoot2 = new Path(
                 new BezierLine(
-                        AutoPoints.closeShootPose,
-                        new Pose(114.145, 76.138)
+                        m(125.740, 68.434),
+                        m(86.000, 86.000)
                 )
         );
-        leaveShootingZone.setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(-90));
+
+        collectFar = new Path(
+                new BezierCurve(
+                        m(86.000, 86.000),
+                        m(86.622, 20.783),
+                        m(117.728, 38.452),
+                        m(130.621, 35.186)
+                )
+        );
+
+        shoot3 = new Path(
+                new BezierLine(
+                        m(130.621, 35.186),
+                        m(86.000, 86.000)
+                )
+        );
 
 
+
+        launchPreload = new Path(
+                new BezierLine(
+
+                        m(FieldDimensions.botTouchingRedGoal),
+                        launchPose
+                )
+        );
+
+        intake1 = new Path(
+                new BezierLine(
+                        launchPose,
+                        intakingTargetPos1
+                )
+        );
+        intake1.setBrakingStrength(2);
+
+        launch2 = new Path(
+                new BezierLine(
+                        intakingTargetPos1,
+                        launchPose
+                )
+        );
+
+        intake2 = new Path(
+                new BezierCurve(
+                        launchPose,
+                        m(86.6, 57.9),
+                        intakingTargetPos2
+                )
+        );
+        intake2.setBrakingStrength(2);
+
+        launch3 = new Path(
+                new BezierLine(
+                        intakingTargetPos2,
+                        launchPose
+                )
+        );
+
+        launch3.setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0));
+
+        intake3 = new Path(
+                new BezierCurve(
+                        launchPose,
+                        m(75.3, 33.97),
+                        intakingTargetPos3
+                )
+        );
+
+        launch4 = new Path(
+                new BezierLine(
+                        intakingTargetPos3,
+                        launchPose
+                )
+        );
+
+        launch4.setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0));
     }
+
     public boolean incrementingStep(){
         return !gamepad1.a;
     }
 
-
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
-//        bot.launcher.PIDF.setConstants(
-//                /*bot.launcher.launcherPIDF.Kp*/0.002,
-//                -0.0003,
-//                bot.launcher.PIDF.Ki,
-//                bot.launcher.PIDF.Ks,
-//                bot.launcher.PIDF.Kv,
-//                bot.launcher.PIDF.Ka
-//        );
+
+        Bot.redSide = false;
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
+
+
+        bot.launcher.PIDF.setConstants(
+                0.002,
+                -0.0003,
+                bot.launcher.PIDF.Ki,
+                bot.launcher.PIDF.Ks,
+                bot.launcher.PIDF.Kv,
+                bot.launcher.PIDF.Ka
+        );
+
+        pathTimer = new Timer();
         follower = bot.follower;
+
         initializePaths();
-        follower.setStartingPose(FieldDimensions.botTouchingRedGoal);
-        this.telemetry = new SectionedTelemetry(super.telemetry);
+
+        follower.setStartingPose(m(FieldDimensions.botTouchingRedGoal));
+
+//        this.telemetry = new SectionedTelemetry(super.telemetry);
+
+
         initSteps(
                 () ->
                 {
-                    bot.launcher.setPower(bot.launcher.PIDF.getFeedForward(300));
-                    follower.followPath(shootPreload, true);
+                    follower.followPath(launchPreload, true);
                     nextStep();
                 },
                 () ->
                 {
-
                     if ((!follower.isBusy())&& incrementingStep())
                     {
-                        bot.launcher.resetPID();
                         bot.launchHandler.initLaunch();
                         nextStep();
                     }
@@ -151,17 +225,16 @@ public class TwelveBallAuto extends AutoSuperClass
                 {
                     if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
                     {
-                        follower.followPath(collectClose, true);
+                        follower.followPath(intake1, true);
                         nextStep();
                     }
                 },
                 () ->
                 {
                     bot.intake.setPower(1);
-                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
+                    if ((!follower.isBusy())&& incrementingStep())
                     {
-
-                        follower.followPath(shootClose, true);
+                        follower.followPath(launch2, true);
                         nextStep();
                     }
                 },
@@ -180,7 +253,7 @@ public class TwelveBallAuto extends AutoSuperClass
                 {
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
-                        follower.followPath(collectMiddle, true);
+                        follower.followPath(intake2, true);
                         nextStep();
                     }
                 },
@@ -190,7 +263,7 @@ public class TwelveBallAuto extends AutoSuperClass
                     if ((!follower.isBusy())&& incrementingStep())
                     {
                         bot.intake.setPower(0);
-                        follower.followPath(shootMiddle, true);
+                        follower.followPath(launch3, true);
                         nextStep();
                     }
                 },
@@ -205,90 +278,69 @@ public class TwelveBallAuto extends AutoSuperClass
                 ()->{
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
-                        follower.followPath(pressGateAndIntake, true);
+                        follower.followPath(intake3, true);
                         nextStep();
                     }
                 },
                 ()->{
                     bot.intake.setPower(1);
-                    if((!follower.isBusy())){
-                        nextStep();
-                    }
-                },
-                ()->{
-                    bot.intake.setPower(1);
-                    if(pathTimer.getElapsedTime()>1000 && incrementingStep()){
+                    if((!follower.isBusy())&& incrementingStep()){
                         bot.intake.setPower(0);
-                        follower.followPath(shootGateBalls, true);
+                        follower.followPath(launch4, true);
                         nextStep();
                     }
                 },
                 ()->{
-
+                    if((!follower.isBusy())&& incrementingStep()){
+                        bot.launchHandler.initLaunch();
+                        nextStep();
+                    }
                 }
-//                ()->{
-//                    if((!follower.isBusy())&& incrementingStep()){
-//                        bot.launchHandler.initLaunch();
-//                        nextStep();
-//                    }
-//                },
-//                ()->{
-//                    if((!follower.isBusy())&& incrementingStep()){
-//                        follower.followPath(leaveShootingZone, true);
-//
-//                    }
-//                }
-
         );
     }
-
 
     public TTimer stopTimer;
     double startTime = TIME.getTime();
     double spunUpTime = 0;
     boolean prevStabilized;
+
     public void start()
     {
         startTime = TIME.getTime();
         stopTimer = new TTimer();
         stopTimer.StartTimer(30);
-        //follower.followPath(ShootPreload);
+
         setCurrentStep(0);
+
         bot.updateConstants(bot.getDistance(getLaunchPosition()));
         bot.launcher.resetPID();
         bot.spinFlywheelToTunedSpeed(getLaunchPosition());
-
-
     }
 
     public Vector getLaunchPosition()
     {
         return launchPose.getAsVector();
     }
+
     public void autonomousPathUpdate()
     {
         bot.update();
         bot.aimTurret();
-//        if(currentStep == 1){
-//        }
-        if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
+
+        if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)
         {
-//            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
-//            bot.launcher.setPower(-bot.launcher.PIDF.getFeedForward(300));
-            //if almost spun up and still accelerating(basically a temporary bandaid solution to make the pid stabilize faster.)
-//            if(ExtraMath.closeTo0(bot.launcher.getFlywheelEncoder().getVelocity()-240,10)&&!bot.launcher.launcherPIDF.lowAcceleration()){
-//                bot.launcher.launcherPIDF.resetPid();
-//            }
+            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
         }
+
         bot.updateSpeedMeasure(getLaunchPosition());
         updateSteps();
     }
-
 
     @Override public void loop()
     {
         follower.update();
         follower.setMaxPower(1);
+
         if(stopTimer.timeover()|| gamepad1.a){
             follower.breakFollowing();
             bot.launcher.setPower(0);
@@ -300,24 +352,18 @@ public class TwelveBallAuto extends AutoSuperClass
         if(bot.launcher.PIDF.hasStabilized()&&!prevStabilized){
             spunUpTime = TIME.getTime();
         }
+
         telemetry.addData("spinup time",spunUpTime-startTime);
-//        telemetry.addArray("times",times);
+        telemetry.addArray("times",times);
         telemetry.addData("current position",bot.currentPos);
         prevStabilized = bot.launcher.PIDF.hasStabilized();
         telemetry.addData("step", currentStep);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
-//        telemetry.a
         telemetry.updateSection();
         telemetry.updateSection("BOT");
-//        telemetry.updateSection("LAUNCHER");
         telemetry.display();
         telemetry.clearAll();
-
-
     }
 }
-
-
-

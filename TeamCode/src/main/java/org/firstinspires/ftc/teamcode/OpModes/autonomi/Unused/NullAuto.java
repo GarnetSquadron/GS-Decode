@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Unused;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 
-@Autonomous
+//@Autonomous
 public class NullAuto extends OpMode
 {
     public static double thing = 0;

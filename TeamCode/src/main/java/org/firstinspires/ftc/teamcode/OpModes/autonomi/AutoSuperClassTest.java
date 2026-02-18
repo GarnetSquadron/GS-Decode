@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 
-@Autonomous
+//@Autonomous
 public class AutoSuperClassTest extends AutoSuperClass
 {
     Bot bot;
@@ -24,7 +24,7 @@ public class AutoSuperClassTest extends AutoSuperClass
     @Override
     public void init()
     {
-        bot = new Bot(hardwareMap, FieldDimensions.goalPositionRed);
+        bot = new Bot(hardwareMap, FieldDimensions.goalVectorRed);
         bot.follower.setStartingPose(new Pose());
         initPaths();
         initSteps(
