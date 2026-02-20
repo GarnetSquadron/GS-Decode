@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.Vision.aprilTags;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.pathing.pedroPathing.CompConstants;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
-import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import static org.firstinspires.ftc.teamcode.pathing.pedroPathing.Tuning.follower;
 import com.pedropathing.geometry.Pose;
 
 
@@ -42,14 +38,23 @@ public class AprilTagPosManager {
     }
 
     //Prints the position of every tag
-    public Pose getOffset(){
+    public double getHeading(boolean blueSide, double originalHeading){
         telemetry.addLine("RBE = Bearing");
+        double heading = originalHeading;
+        for(AprilTagDetection detection : aprilTagProcessor.getDetections()){
+            telemetry.addLine(String.format("RBE %6.1f  (deg)", detection.ftcPose.yaw));
+            heading = Math.toRadians(detection.ftcPose.yaw)- AutoPoints.getGoalStart(blueSide).getHeading();
+        }
+        return heading;
+    }
+    public void updateTelem(boolean blueSide){
         Pose pose = new Pose();
         for(AprilTagDetection detection : aprilTagProcessor.getDetections()){
-            telemetry.addLine(String.format("RBE %6.1f  (deg)", detection.ftcPose.bearing));
-            pose = new Pose(0,0,detection.ftcPose.bearing);
+            telemetry.addData("tag bearing",String.format("RBE %6.1f  (deg)", detection.ftcPose.yaw));
+            pose = new Pose(0,0,Math.toRadians(detection.ftcPose.yaw)+ AutoPoints.getGoalStart(blueSide).getHeading());
         }
-        return pose;
+        telemetry.addData("goal heading",Math.toDegrees(AutoPoints.getGoalStart(blueSide).getHeading()));
+        telemetry.addData("net heading",Math.toDegrees(pose.getHeading()));
     }
 }
 

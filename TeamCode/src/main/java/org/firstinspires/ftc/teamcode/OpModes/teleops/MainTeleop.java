@@ -421,6 +421,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //telemetry.addData("is auto clear",telemetry.isAutoClear());
         telemetry.updateSection();
         telemetry.updateSection("TURRET");
+        telemetry.updateSection("APRIL TAG");
 //        telemetry.updateSection("LAUNCHER");
 //        telemetry.updateSection("PIDF");
 //        telemetry.updateSection("BOT");

@@ -75,7 +75,7 @@ public class Bot
     public double targetSpeed = 0;
     public AprilTagPosManager resetCam;
     public void resetPos(){
-        follower.poseTracker.setCurrentPoseWithOffset(resetCam.getOffset());
+        follower.poseTracker.setCurrentPoseWithOffset(new Pose(0,0,resetCam.getHeading(!redSide,follower.getHeading())));
     }
     SectTelemetryAdder telemetry;
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
@@ -195,6 +195,7 @@ public class Bot
 //        telemetry.addArray("VEL BOUNDS",velBounds);
 //        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
 //        telemetry.addData("flywheelToBallSpeedRatio",flywheelToBallSpeedRatio);
+        resetCam.updateTelem(!redSide);
         updateCurrentPos();
         return launchHandler.update();
     }
