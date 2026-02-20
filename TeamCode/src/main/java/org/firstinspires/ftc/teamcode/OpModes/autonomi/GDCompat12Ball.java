@@ -503,17 +503,10 @@ public class GDCompat12Ball extends AutoSuperClass
         follower.update();
         Gpad.update();
 
-        if(/*stopTimer.timeover()||*/ Gpad.getToggleValue("a")){//TODO: also remove this because it is illegal for a real match
-//            follower.breakFollowing();
-            telemetry.addLine("paused");
-            follower.setMaxPower(0);
-            bot.launcher.setPower(0);
-            bot.updateCurrentPos();
-        }else{
-            autonomousPathUpdate();
-            if(bot.launcher.PIDF.hasStabilized()&&!prevStabilized){
-                spunUpTime = TIME.getTime();
-            }
+        autonomousPathUpdate();
+        if(bot.launcher.PIDF.hasStabilized()&&!prevStabilized){
+            spunUpTime = TIME.getTime();
+        }
 //        telemetry.addData("max power scale",follower.getMaxPowerScaling());
 //        try {
 //            telemetry.addData("vector ", follower.getDriveVector());
@@ -522,19 +515,18 @@ public class GDCompat12Ball extends AutoSuperClass
 //        }
 //        telemetry.addData("spinup time",spunUpTime-startTime);
 //        telemetry.addArray("times",times);
-            telemetry.addData("current position",bot.currentPos);
-            prevStabilized = bot.launcher.PIDF.hasStabilized();
-            telemetry.addData("step", currentStep);
-            telemetry.addData("x", follower.getPose().getX());
-            telemetry.addData("y", follower.getPose().getY());
-            telemetry.addData("heading", follower.getPose().getHeading());
-            telemetry.addData("side",selections.get("color"));
-            telemetry.addData("path start pose",shootPreload.getPose(0));
-            telemetry.addData("pose",follower.getPose());
-        }
-        if(Gpad.getRisingEdge("a")){
-            follower.setMaxPower(1);
-        }
+        telemetry.addData("current position",bot.currentPos);
+        prevStabilized = bot.launcher.PIDF.hasStabilized();
+        telemetry.addData("step", currentStep);
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("side",selections.get("color"));
+        telemetry.addData("path start pose",shootPreload.getPose(0));
+        telemetry.addData("pose",follower.getPose());
+//        if(Gpad.getRisingEdge("a")){
+//            follower.setMaxPower(1);
+//        }
         bot.aimTurret();
 
 

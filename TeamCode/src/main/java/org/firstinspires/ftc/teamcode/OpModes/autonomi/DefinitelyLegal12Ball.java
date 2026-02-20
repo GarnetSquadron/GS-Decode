@@ -516,13 +516,13 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
         follower.update();
         Gpad.update();
 
-        if(/*stopTimer.timeover()||*/ Gpad.getToggleValue("a")){//TODO: also remove this because it is illegal for a real match
-//            follower.breakFollowing();
-            telemetry.addLine("paused");
-            follower.setMaxPower(0);
-            bot.launcher.setPower(0);
-            bot.updateCurrentPos();
-        }else{
+//        if(/*stopTimer.timeover()||*/ Gpad.getToggleValue("a")){//TODO: also remove this because it is illegal for a real match
+////            follower.breakFollowing();
+//            telemetry.addLine("paused");
+//            follower.setMaxPower(0);
+//            bot.launcher.setPower(0);
+//            bot.updateCurrentPos();
+//        }else{
             autonomousPathUpdate();
             if(bot.launcher.PIDF.hasStabilized()&&!prevStabilized){
                 spunUpTime = TIME.getTime();
@@ -544,10 +544,10 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
             telemetry.addData("side",selections.get("color"));
             telemetry.addData("path start pose",shootPreload.getPose(0));
             telemetry.addData("pose",follower.getPose());
-        }
-        if(Gpad.getRisingEdge("a")){
-            follower.setMaxPower(1);
-        }
+//        }
+//        if(Gpad.getRisingEdge("a")){
+//            follower.setMaxPower(1);
+//        }
         bot.aimTurret();
 
 
