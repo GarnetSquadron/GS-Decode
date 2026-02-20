@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.autonomi;
 
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeJustPressingGate;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeLEAVEShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closePressPrep;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.getGoalStart;
@@ -40,11 +41,12 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
     double launchY = 84.000;
 //    Pose launchPose = new Pose(90, launchY,Math.PI-Math.PI/5);
     Pose shootPose0 = closeShootPose.setHeading(FieldDimensions.botTouchingRedGoal.getHeading());
-    Pose shootPose1 = closeShootPose.setHeading(-Math.PI/5);
-    Pose shootPose2 = closeShootPose.setHeading(-Math.PI/5);
-    Pose shootPose3 = closeShootPose.setHeading(-Math.PI/5);
-    Pose shootPose4 = closeShootPose.setHeading(-Math.PI/5);
+//    Pose shootPose1 = closeShootPose.setHeading(-Math.PI/5);
+//    Pose shootPose2 = closeShootPose.setHeading(-Math.PI/5);
+//    Pose shootPose3 = closeShootPose.setHeading(-Math.PI/5);
+//    Pose shootPose4 = closeShootPose.setHeading(-Math.PI/5);
     Pose gateShootPose = closeShootPose.setHeading(-Math.PI/5);
+
 
 
     Path shootPreload, prepCloseIntake,collectClose,intakeCloseAndOpenGate, closePrepGate, closeOpenGate, shootClose, collectMiddle, shootMiddle, pressGatePrep, pressGatePrep2,pressGate, collectFar, shootFar, LEAVE, prepHP, collectHP,shootHP;
@@ -132,14 +134,14 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
         shootClose = getPathFromBezierCurve(
                 correctBezierLine(new BezierLine(
                         intakingTargetPos1,
-                        shootPose1
+                        closeShootPose
                 ))
         );
 //        shootClose.setLinearHeadingInterpolation(intakingTargetPos1.getHeading(),intakingTargetPos1.getHeading()-Math.PI/5);
 
         collectMiddle = getPathFromBezierCurve(
                 correctBezierCurve(new BezierCurve(
-                        shootPose1,
+                        closeShootPose,
                         new Pose(92.154, 57.196),
                         intakingTargetPos2
                 ))
@@ -181,13 +183,13 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
                 correctBezierCurve(new BezierCurve(
                         intakingTargetPos2,
                         new Pose(92.154, 57.196),
-                        shootPose2
+                        closeShootPose
                 ))
         );
 //        shootMiddle.setLinearHeadingInterpolation(intakingTargetPos2.getHeading(),intakingTargetPos2.getHeading()-Math.PI/5);
         collectFar = getPathFromBezierCurve(
                 correctBezierCurve(new BezierCurve(
-                        shootPose2,
+                        closeShootPose,
 
                         new Pose(75.3,33.97),
 
@@ -201,19 +203,19 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
                 correctBezierLine(new BezierLine(
                         intakingTargetPos3,
 
-                        shootPose2
+                        closeLEAVEShootPose
                 ))
         );
-        LEAVE = getPathFromBezierCurve(
-                correctBezierLine(new BezierLine(
-                        shootPose2,
-
-                        new Pose(83,107,shootPose2.getHeading())
-                ))
-        );
+//        LEAVE = getPathFromBezierCurve(
+//                correctBezierLine(new BezierLine(
+//                        shootPose2,
+//
+//                        new Pose(90,107,shootPose2.getHeading())
+//                ))
+//        );
         prepHP = getPathFromBezierCurve(
                 correctBezierLine(new BezierLine(
-                        shootPose2,
+                        closeLEAVEShootPose,
 
 //                        new Pose(75.3,33.97),
 
@@ -241,9 +243,17 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
                 correctBezierLine(new BezierLine(
                         intakeHP,
 
-                        shootPose4
+                        closeLEAVEShootPose
                 ))
         );
+    }
+
+    /**
+     * should tell us if we need to pump the intake to keep everything from falling out
+     * @return
+     */
+    public boolean ballsGoingToFallOut(){
+        return follower.getAcceleration().dot(follower.getPose().getHeadingAsUnitVector())<0.5 ;//&& follower.getAcceleration().dot(follower.getVelocity())<0;
     }
     public void initSteps(){
         initSteps(
@@ -275,6 +285,9 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
                 },
                 () ->
                 {
+//                    if(){
+//
+//                    }
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
                         follower.followPath(collectCloseAndPressGate, true);

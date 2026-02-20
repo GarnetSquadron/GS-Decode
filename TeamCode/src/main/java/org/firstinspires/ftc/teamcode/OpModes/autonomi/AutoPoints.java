@@ -14,6 +14,7 @@ public class AutoPoints
     public static double pressingGateX = 128;
     public static Pose farShootPose =  new Pose(84, farLaunchY,Math.PI);
     public static Pose closeShootPose = new Pose(90.000, closeLaunchY, -Math.PI/5);
+    public static Pose closeLEAVEShootPose = new Pose(90,107,-Math.PI/5);
     public static double intakiningPrepX = 101;
     public static Pose intakingPrepPos1 = new Pose(intakiningPrepX, 84);
     public static Pose intakingTargetPos1 = new Pose(intakingTargetX, 84);
