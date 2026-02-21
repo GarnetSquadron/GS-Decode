@@ -166,6 +166,7 @@ public class MainTeleop extends SettingSelectorOpMode
             }
 
         }
+
         turretPos = 0;
         if(selections.get("remember old position?")=="yes"){
             startingPose = Bot.currentPos[0];
@@ -174,6 +175,7 @@ public class MainTeleop extends SettingSelectorOpMode
                 targetGoalPos = FieldDimensions.goalVectorRed;
             }else{
                 targetGoalPos = FieldDimensions.goalVectorBlue;
+                driverAngle = Math.PI;
 
             }
         }
