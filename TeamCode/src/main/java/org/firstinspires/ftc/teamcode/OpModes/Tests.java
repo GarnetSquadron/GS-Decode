@@ -613,11 +613,11 @@ class FlyWheelTest extends OpMode{
         }
 //        telemetry.addData("target ", target);
 //        telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
-        if(launcher.PIDF.hasStabilized()&&!prevStabilized) {
+        if(launcher.PIDF.isStable()&&!prevStabilized) {
             spunUpTime = TIME.getTime();
             oscilCount++;
         }
-        prevStabilized = launcher.PIDF.hasStabilized();
+        prevStabilized = launcher.PIDF.isStable();
         lights.leftLight.setColor(prevStabilized? Light.Color.Orange: Light.Color.Green);
 
 

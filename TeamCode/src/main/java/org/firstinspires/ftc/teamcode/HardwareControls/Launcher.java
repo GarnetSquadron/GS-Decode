@@ -113,7 +113,7 @@ public class Launcher {
         PIDF.updateArrays(currentVel,flyVel);
         telemetry.addData("power", power);
         telemetry.addData("acceleration", PIDF.getAcceleration());
-        telemetry.addData("has stabilized", PIDF.hasStabilized());
+        telemetry.addData("has stabilized", PIDF.isStable());
         telemetry.addData("acceleration good", PIDF.lowAcceleration());
         telemetry.addData("velocity good", PIDF.closeToTarget());
         telemetry.addData("velocity difference", PIDF.differences[0]);
@@ -136,7 +136,7 @@ public class Launcher {
         //temporary flywheel code, just guesses the velocity.
         //it doesn't exist anymore mb
 
-        return PIDF.hasStabilized();
+        return PIDF.isStable();
     }
     public boolean spinFlyWheelWithinRange(double flyVel){
         //spin up the flywheel to get it within the provided range
@@ -150,7 +150,7 @@ public class Launcher {
         //temporary flywheel code, just guesses the velocity.
         //it doesn't exist anymore mb
 
-        return PIDF.hasStabilized();
+        return PIDF.isStable();
     }
     public void fightMomentumLoss(){
         setPower(motor1.getPower()+0.2);

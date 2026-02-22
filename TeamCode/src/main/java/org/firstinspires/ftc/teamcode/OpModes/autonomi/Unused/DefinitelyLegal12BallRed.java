@@ -340,7 +340,7 @@ public class DefinitelyLegal12BallRed extends AutoSuperClass
             autonomousPathUpdate();
         }
 
-        if(bot.launcher.PIDF.hasStabilized()&&!prevStabilized){
+        if(bot.launcher.PIDF.isStable()&&!prevStabilized){
             spunUpTime = TIME.getTime();
         }
 //        telemetry.addData("max power scale",follower.getMaxPowerScaling());
@@ -352,7 +352,7 @@ public class DefinitelyLegal12BallRed extends AutoSuperClass
 //        telemetry.addData("spinup time",spunUpTime-startTime);
 //        telemetry.addArray("times",times);
         telemetry.addData("current position",bot.currentPos);
-        prevStabilized = bot.launcher.PIDF.hasStabilized();
+        prevStabilized = bot.launcher.PIDF.isStable();
         telemetry.addData("step", currentStep);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());

@@ -18,7 +18,7 @@ public class LauncherPIDF
     public double Kp,Kd,Ki,Ks,Kv,Ka;
     public double p =0,d,i=0,f;
     public double pidForce = 0;
-    public double margin = 20;
+    public double margin = 3;
     public double startPosition;
 //    public double startVelocity;
     private StopWatch stopWatch;
@@ -92,41 +92,14 @@ public class LauncherPIDF
     public boolean lowAcceleration(){
         return ExtraMath.closeTo0(getAcceleration(),20);
     }
-    public boolean currentIsCloseToTarget(){
-        return ExtraMath.closeTo0(differences[0],margin);
-    }
-    public boolean averageCloseToTarget(){
-        return ExtraMath.closeTo0(differences[0],margin);
-    }
     public boolean isStable(){
-        return lowAcceleration() && averageCloseToTarget();
-
-//        for(int i=0;i<sampleSize;i++){
-//            if(!ExtraMath.closeTo0(differences[i],margin-2)){
-//                return false;
-//            };
-//        }
-//        return true;
+        for(int i = 0;i<sampleSize;i++){
+            if(!ExtraMath.closeTo0(differences[i],margin)){
+                return false;
+            }
+        }
+        return true;
     }
-    public boolean hasStabilized(){
-        return lowAcceleration() && averageCloseToTarget();
-
-//        for(int i=0;i<sampleSize;i++){
-//            if(!ExtraMath.closeTo0(differences[i],margin-2)){
-//                return false;
-//            };
-//        }
-//        return true;
-    }
-    public boolean closeToTarget(){
-        return ExtraMath.closeTo0(average(differences),margin);
-    }
-    public boolean hasDestabilized(){
-        return !ExtraMath.closeTo0(differences[0],margin);
-    }
-//    public boolean hasStabilizedRelaxed(){
-//        return lowAcceleration() && closeToTarget();
-//    }
     public double getFeedForward(double targetVel){
         return Ks *Math.signum(targetVel)+Kv *targetVel;
     }

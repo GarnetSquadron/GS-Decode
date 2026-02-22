@@ -257,7 +257,7 @@ public class Bot
             return getDistance()>120;
         }
         public boolean isUpToSpeed(){
-            return pauseBetweenShots()?launcher.PIDF.hasStabilized():launcher.PIDF.closeToTarget();
+            return pauseBetweenShots()?launcher.PIDF.isStable():launcher.PIDF.isStable();
         }
 
         /**
@@ -267,7 +267,7 @@ public class Bot
          * @return
          */
         public boolean shouldSpinUp(){
-            return pauseBetweenShots()? launcher.PIDF.hasDestabilized():/*!launcher.PIDF.closeToTarget()*/false;
+            return pauseBetweenShots()? !launcher.PIDF.isStable():/*!launcher.PIDF.closeToTarget()*/false;
         }
         public void displayBatteryInLeftLight(){
             Light.Color color;
@@ -301,7 +301,7 @@ public class Bot
 
             boolean velInRange = false;
 //            lights.leftLight.setColor(!launcher.PIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
-            lights.rightLight.setColor(launcher.PIDF.hasDestabilized()? Light.Color.Orange:Light.Color.Green);
+            lights.rightLight.setColor(launcher.PIDF.isStable()? Light.Color.Orange:Light.Color.Green);
             displayBatteryInLeftLight();
 //            telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed
