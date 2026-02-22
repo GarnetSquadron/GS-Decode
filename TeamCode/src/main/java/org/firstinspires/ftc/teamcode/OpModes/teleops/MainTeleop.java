@@ -311,7 +311,7 @@ public class MainTeleop extends SettingSelectorOpMode
 
         //the time is 1700. this seems to work well but still might want to be tuned
         if (extendKickStand) {
-            stand.extendStand(1700);
+            stand.extendStand((int)(1700*0.9));
         }
 
 //        telemetry.addData("starting iteration", releaseTheBallsInput);
