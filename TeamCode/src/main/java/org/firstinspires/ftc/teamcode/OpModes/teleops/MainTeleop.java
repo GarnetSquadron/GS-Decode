@@ -209,6 +209,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //bot.intake.openGate();
         currentMonitor = new CurrentMonitor(hardwareMap,bot);
         follower.startTeleopDrive();
+        bot.launcher.resetPID();
     }
     public void move(double yInput,double xInput,double turnInput){
         double forwardForce = modifyInput(0.05,yInput);
@@ -263,15 +264,16 @@ public class MainTeleop extends SettingSelectorOpMode
 
         if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
             if(initSpinUpFlywheelInput){
-                bot.launcher.resetPID();
+//                bot.launcher.resetPID();
             }
             if (spinUpFlywheelInput)
             {
-                bot.spinFlywheelToTunedSpeed();
-            }
-            if (releaseTheBallsInput)
+                bot.idleFlywheel();
+            }else if (releaseTheBallsInput)
             {
                 bot.launchHandler.initLaunch();
+            }else{
+                bot.launcher.updatePID(0);
             }
         }
         else {
@@ -303,7 +305,7 @@ public class MainTeleop extends SettingSelectorOpMode
 
         double launchAngle = bot.launcher.getAngle();
 
-        bot.updateSpeedMeasure(follower.getPose().getAsVector());
+//        bot.updatePIDMeasures(follower.getPose().getAsVector());
         Bot.LaunchPhase launchPhase = bot.update();
 //        if(!adjustingConstants){
         bot.updateConstants();
@@ -418,7 +420,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //telemetry.addData("is auto clear",telemetry.isAutoClear());
         telemetry.updateSection();
         telemetry.updateSection("TURRET");
-//        telemetry.updateSection("LAUNCHER");
+        telemetry.updateSection("LAUNCHER");
 //        telemetry.updateSection("PIDF");
 //        telemetry.updateSection("BOT");
 //        telemetry.updateSection("TURRET");

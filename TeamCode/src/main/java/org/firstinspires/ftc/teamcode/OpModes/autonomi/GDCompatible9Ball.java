@@ -493,7 +493,7 @@ public class GDCompatible9Ball extends AutoSuperClass
 //                bot.launcher.launcherPIDF.resetPid();
 //            }
         }
-        bot.updateSpeedMeasure(getLaunchPosition());
+//        bot.updatePIDMeasures(getLaunchPosition());
         updateSteps();
     }
 

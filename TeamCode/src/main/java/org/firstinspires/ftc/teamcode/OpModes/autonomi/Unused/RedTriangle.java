@@ -195,7 +195,7 @@ public class RedTriangle extends AutoSuperClass {
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL) {
             bot.spinFlywheelToTunedSpeed(farShootPose.getAsVector());
         }
-        bot.updateSpeedMeasure(farShootPose.getAsVector());
+//        bot.updatePIDMeasures(farShootPose.getAsVector());
         updateSteps();
     }
 

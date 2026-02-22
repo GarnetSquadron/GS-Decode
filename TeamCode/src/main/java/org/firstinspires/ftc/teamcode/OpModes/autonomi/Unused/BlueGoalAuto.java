@@ -332,7 +332,7 @@ public class BlueGoalAuto extends AutoSuperClass
             bot.spinFlywheelToTunedSpeed(getLaunchPosition());
         }
 
-        bot.updateSpeedMeasure(getLaunchPosition());
+//        bot.updatePIDMeasures(getLaunchPosition());
         updateSteps();
     }
 

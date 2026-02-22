@@ -599,7 +599,7 @@ class FlyWheelTest extends OpMode{
         launcher.PIDF.Kd += gpad.getIncrement("a","y",0.00001);
         launcher.PIDF.Kv += gpad.getIncrement("b","x",0.001);
         target += gpad.getIncrement("left_bumper","right_bumper",10);
-        launcher.updateSpeedMeasurements(target);
+        launcher.updateTelemetry(target);
         if(gpad.getCurrentValue("right_trigger")||gpad.getCurrentValue("left_trigger")) {
             //launcher.launcherPIDF.setConstants(Kp, Kd,0, Ks,Kv,Ka);
             telemetry.addData("stabilized at target",launcher.spinFlyWheelWithinRange(target));

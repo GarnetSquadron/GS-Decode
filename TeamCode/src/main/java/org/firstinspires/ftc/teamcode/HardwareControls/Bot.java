@@ -71,7 +71,6 @@ public class Bot
     public LaunchHandler launchHandler;
     double[] targetGoalPos;
     public ServoController servoController;
-    public double targetSpeed = 0;
     SectTelemetryAdder telemetry;
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos){
         //Arrays.fill(currentPos,FieldDimensions.botTouchingRedGoal);
@@ -199,10 +198,6 @@ public class Bot
         currentTurretPosition = turret.turretRot.getEncoder().getPos();
         telemetry.addData("turret pos",currentTurretPosition);
     }
-    public void updateSpeedMeasure(Vector position){
-        double[] velBounds = getVelBounds(getDistance(position));
-        launcher.updateSpeedMeasurements(targetSpeed);
-    }
     public void aimTurret(Pose botPose){
         turret.aimTowardsGoal(targetGoalPos, new double[] {botPose.getX(), botPose.getY()},botPose.getHeading());
     }
@@ -293,15 +288,17 @@ public class Bot
             lights.leftLight.setColor(color);
         }
         public LaunchPhase update(){
-            targetSpeed = velMap.get(getDistance());//launcher.betweenVel(velBounds[0],velBounds[1]);
+            // so that we dont call this function more than we need
+            final double targetSpeed = velMap.get(getDistance());//launcher.betweenVel(velBounds[0],velBounds[1]);
             launcher.setAngle(Math.toRadians(angleMap.get(getDistance())));
+            launcher.updateTelemetry(targetSpeed);
 //            telemetry.addData("launchPhase",launchPhase);
 //            telemetry.addData("is pausing",pauseBetweenShots());
 
 
             boolean velInRange = false;
 //            lights.leftLight.setColor(!launcher.PIDF.hasStabilized()? Light.Color.Orange:Light.Color.Green);
-            lights.rightLight.setColor(launcher.PIDF.isStable()? Light.Color.Orange:Light.Color.Green);
+            lights.rightLight.setColor(launcher.PIDF.isStable()? Light.Color.Green:Light.Color.RED);
             displayBatteryInLeftLight();
 //            telemetry.addLine("start of loop");
             // basic idea is that the sequence will pause if the flywheel is not up to speed, and then attempt to get back up to speed

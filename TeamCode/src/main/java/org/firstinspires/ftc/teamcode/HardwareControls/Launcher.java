@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
 public class Launcher {
-    public LauncherPIDF PIDF = new LauncherPIDF(0.001,-0.002,0,0.05,0.002,0);
+    public LauncherPIDF PIDF = new LauncherPIDF(0.002,-0.002,0,0.05,0.002,0);
     VoltageSensor voltageSensor;
     SectTelemetryAdder telemetry = new SectTelemetryAdder("LAUNCHER");
     double maxCurrent = 0;
@@ -108,14 +108,12 @@ public class Launcher {
     public void resetPID(){
         PIDF.resetPID(motor1.getEncoder().getPos());
     }
-    public void updateSpeedMeasurements(double flyVel){
+    public void updateTelemetry(double flyVel){
         double currentVel = motor1.getEncoder().getVelocity();
-        PIDF.updateArrays(currentVel,flyVel);
         telemetry.addData("power", power);
         telemetry.addData("acceleration", PIDF.getAcceleration());
         telemetry.addData("has stabilized", PIDF.isStable());
         telemetry.addData("acceleration good", PIDF.lowAcceleration());
-        telemetry.addData("velocity good", PIDF.closeToTarget());
         telemetry.addData("velocity difference", PIDF.differences[0]);
         telemetry.addData("supposed velocity difference", currentVel-flyVel);
         telemetry.addData("target ratio", ratio);
@@ -123,20 +121,8 @@ public class Launcher {
         telemetry.addData("target speed",flyVel);
         telemetry.addData("actual speed",currentVel);
     }
-    public boolean spinFlyWheelWithinRange(double minVel,double maxVel){
-        //spin up the flywheel to get it within the provided range
-        //if its in the range return true otherwise
-
-        //pid code
-        double targetVel = getFlywheelSpeedFromBallSpeed(betweenVel(minVel,maxVel));
-        double currentVel = motor1.getEncoder().getVelocity();
-        double power = PIDF.getPidNewWay(currentVel,targetVel,motor1.getEncoder().getPos());
-
-        spinUpFlywheel(power);
-        //temporary flywheel code, just guesses the velocity.
-        //it doesn't exist anymore mb
-
-        return PIDF.isStable();
+    public void updatePID(double targetVel){
+        PIDF.updateArrays(motor1.getEncoder().getVelocity(),targetVel,motor1.getEncoder().getPos());
     }
     public boolean spinFlyWheelWithinRange(double flyVel){
         //spin up the flywheel to get it within the provided range
@@ -144,6 +130,7 @@ public class Launcher {
 
         //pid code
         double currentVel = motor1.getEncoder().getVelocity();
+        updatePID(flyVel);
         double power = PIDF.getPidNewWay(currentVel,flyVel,motor1.getEncoder().getPos());
 
         spinUpFlywheel(power);
@@ -163,9 +150,6 @@ public class Launcher {
 //
 //        return minVel < getExitVel() && getExitVel() < maxVel;
 //    }
-    public boolean spinFlyWheelWithinRange(double[] range){
-        return spinFlyWheelWithinRange(range[0],range[1]);
-    }
     public Encoder getFlywheelEncoder(){
         return motor1.getEncoder();
     }

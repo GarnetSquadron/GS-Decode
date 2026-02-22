@@ -506,7 +506,7 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
 //                bot.launcher.launcherPIDF.resetPid();
 //            }
         }
-        bot.updateSpeedMeasure(getLaunchPosition());
+//        bot.updatePIDMeasures(getLaunchPosition());
         updateSteps();
     }
 
