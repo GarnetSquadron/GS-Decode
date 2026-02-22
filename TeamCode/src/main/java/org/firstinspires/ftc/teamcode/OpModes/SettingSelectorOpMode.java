@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Telemetry.LoggerSectionedTelemetry;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
-import org.firstinspires.ftc.teamcode.Telemetry.SectionedTelemetry;
 
 import java.util.HashMap;
 
@@ -12,7 +12,7 @@ import kotlin.Pair;
 
 public abstract class SettingSelectorOpMode extends OpMode
 {
-    public SectionedTelemetry telemetry;
+    public LoggerSectionedTelemetry telemetry;
     private final Pair<String[],String>[] settingsMap;
     private final int[] selectorPositions;
     public final HashMap<String,String> selections;
@@ -29,7 +29,7 @@ public abstract class SettingSelectorOpMode extends OpMode
      * @param selections
      */
     public SettingSelectorOpMode(Pair<String[],String>[] settingsMap,HashMap<String,String> selections) {
-        this.telemetry = new SectionedTelemetry(super.telemetry);
+        this.telemetry = new LoggerSectionedTelemetry(super.telemetry);
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         this.settingsMap = settingsMap;
         selectorPositions = new int[settingsMap.length];

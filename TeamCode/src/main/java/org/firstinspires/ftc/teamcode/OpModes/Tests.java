@@ -30,7 +30,11 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.Telemetry.SectionedTelemetry;
 import org.firstinspires.ftc.teamcode.Telemetry.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
+import org.firstinspires.ftc.teamcode.logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 @Configurable
@@ -344,14 +348,12 @@ class TurretMathTest extends OpMode{
 }
 class HoodTest extends OpMode{
     Launcher launcher;
-    ColorSensor colorSensor;
     double distance = 48;
     double vel = 273;
     @Override
     public void init()
     {
         launcher = new Launcher(hardwareMap);
-        colorSensor = hardwareMap.get(ColorSensor.class,"sensor");
     }
 
     @Override
@@ -387,7 +389,6 @@ class HoodTest extends OpMode{
         telemetry.addData("t^2 solution #1", tSquared.length==0?-1:tSquared[0]);
         telemetry.addData("t^2 solution #2", tSquared.length<2?-1:tSquared[1]);
         telemetry.addData("length",angles.length);
-        telemetry.addData("color", colorSensor.argb());
         for(int i=0;i<angles.length;i++){
             telemetry.addData("angle "+String.valueOf(i),Math.toDegrees(angles[i]));
         }
