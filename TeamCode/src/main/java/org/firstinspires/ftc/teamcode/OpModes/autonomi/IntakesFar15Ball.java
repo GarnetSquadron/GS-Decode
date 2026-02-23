@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.autonomi;
 
 
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.GoToPressAndIntakeControlPoint;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeCloseShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeJustPressingGate;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeLEAVEShootPose;
@@ -51,6 +52,10 @@ public class IntakesFar15Ball extends AutoSuperClass
     PathChain goGetClose,collectCloseAndPressGate, collectMiddleAndPressGate, goGetHP;
     //    SectionedTelemetry telemetry;
     BetterControllerClass Gpad;
+    public Pose launchPose = closePreloadShootPose;
+    public void setLaunchPose(Pose pose){
+        launchPose = pose;
+    }
 
 
     public void initializePaths()
@@ -132,16 +137,16 @@ public class IntakesFar15Ball extends AutoSuperClass
                 correctBezierCurve(new BezierCurve(
                         intakingTargetPos2,
                         new Pose(92.154, 57.196),
-                        closeShootPose
+                        closeCloseShootPose
                 ))
         );
         ;
         pressGateAndIntake =getPathFromBezierCurve(
                 correctBezierCurve(
-                        new BezierCurve(
-                                closeShootPose,
-                                new Pose(70.688, 37.357),
-                                pressingAndIntakingGate
+                            new BezierCurve(
+                                    closeCloseShootPose,
+                                    GoToPressAndIntakeControlPoint,
+                                    pressingAndIntakingGate
                         )
                 )
         );
@@ -207,6 +212,7 @@ public class IntakesFar15Ball extends AutoSuperClass
                     follower.setMaxPower(1);
 //                    follower.setMaxPower(1);
                     follower.followPath(shootPreload, true);
+                    setLaunchPose(shootPreload.endPose());
                     nextStep();
                 },
                 () ->
@@ -226,6 +232,7 @@ public class IntakesFar15Ball extends AutoSuperClass
 //                    }
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
+                        setLaunchPose(shootClose.endPose());
                         follower.followPath(goGetClose, true);
                         bot.intake.setPower(1);
                         nextStep();
@@ -246,7 +253,7 @@ public class IntakesFar15Ball extends AutoSuperClass
                 },
                 () ->
                 {
-                    if(stepTimer.getElapsedTime()>300){
+                    if(stepTimer.getElapsedTime()>500){
                         bot.intake.setPower(0);
                     }else {
                         bot.intake.setPower(1);
@@ -267,6 +274,7 @@ public class IntakesFar15Ball extends AutoSuperClass
                 ()->{
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
+                        setLaunchPose(shootMiddle.endPose());
                         follower.followPath(collectMiddle, true);
                         nextStep();
                         bot.intake.setPower(1);
@@ -298,6 +306,7 @@ public class IntakesFar15Ball extends AutoSuperClass
                 () ->
                 {
                     if (bot.launchHandler.launchPhase==Bot.LaunchPhase.NULL){
+                        setLaunchPose(shootGateBalls.endPose());
                         bot.follower.followPath(pressGateAndIntake);
                         bot.intake.setPower(1);
                         nextStep();
@@ -337,6 +346,7 @@ public class IntakesFar15Ball extends AutoSuperClass
                 {
                     if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
                     {
+                        setLaunchPose(shootFar.endPose());
                         follower.followPath(collectFar, true);
                         nextStep();
                     }
@@ -410,20 +420,16 @@ public class IntakesFar15Ball extends AutoSuperClass
         stopTimer.StartTimer(30);
         //follower.followPath(ShootPreload);
         setCurrentStep(0);
-        bot.updateConstants(bot.getDistance(getLaunchPosition()));
         bot.launcher.resetPID();
-        bot.spinFlywheelToTunedSpeed(getLaunchPosition());
+//        bot.spinFlywheelToTunedSpeed(getLaunchVector());
 
 
-    }
-
-    public Vector getLaunchPosition()
-    {
-        return correctPose(closeShootPose).getAsVector();
     }
     public void autonomousPathUpdate()
     {
         bot.update();
+//        bot.updateConstants();
+
 //        if(currentStep == 1){
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
@@ -478,7 +484,7 @@ public class IntakesFar15Ball extends AutoSuperClass
 //        if(Gpad.getRisingEdge("a")){
 //            follower.setMaxPower(1);
 //        }
-        bot.aimTurret();
+        bot.aimTurret(launchPose);
 
 
 //        telemetry.a
