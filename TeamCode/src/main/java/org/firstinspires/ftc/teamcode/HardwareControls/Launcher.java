@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.TrajectoryMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.enums.AngleUnitV2;
 
 public class Launcher {
-    public LauncherPIDF PIDF = new LauncherPIDF(0.002,-0.002,0,0.05,0.002,0);
+    public LauncherPIDF PIDF = new LauncherPIDF(0.006/*0.002*/,-0.06/*-0.003*/,0,0.05,0.002,0);
     VoltageSensor voltageSensor;
     SectTelemetryAdder telemetry = new SectTelemetryAdder("LAUNCHER");
     double maxCurrent = 0;

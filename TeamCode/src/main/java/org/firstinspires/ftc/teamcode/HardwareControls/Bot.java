@@ -122,16 +122,16 @@ public class Bot
 //        putConstant(140+adjustment,274,55);//152
 //        putConstant(146+adjustment,274,55);//158
         //replacing most of them with the new ones
-        putConstant(54,255,55);
-        putConstant(60,255,55);
-        putConstant(66,260,52);
-        putConstant(72,285,49);
+        putConstant(54,240,55);
+        putConstant(60,240,55);
+        putConstant(66,240,52);
+        putConstant(72,270,49);
         putConstant(84,285,48);
         putConstant(90,290,50);
         putConstant(96,300,55);
-        putConstant(96,300,55);
-        putConstant(132,340,55);
-        putConstant(130,325,55);
+        putConstant(96,310,55);
+        putConstant(132,320,55);
+        putConstant(130,330,55);
 //        putConstant(138,340,55);
 //        putConstant(144,340,45);
 //        putConstant(150,350,43);
@@ -249,7 +249,7 @@ public class Bot
         }
 
         public boolean pauseBetweenShots(){
-            return getDistance()>120;
+            return false;//getDistance()>120;
         }
         public boolean isUpToSpeed(){
             return pauseBetweenShots()?launcher.PIDF.isStable():launcher.PIDF.isStable();

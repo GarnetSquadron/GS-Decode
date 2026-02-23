@@ -595,10 +595,10 @@ class FlyWheelTest extends OpMode{
 //            Kd -= 0.01;
 //        }
         gpad.update();
-        launcher.PIDF.Kp += gpad.getIncrement("dpad_up","dpad_down",0.001);
+        launcher.PIDF.Kp += gpad.getIncrement("dpad_up","dpad_down",0.0001);
         launcher.PIDF.Ki += gpad.getIncrement("dpad_right","dpad_left",0.00001);
-        launcher.PIDF.Kd += gpad.getIncrement("a","y",0.00001);
-        launcher.PIDF.Kv += gpad.getIncrement("b","x",0.001);
+        launcher.PIDF.Kd += gpad.getIncrement("a","y",0.001);
+        launcher.PIDF.Ks += gpad.getIncrement("b","x",0.001);
         target += gpad.getIncrement("left_bumper","right_bumper",10);
         launcher.updateTelemetry(target);
         if(gpad.getCurrentValue("right_trigger")||gpad.getCurrentValue("left_trigger")) {
