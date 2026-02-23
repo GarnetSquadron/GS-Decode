@@ -126,8 +126,8 @@ public class Bot
         putConstant(60,245,55);
         putConstant(66,250,55);
         putConstant(72,255,55);
-        putConstant(84,260,55);
-        putConstant(90,290,50);
+        putConstant(84,258,55);
+        putConstant(90,280,50);
         putConstant(96,300,55);
         putConstant(96,310,55);
         putConstant(132,320,55);
