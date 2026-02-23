@@ -30,7 +30,6 @@ public class MainTeleop extends SettingSelectorOpMode
     double driverAngle = 0;
     VoltageSensor voltageSensor;
     KickStand stand;
-    boolean adjustingConstants = false;
     Pose startingPose;
     double turretPos;
     public static Follower follower;
@@ -235,6 +234,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //I wanted to find a better way, but this seems like the best option for organizing the button inputs
         //==============================INPUTS====================================\\
         boolean intakeToggle = Gpad.getCurrentValue(intakeButtonName);
+        boolean idleFlywheelInput = Gpad.getToggleValue("b");
         boolean initSpinUpFlywheelInput = Gpad.getRisingEdge(launchButtonName);
         boolean spinUpFlywheelInput = Gpad.getCurrentValue(launchButtonName);
         boolean releaseTheBallsInput = Gpad.getFallingEdge(launchButtonName);
@@ -253,8 +253,6 @@ public class MainTeleop extends SettingSelectorOpMode
         bot.velMap.increment(bot.getDistance(),Gpad.getIncrement("dpad_up","dpad_down",1));
         bot.angleMap.increment(bot.getDistance(),Gpad.getIncrement("dpad_right","dpad_left",1));
 
-        adjustingConstants = Gpad.getToggleValue("b");
-        if(Gpad.getRisingEdge("x")&&adjustingConstants){bot.oldPutConstant(bot.getDistance(),bot.launcher.flywheelToBallSpeedRatio,TrajectoryMath.ratio,bot.launcher.ratio);}
 
         //servoPos = gamepad1.left_trigger*20+30;
 
@@ -268,12 +266,17 @@ public class MainTeleop extends SettingSelectorOpMode
             }
             if (spinUpFlywheelInput)
             {
-                bot.idleFlywheel();
+                bot.spinFlywheelToTunedSpeed();
             }else if (releaseTheBallsInput)
             {
                 bot.launchHandler.initLaunch();
             }else{
-                bot.launcher.updatePID(0);
+                if(idleFlywheelInput){
+                    bot.idleFlywheel();
+                }else{
+                    bot.launcher.updatePID(0);
+                    bot.launcher.setPower(0);
+                }
             }
         }
         else {

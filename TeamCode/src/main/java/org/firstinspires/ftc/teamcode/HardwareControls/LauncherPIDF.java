@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.StopWatch;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LauncherPIDF
@@ -16,9 +17,9 @@ public class LauncherPIDF
     public double[] times = new double[sampleSize];
     public double[] derivatives =new double[5];
     public double Kp,Kd,Ki,Ks,Kv,Ka;
-    public double p =0,d,i=0,f;
+    public double p = 0,d,i = 0,f;
     public double pidForce = 0;
-    public double margin = 5;
+    public double margin = 10;
     public double startPosition;
     public double displacement;
 //    public double startVelocity;
@@ -63,8 +64,11 @@ public class LauncherPIDF
 //        }
         telemetry.addData("time",stopWatch.getElapsedTime());
         telemetry.addData("position-startpos",position-startPosition);
+        telemetry.addData("displacement",displacement);
         telemetry.addData("p",p);
         telemetry.addData("d",d);
+        telemetry.addData("i",i);
+        telemetry.addData("f",f);
         telemetry.addData("PID Force",pidForce);
         telemetry.addData("F Force",f);
         telemetry.addData("Net Force",f+pidForce);
@@ -77,13 +81,32 @@ public class LauncherPIDF
         return ExtraMath.closeTo0(getAcceleration(),20);
     }
     public boolean isStable(){
+        ArrayList<Double> speeds = new ArrayList<>();
         int outlierCount = 0;
         for(int i = 0;i<sampleSize;i++){
-            if(!ExtraMath.closeTo0(differences[i],margin)){
-                outlierCount++;
+            if(!speeds.contains(differences[i])){
+                speeds.add(differences[i]);
+                if(!ExtraMath.closeTo0(differences[i],margin)){
+                    outlierCount++;
+                }
             }
         }
-        return outlierCount<5;
+        telemetry.addData("distinct speeds",speeds.toString());
+        return outlierCount<2;
+    }
+    public boolean isKindaStable(){
+        ArrayList<Double> speeds = new ArrayList<>();
+        int outlierCount = 0;
+        for(int i = 0;i<sampleSize;i++){
+            if(!speeds.contains(differences[i])){
+                speeds.add(differences[i]);
+                if(!ExtraMath.closeTo0(differences[i],20)){
+                    outlierCount++;
+                }
+            }
+        }
+        telemetry.addData("distinct speeds",speeds.toString());
+        return outlierCount<2;
     }
     public double getFeedForward(double targetVel){
         return Ks *Math.signum(targetVel)+Kv *targetVel;

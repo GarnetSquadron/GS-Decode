@@ -392,15 +392,15 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
                         bot.launchHandler.initLaunch();
                         nextStep();
                     }
-                },
-                () ->
-                {
-                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
-                    {
-                        follower.followPath(LEAVE, true);
-                        nextStep();
-                    }
                 }
+//                () ->
+//                {
+//                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
+//                    {
+//                        follower.followPath(LEAVE, true);
+//                        nextStep();
+//                    }
+//                }
 //                () ->
 //                {
 //                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
