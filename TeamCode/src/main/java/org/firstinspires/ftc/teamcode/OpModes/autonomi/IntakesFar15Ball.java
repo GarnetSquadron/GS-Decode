@@ -227,25 +227,30 @@ public class IntakesFar15Ball extends AutoSuperClass
                     if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
                     {
                         follower.followPath(goGetClose, true);
+                        bot.intake.setPower(1);
                         nextStep();
                     }
                 },
                 () ->
                 {
-                    if(bot.follower.getChainIndex()==1){
-                        bot.intake.setPower(1);
-                    }else{
-                        bot.intake.setPower(0);
-                    }
+//                    if(bot.follower.getChainIndex()==1){
+//                        bot.intake.setPower(1);
+//                    }else{
+//                        bot.intake.setPower(0);
+//                    }
                     if ((!follower.isBusy())&& incrementingStep())
                     {
-                        bot.intake.setPower(0);
                         follower.followPath(shootClose, true);
                         nextStep();
                     }
                 },
                 () ->
                 {
+                    if(stepTimer.getElapsedTime()>300){
+                        bot.intake.setPower(0);
+                    }else {
+                        bot.intake.setPower(1);
+                    }
                     if ((!follower.isBusy())&& incrementingStep())
                     {
                         bot.launchHandler.initLaunch();
