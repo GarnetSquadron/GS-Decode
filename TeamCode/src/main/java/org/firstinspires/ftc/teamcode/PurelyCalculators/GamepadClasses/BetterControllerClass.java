@@ -37,7 +37,7 @@ public class BetterControllerClass
         try
         {
             boolean buttonPressed = buttonName.contains("trigger")?
-                    ((Float) Gamepad.class.getField(buttonName).get(gamepad))==1:
+                    ((Float) Gamepad.class.getField(buttonName).get(gamepad))>0.8:
                     (Boolean) Gamepad.class.getField(buttonName).get(gamepad);
             boolean valChanged = prevValue^buttonPressed;
             prevValues.put(buttonName,buttonPressed);

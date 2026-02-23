@@ -17,6 +17,7 @@ import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.middleP
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.BezierPoint;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.pedropathing.paths.Path;
@@ -499,7 +500,8 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
         {
-            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
+//            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
+            bot.idleFlywheel();
 //            bot.launcher.setPower(-bot.launcher.PIDF.getFeedForward(300));
             //if almost spun up and still accelerating(basically a temporary bandaid solution to make the pid stabilize faster.)
 //            if(ExtraMath.closeTo0(bot.launcher.getFlywheelEncoder().getVelocity()-240,10)&&!bot.launcher.launcherPIDF.lowAcceleration()){
