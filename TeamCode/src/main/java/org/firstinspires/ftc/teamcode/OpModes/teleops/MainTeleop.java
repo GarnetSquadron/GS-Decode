@@ -271,7 +271,7 @@ public class MainTeleop extends SettingSelectorOpMode
             {
                 bot.launchHandler.initLaunch();
             }else{
-                if(idleFlywheelInput){
+                if(!idleFlywheelInput){
                     bot.idleFlywheel();
                 }else{
                     bot.launcher.updatePID(0);
