@@ -374,7 +374,7 @@ public class Bot
                     powerIntake();
                     launcher.spinFlyWheelWithinRange(targetSpeed);
 //                    telemetry.addLine("releasing balls!");
-                    if(getElapsedTime() > 0.4){
+                    if(getElapsedTime() > 0.5){
                         launchPhase = LaunchPhase.KICKING_SERVO;
                         phaseStartTime = TIME.getTime();
                     }

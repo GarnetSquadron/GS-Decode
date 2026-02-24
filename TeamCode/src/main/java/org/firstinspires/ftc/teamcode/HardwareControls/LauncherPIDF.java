@@ -94,20 +94,6 @@ public class LauncherPIDF
         telemetry.addData("distinct speeds",speeds.toString());
         return outlierCount<2;
     }
-    public boolean isKindaStable(){
-        ArrayList<Double> speeds = new ArrayList<>();
-        int outlierCount = 0;
-        for(int i = 0;i<sampleSize;i++){
-            if(!speeds.contains(differences[i])){
-                speeds.add(differences[i]);
-                if(!ExtraMath.closeTo0(differences[i],20)){
-                    outlierCount++;
-                }
-            }
-        }
-        telemetry.addData("distinct speeds",speeds.toString());
-        return outlierCount<2;
-    }
     public double getFeedForward(double targetVel){
         return Ks *Math.signum(targetVel)+Kv *targetVel;
     }
