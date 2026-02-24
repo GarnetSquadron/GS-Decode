@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Ball15;
 
 
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.GoToPressAndIntakeControlPoint;
@@ -12,27 +12,27 @@ import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.getGoal
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos3;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.pressingAndIntakingGate;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
 
-@Autonomous(name = "\uD83D\uDE2E possibly illegal 15 ball that intakes far \uD83D\uDE2E")
-public class IntakesFar15Ball extends AutoSuperClass
+@Autonomous(name = "\uD83D\uDE2E possibly illegal 15 ball with 2 gate intakes \uD83D\uDE2E")
+public class CloseMiddleFarGate extends AutoSuperClass
 {
     //    public SideSwitchingDefinitelyLegal15Ball(){
 //        super(new Pair[]{colorSelections,new Pair(new String[]{""},"in")});
@@ -160,32 +160,11 @@ public class IntakesFar15Ball extends AutoSuperClass
                 ));
         shootGateBallsLEAVE = getPathFromBezierCurve(
                 correctBezierLine(
-                        new BezierLine(
-                                pressingAndIntakingGate,
-                                closeLEAVEShootPose
-                        )
-                ));
-        collectFar = getPathFromBezierCurve(
-                correctBezierCurve(new BezierCurve(
-                        closeShootPose,
-
-                        new Pose(75.3,33.97),
-
-
-                        intakingTargetPos3
-                ))
-        );
-//        collectFar.setLinearHeadingInterpolation(intakingTargetPos3.getHeading()-Math.PI/5,0);
-
-        shootFar = getPathFromBezierCurve(
-                correctBezierLine(new BezierLine(
-                        intakingTargetPos3,
-
+                new BezierLine(
+                        pressingAndIntakingGate,
                         closeLEAVEShootPose
-                ))
-        );
-
-//        LEAVE = getPathFromBezierCurv
+                )
+        ));
 
     }
 
@@ -344,19 +323,23 @@ public class IntakesFar15Ball extends AutoSuperClass
                 },
                 () ->
                 {
-                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
-                    {
-                        setLaunchPose(shootFar.endPose());
-                        follower.followPath(collectFar, true);
+                    if (bot.launchHandler.launchPhase==Bot.LaunchPhase.NULL){
+                        setLaunchPose(shootGateBallsLEAVE.endPose());
+                        bot.follower.followPath(pressGateAndIntake);
+                        bot.intake.setPower(1);
                         nextStep();
                     }
                 },
                 () ->
                 {
-                    bot.intake.setPower(1);
-                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
-                    {
-                        follower.followPath(shootFar, true);
+                    if (!bot.follower.isBusy()){
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+                    if (stepTimer.getElapsedTime()>1500){
+                        follower.followPath(shootGateBallsLEAVE);
                         nextStep();
                     }
                 },
@@ -428,8 +411,6 @@ public class IntakesFar15Ball extends AutoSuperClass
     public void autonomousPathUpdate()
     {
         bot.update();
-//        bot.updateConstants();
-
 //        if(currentStep == 1){
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
