@@ -15,9 +15,9 @@ public class AutoPoints
     public static Pose farShootPose =  new Pose(84, farLaunchY,Math.PI);
     public static Pose closeShootPose = new Pose(90.000, closeLaunchY, -Math.PI/5);
     public static Pose closePreloadShootPose = new Pose(100.000, 90, -Math.PI/5);
-    public static Pose closeCloseShootPose = new Pose(100.000, 80, -Math.PI/5);
+    public static Pose closeCloseShootPose = new Pose(90.000, 80, -Math.PI/5);
 //    public static Pose closeReadyToIntakeCloseShootPose = new Pose(90.000, 90, -Math.PI/5);
-    public static Pose closeAvoidningCloseShootPose = new Pose(90.000, 80, -Math.PI/6);
+    public static Pose closeAvoidningCloseShootPose = new Pose(90.000, 80, -Math.PI/7);
     public static Pose closeLEAVEShootPose = new Pose(90,107,-2*Math.PI/5);
     public static double intakiningPrepX = 101;
     public static Pose intakingPrepPos1 = new Pose(intakiningPrepX, 84);

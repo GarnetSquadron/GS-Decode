@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Ball15;
 
 
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.GoToPressAndIntakeControlPoint;
-//import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeAvoidningCloseShootPose;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeAvoidningCloseShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeCloseShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeJustPressingGate;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeLEAVEShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closePreloadShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closePressPrep;
-//import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeReadyToIntakeCloseShootPose;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.getGoalStart;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos3;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.pressingAndIntakingGate;
 
 import com.pedropathing.follower.Follower;
@@ -26,13 +25,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
 
-@Autonomous(name = "\uD83D\uDE2E middle -> gate -> gate -> close \uD83D\uDE2E")
-public class MiddleGateGateClose extends AutoSuperClass
+@Autonomous(name = "\uD83D\uDE2E possibly illegal 15 ball that intakes far \uD83D\uDE2E")
+public class CloseMiddleGateGate extends AutoSuperClass
 {
     //    public SideSwitchingDefinitelyLegal15Ball(){
 //        super(new Pair[]{colorSelections,new Pair(new String[]{""},"in")});
@@ -47,7 +48,7 @@ public class MiddleGateGateClose extends AutoSuperClass
 //    Pose shootPose4 = closeShootPose.setHeading(-Math.PI/5);
 
 
-    Path shootPreload, prepCloseIntake,collectClose,intakeCloseAndOpenGate, closePrepGate, closeOpenGate, shootClose, collectMiddle, shootMiddle, collectFar, shootFar,pressGateAndIntake, shootGateBalls, shootGateBallsClose;
+    Path shootPreload, prepCloseIntake,collectClose,intakeCloseAndOpenGate, closePrepGate, closeOpenGate, shootClose, collectMiddle, shootMiddle, collectFar, shootFar,pressGateAndIntake, shootGateBalls,shootGateBallsLEAVE;
 
     PathChain goGetClose,collectCloseAndPressGate, collectMiddleAndPressGate, goGetHP;
     //    SectionedTelemetry telemetry;
@@ -64,57 +65,16 @@ public class MiddleGateGateClose extends AutoSuperClass
         shootPreload = getPathFromBezierCurve(
                 correctBezierLine(new BezierLine(
                         getGoalStart(blueSide()),
-                        closeAvoidningCloseShootPose
+                        closePreloadShootPose
                 ))
         );
 //        shootPreload.setBrakingStrength(0.5);
-//        shootClose.setLinearHeadingInterpolation(intakingTargetPos1.getHeading(),intakingTargetPos1.getHeading()-Math.PI/5);
 
-        collectMiddle = getPathFromBezierCurve(
-                correctBezierCurve(new BezierCurve(
-                        closeAvoidningCloseShootPose,
-                        new Pose(92.154, 57.196),
-                        intakingTargetPos2
-                ))
-        );
-
-        shootMiddle = getPathFromBezierCurve(
-                correctBezierCurve(new BezierCurve(
-                        intakingTargetPos2,
-                        new Pose(92.154, 57.196),
-                        closeAvoidningCloseShootPose
-                ))
-        );
-        ;
-        pressGateAndIntake =getPathFromBezierCurve(
-                correctBezierCurve(
-                        new BezierCurve(
-                                closeAvoidningCloseShootPose,
-                                GoToPressAndIntakeControlPoint,
-                                pressingAndIntakingGate
-                        )
-                )
-        );
-
-        shootGateBalls = getPathFromBezierCurve(
-                correctBezierLine(
-                        new BezierLine(
-                                pressingAndIntakingGate,
-                                closeAvoidningCloseShootPose
-                        )
-                ));
-        shootGateBallsClose = getPathFromBezierCurve(
-                correctBezierLine(
-                        new BezierLine(
-                                pressingAndIntakingGate,
-                                closeAvoidningCloseShootPose
-                        )
-                ));
 
         prepCloseIntake = getPathFromBezierCurve(
                 correctBezierLine(new BezierLine(
-                        closeCloseShootPose,
-                        closeAvoidningCloseShootPose
+                        closePreloadShootPose,
+                        intakingPrepPos1
                 ))
         );
 
@@ -161,9 +121,72 @@ public class MiddleGateGateClose extends AutoSuperClass
         shootClose = getPathFromBezierCurve(
                 correctBezierLine(new BezierLine(
                         intakingTargetPos1,
+                        closeCloseShootPose
+                ))
+        );
+//        shootClose.setLinearHeadingInterpolation(intakingTargetPos1.getHeading(),intakingTargetPos1.getHeading()-Math.PI/5);
+
+        collectMiddle = getPathFromBezierCurve(
+                correctBezierCurve(new BezierCurve(
+                        closeCloseShootPose,
+                        new Pose(92.154, 57.196),
+                        intakingTargetPos2
+                ))
+        );
+
+        shootMiddle = getPathFromBezierCurve(
+                correctBezierCurve(new BezierCurve(
+                        intakingTargetPos2,
+                        new Pose(92.154, 57.196),
+                        closeCloseShootPose
+                ))
+        );
+        ;
+        pressGateAndIntake =getPathFromBezierCurve(
+                correctBezierCurve(
+                            new BezierCurve(
+                                    closeCloseShootPose,
+                                    GoToPressAndIntakeControlPoint,
+                                    pressingAndIntakingGate
+                        )
+                )
+        );
+
+        shootGateBalls = getPathFromBezierCurve(
+                correctBezierLine(
+                        new BezierLine(
+                                pressingAndIntakingGate,
+                                closeShootPose
+                        )
+                ));
+        shootGateBallsLEAVE = getPathFromBezierCurve(
+                correctBezierLine(
+                        new BezierLine(
+                                pressingAndIntakingGate,
+                                closeLEAVEShootPose
+                        )
+                ));
+        collectFar = getPathFromBezierCurve(
+                correctBezierCurve(new BezierCurve(
+                        closeShootPose,
+
+                        new Pose(75.3,33.97),
+
+
+                        intakingTargetPos3
+                ))
+        );
+//        collectFar.setLinearHeadingInterpolation(intakingTargetPos3.getHeading()-Math.PI/5,0);
+
+        shootFar = getPathFromBezierCurve(
+                correctBezierLine(new BezierLine(
+                        intakingTargetPos3,
+
                         closeLEAVEShootPose
                 ))
         );
+
+//        LEAVE = getPathFromBezierCurv
 
     }
 
@@ -200,6 +223,46 @@ public class MiddleGateGateClose extends AutoSuperClass
                         //follower.setMaxPower(1);
 //                        bot.launcher.resetPID();
                         bot.launchHandler.initLaunch();
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+//                    if(){
+//
+//                    }
+                    if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
+                    {
+                        setLaunchPose(shootClose.endPose());
+                        follower.followPath(goGetClose, true);
+                        bot.intake.setPower(1);
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+//                    if(bot.follower.getChainIndex()==1){
+//                        bot.intake.setPower(1);
+//                    }else{
+//                        bot.intake.setPower(0);
+//                    }
+                    if ((!follower.isBusy())&& incrementingStep())
+                    {
+                        follower.followPath(shootClose, true);
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+                    if(stepTimer.getElapsedTime()>500){
+                        bot.intake.setPower(0);
+                    }else {
+                        bot.intake.setPower(1);
+                    }
+                    if ((!follower.isBusy())&& incrementingStep())
+                    {
+                        bot.launchHandler.initLaunch();
+
                         nextStep();
                     }
                 },
@@ -282,23 +345,19 @@ public class MiddleGateGateClose extends AutoSuperClass
                 },
                 () ->
                 {
-                    if (bot.launchHandler.launchPhase==Bot.LaunchPhase.NULL){
-                        setLaunchPose(shootGateBallsClose.endPose());
-                        bot.follower.followPath(pressGateAndIntake);
-                        bot.intake.setPower(1);
+                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
+                    {
+                        setLaunchPose(shootFar.endPose());
+                        follower.followPath(collectFar, true);
                         nextStep();
                     }
                 },
                 () ->
                 {
-                    if (!bot.follower.isBusy()){
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-                    if (stepTimer.getElapsedTime()>1500){
-                        follower.followPath(shootGateBallsClose);
+                    bot.intake.setPower(1);
+                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
+                    {
+                        follower.followPath(shootFar, true);
                         nextStep();
                     }
                 },
@@ -316,41 +375,6 @@ public class MiddleGateGateClose extends AutoSuperClass
                     if ((!follower.isBusy())&& incrementingStep())
                     {
                         bot.launchHandler.initLaunch();
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-        //                    if(){
-        //
-        //                    }
-                    if ((bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL)&& incrementingStep())
-                    {
-                        setLaunchPose(shootClose.endPose());
-                        follower.followPath(goGetClose, true);
-                        bot.intake.setPower(1);
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-                    if ((!follower.isBusy())&& incrementingStep())
-                    {
-                        follower.followPath(shootClose, true);
-                        nextStep();
-                    }
-                },
-                () ->
-                {
-                    if(stepTimer.getElapsedTime()>500){
-                        bot.intake.setPower(0);
-                    }else {
-                        bot.intake.setPower(1);
-                    }
-                    if ((!follower.isBusy())&& incrementingStep())
-                    {
-                        bot.launchHandler.initLaunch();
-
                         nextStep();
                     }
                 }
@@ -405,6 +429,8 @@ public class MiddleGateGateClose extends AutoSuperClass
     public void autonomousPathUpdate()
     {
         bot.update();
+//        bot.updateConstants();
+
 //        if(currentStep == 1){
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)

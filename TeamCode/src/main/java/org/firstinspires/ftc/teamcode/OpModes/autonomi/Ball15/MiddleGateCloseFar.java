@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.autonomi;
+package org.firstinspires.ftc.teamcode.OpModes.autonomi.Ball15;
 
 
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.GoToPressAndIntakeControlPoint;
@@ -10,13 +10,13 @@ import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeLE
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closePreloadShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closePressPrep;
 //import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeReadyToIntakeCloseShootPose;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.getGoalStart;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos3;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos3;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetX;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.pressingAndIntakingGate;
 
 import com.pedropathing.follower.Follower;
@@ -29,6 +29,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints;
+import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
@@ -53,6 +55,8 @@ public class MiddleGateCloseFar extends AutoSuperClass
     Path shootPreload, prepCloseIntake,collectClose,intakeCloseAndOpenGate, closePrepGate, closeOpenGate, shootClose, collectMiddle, shootMiddle, prepFar, collectFar, shootFar,pressGateAndIntake, shootGateBalls, shootGateBallsClose;
 
     PathChain goGetClose,collectCloseAndPressGate, collectMiddleAndPressGate, goGetHP, goGetFar;
+    Pose intakingTargetPos3 = new Pose(intakingTargetX-5, 34.8);
+
     //    SectionedTelemetry telemetry;
     BetterControllerClass Gpad;
     public Pose launchPose = closePreloadShootPose;
@@ -192,7 +196,7 @@ public class MiddleGateCloseFar extends AutoSuperClass
                 correctBezierLine(new BezierLine(
                         intakingTargetPos3,
 
-                        closeLEAVEShootPose
+                        closeCloseShootPose
                 ))
         );
 
