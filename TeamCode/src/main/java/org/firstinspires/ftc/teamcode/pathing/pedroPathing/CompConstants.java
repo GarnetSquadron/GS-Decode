@@ -19,7 +19,7 @@ public class CompConstants
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0, 0))
-            .headingPIDFCoefficients(new PIDFCoefficients(5, 0, 0.1, 0))
+            .headingPIDFCoefficients(new PIDFCoefficients(4, 0, 0.1, 0))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0))
             .mass(13.245)//29.2lb = 735 moles (of water) = 58.4 moles(Eastern) = 13.245kg
             .forwardZeroPowerAcceleration(-59.8)

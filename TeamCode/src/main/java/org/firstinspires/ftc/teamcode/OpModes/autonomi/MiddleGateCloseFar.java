@@ -52,7 +52,7 @@ public class MiddleGateCloseFar extends AutoSuperClass
 
     Path shootPreload, prepCloseIntake,collectClose,intakeCloseAndOpenGate, closePrepGate, closeOpenGate, shootClose, collectMiddle, shootMiddle, prepFar, collectFar, shootFar,pressGateAndIntake, shootGateBalls, shootGateBallsClose;
 
-    PathChain goGetClose,collectCloseAndPressGate, collectMiddleAndPressGate, goGetHP;
+    PathChain goGetClose,collectCloseAndPressGate, collectMiddleAndPressGate, goGetHP, goGetFar;
     //    SectionedTelemetry telemetry;
     BetterControllerClass Gpad;
     public Pose launchPose = closePreloadShootPose;
@@ -102,21 +102,22 @@ public class MiddleGateCloseFar extends AutoSuperClass
                 correctBezierLine(
                         new BezierLine(
                                 pressingAndIntakingGate,
+//                                new Pose(90,60),
                                 closeAvoidningCloseShootPose
                         )
                 ));
-        shootGateBallsClose = getPathFromBezierCurve(
-                correctBezierLine(
-                        new BezierLine(
-                                pressingAndIntakingGate,
-                                closeAvoidningCloseShootPose
-                        )
-                ));
+//        shootGateBallsClose = getPathFromBezierCurve(
+//                correctBezierLine(
+//                        new BezierLine(
+//                                pressingAndIntakingGate,
+//                                closeCloseShootPose
+//                        )
+//                ));
 
         prepCloseIntake = getPathFromBezierCurve(
                 correctBezierLine(new BezierLine(
-                        closeCloseShootPose,
-                        closeAvoidningCloseShootPose
+                        closeAvoidningCloseShootPose,
+                        intakingPrepPos1
                 ))
         );
 
@@ -180,6 +181,10 @@ public class MiddleGateCloseFar extends AutoSuperClass
 
                         intakingTargetPos3
                 ))
+        );
+        goGetFar = new PathChain(
+                prepFar,
+                collectFar
         );
 //        collectFar.setLinearHeadingInterpolation(intakingTargetPos3.getHeading()-Math.PI/5,0);
 
@@ -353,7 +358,7 @@ public class MiddleGateCloseFar extends AutoSuperClass
                     if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
                     {
                         setLaunchPose(shootFar.endPose());
-                        follower.followPath(collectFar, true);
+                        follower.followPath(goGetFar, true);
                         nextStep();
                     }
                 },
@@ -386,7 +391,7 @@ public class MiddleGateCloseFar extends AutoSuperClass
         );
     }
     public boolean incrementingStep(){
-        return !gamepad1.b;
+        return true/*!gamepad1.b*/;
     }
 
 
@@ -434,12 +439,15 @@ public class MiddleGateCloseFar extends AutoSuperClass
     public void autonomousPathUpdate()
     {
         bot.update();
+        bot.aimTurret(launchPose);
 //        if(currentStep == 1){
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
         {
 //            bot.spinFlywheelToTunedSpeed(getLaunchPosition());
+//            bot.spinFlywheelToTunedSpeed(launchPose.getAsVector());
             bot.idleFlywheel();
+
 //            bot.launcher.setPower(-bot.launcher.PIDF.getFeedForward(300));
             //if almost spun up and still accelerating(basically a temporary bandaid solution to make the pid stabilize faster.)
 //            if(ExtraMath.closeTo0(bot.launcher.getFlywheelEncoder().getVelocity()-240,10)&&!bot.launcher.launcherPIDF.lowAcceleration()){
@@ -464,35 +472,37 @@ public class MiddleGateCloseFar extends AutoSuperClass
 //            bot.updateCurrentPos();
 //        }else{
         autonomousPathUpdate();
-        if(bot.launcher.PIDF.isStable()&&!prevStabilized){
-            spunUpTime = TIME.getTime();
-        }
-//        telemetry.addData("max power scale",follower.getMaxPowerScaling());
-//        try {
-//            telemetry.addData("vector ", follower.getDriveVector());
-//        }catch (Exception ignored){
-//            telemetry.addLine("unable to get vector");
+//        if(bot.launcher.PIDF.isStable()&&!prevStabilized){
+//            spunUpTime = TIME.getTime();
 //        }
-//        telemetry.addData("spinup time",spunUpTime-startTime);
-//        telemetry.addArray("times",times);
-        telemetry.addData("current position",bot.currentPos);
-        prevStabilized = bot.launcher.PIDF.isStable();
+////        telemetry.addData("max power scale",follower.getMaxPowerScaling());
+////        try {
+////            telemetry.addData("vector ", follower.getDriveVector());
+////        }catch (Exception ignored){
+////            telemetry.addLine("unable to get vector");
+////        }
+////        telemetry.addData("spinup time",spunUpTime-startTime);
+////        telemetry.addArray("times",times);
+//        telemetry.addData("current position",bot.currentPos);
+//        prevStabilized = bot.launcher.PIDF.isStable();
+//        telemetry.addData("step", currentStep);
+//        telemetry.addData("x", follower.getPose().getX());
+//        telemetry.addData("y", follower.getPose().getY());
+//        telemetry.addData("heading", follower.getPose().getHeading());
+//        telemetry.addData("side",selections.get("color"));
+//        telemetry.addData("path start pose",shootPreload.getPose(0));
+//        telemetry.addData("pose",follower.getPose());
+        telemetry.addData("phase",bot.launchHandler.launchPhase);
         telemetry.addData("step", currentStep);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.addData("side",selections.get("color"));
-        telemetry.addData("path start pose",shootPreload.getPose(0));
-        telemetry.addData("pose",follower.getPose());
+        telemetry.addData("pose", follower.getPose());
 //        }
 //        if(Gpad.getRisingEdge("a")){
 //            follower.setMaxPower(1);
 //        }
-        bot.aimTurret(launchPose);
 
 
 //        telemetry.a
-//        telemetry.updateSection();
+        telemetry.updateSection();
 //        telemetry.updateSection("BOT");
         telemetry.updateSection("LAUNCHER");
         telemetry.updateSection("PIDF");
