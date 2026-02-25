@@ -14,7 +14,7 @@ import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.getGoal
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.pressingAndIntakingGate;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingGate;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -93,7 +93,7 @@ public class MiddleGateGateClose extends AutoSuperClass
                         new BezierCurve(
                                 closeAvoidningCloseShootPose,
                                 GoToPressAndIntakeControlPoint,
-                                pressingAndIntakingGate
+                                intakingGate
                         )
                 )
         );
@@ -101,14 +101,14 @@ public class MiddleGateGateClose extends AutoSuperClass
         shootGateBalls = getPathFromBezierCurve(
                 correctBezierLine(
                         new BezierLine(
-                                pressingAndIntakingGate,
+                                intakingGate,
                                 closeAvoidningCloseShootPose
                         )
                 ));
         shootGateBallsClose = getPathFromBezierCurve(
                 correctBezierLine(
                         new BezierLine(
-                                pressingAndIntakingGate,
+                                intakingGate,
                                 closeAvoidningCloseShootPose
                         )
                 ));
