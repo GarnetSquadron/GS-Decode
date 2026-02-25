@@ -12,8 +12,7 @@ import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.getGoal
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos3;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.pressingAndIntakingGate;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingGate;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -32,7 +31,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
 
 
-@Autonomous(name = "\uD83D\uDE2E possibly illegal 15 ball that intakes far \uD83D\uDE2E")
+@Autonomous(name = "\uD83D\uDE2E possibly illegal 15 ball with 2 gate intakes \uD83D\uDE2E")
 public class CloseMiddleGateGate extends AutoSuperClass
 {
     //    public SideSwitchingDefinitelyLegal15Ball(){
@@ -147,7 +146,7 @@ public class CloseMiddleGateGate extends AutoSuperClass
                             new BezierCurve(
                                     closeCloseShootPose,
                                     GoToPressAndIntakeControlPoint,
-                                    pressingAndIntakingGate
+                                    intakingGate
                         )
                 )
         );
@@ -155,38 +154,17 @@ public class CloseMiddleGateGate extends AutoSuperClass
         shootGateBalls = getPathFromBezierCurve(
                 correctBezierLine(
                         new BezierLine(
-                                pressingAndIntakingGate,
+                                intakingGate,
                                 closeShootPose
                         )
                 ));
         shootGateBallsLEAVE = getPathFromBezierCurve(
                 correctBezierLine(
-                        new BezierLine(
-                                pressingAndIntakingGate,
-                                closeLEAVEShootPose
-                        )
-                ));
-        collectFar = getPathFromBezierCurve(
-                correctBezierCurve(new BezierCurve(
-                        closeShootPose,
-
-                        new Pose(75.3,33.97),
-
-
-                        intakingTargetPos3
-                ))
-        );
-//        collectFar.setLinearHeadingInterpolation(intakingTargetPos3.getHeading()-Math.PI/5,0);
-
-        shootFar = getPathFromBezierCurve(
-                correctBezierLine(new BezierLine(
-                        intakingTargetPos3,
-
+                new BezierLine(
+                        intakingGate,
                         closeLEAVEShootPose
-                ))
-        );
-
-//        LEAVE = getPathFromBezierCurv
+                )
+        ));
 
     }
 
@@ -345,19 +323,23 @@ public class CloseMiddleGateGate extends AutoSuperClass
                 },
                 () ->
                 {
-                    if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
-                    {
-                        setLaunchPose(shootFar.endPose());
-                        follower.followPath(collectFar, true);
+                    if (bot.launchHandler.launchPhase==Bot.LaunchPhase.NULL){
+                        setLaunchPose(shootGateBallsLEAVE.endPose());
+                        bot.follower.followPath(pressGateAndIntake);
+                        bot.intake.setPower(1);
                         nextStep();
                     }
                 },
                 () ->
                 {
-                    bot.intake.setPower(1);
-                    if ((!follower.isBusy())&& incrementingStep()/*&&pathTimer.getElapsedTime()<4000*/)
-                    {
-                        follower.followPath(shootFar, true);
+                    if (!bot.follower.isBusy()){
+                        nextStep();
+                    }
+                },
+                () ->
+                {
+                    if (stepTimer.getElapsedTime()>1500){
+                        follower.followPath(shootGateBallsLEAVE);
                         nextStep();
                     }
                 },
@@ -429,8 +411,6 @@ public class CloseMiddleGateGate extends AutoSuperClass
     public void autonomousPathUpdate()
     {
         bot.update();
-//        bot.updateConstants();
-
 //        if(currentStep == 1){
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)

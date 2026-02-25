@@ -26,7 +26,8 @@ public class AutoPoints
     public static Pose intakingTargetPos2 = new Pose(intakingTargetX, 59.000);
     public static Pose intakingPrepPos3 = new Pose(95, 34);
     public static Pose intakingTargetPos3 = new Pose(intakingTargetX, 34.8);
-    public static Pose pressingAndIntakingGate = new Pose(134, 60,Math.toRadians(55));//new Pose(134.158, 58.232);
+    public static Pose pressGateForInt = new Pose(128, 62,Math.toRadians(25));//new Pose(134.158, 58.232);
+    public static Pose intakingGate = new Pose(135, 60,Math.toRadians(45));//new Pose(134.158, 58.232);
 
     public static Pose GoToPressAndIntakeControlPoint = new Pose(70.688, 50.357);
     public static Pose middlePressPrep = new Pose(intakingTargetX,66.5);

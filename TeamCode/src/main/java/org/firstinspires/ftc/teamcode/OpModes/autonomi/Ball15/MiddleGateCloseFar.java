@@ -6,18 +6,18 @@ import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.GoToPre
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeAvoidningCloseShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeCloseShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeJustPressingGate;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeLEAVEShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closePreloadShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closePressPrep;
 //import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeReadyToIntakeCloseShootPose;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.closeShootPose;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.getGoalStart;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingPrepPos3;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos1;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos2;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetPos3;
 import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingTargetX;
-import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.pressingAndIntakingGate;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.pressGateForInt;
+import static org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints.intakingGate;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoPoints;
 import org.firstinspires.ftc.teamcode.OpModes.autonomi.AutoSuperClass;
+import org.firstinspires.ftc.teamcode.PurelyCalculators.ExtraMath;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.GamepadClasses.BetterControllerClass;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TTimer;
@@ -50,12 +51,11 @@ public class MiddleGateCloseFar extends AutoSuperClass
 //    Pose shootPose2 = closeShootPose.setHeading(-Math.PI/5);
 //    Pose shootPose3 = closeShootPose.setHeading(-Math.PI/5);
 //    Pose shootPose4 = closeShootPose.setHeading(-Math.PI/5);
+    Path shootPreload, prepCloseIntake,collectClose,intakeCloseAndOpenGate, closePrepGate, closeOpenGate, shootClose, collectMiddle, shootMiddle, prepFar, collectFar, shootFar, intakeGate, shootGateBalls, shootGateBallsClose, pressGate, LEAVE;
 
-
-    Path shootPreload, prepCloseIntake,collectClose,intakeCloseAndOpenGate, closePrepGate, closeOpenGate, shootClose, collectMiddle, shootMiddle, prepFar, collectFar, shootFar,pressGateAndIntake, shootGateBalls, shootGateBallsClose;
-
-    PathChain goGetClose,collectCloseAndPressGate, collectMiddleAndPressGate, goGetHP, goGetFar;
+    PathChain goGetClose,collectCloseAndPressGate, collectMiddleAndPressGate, goGetHP, goGetFar, pressAndIntakeGate;
     Pose intakingTargetPos3 = new Pose(intakingTargetX-5, 34.8);
+    Pose LEAVING = new Pose();
 
     //    SectionedTelemetry telemetry;
     BetterControllerClass Gpad;
@@ -74,6 +74,7 @@ public class MiddleGateCloseFar extends AutoSuperClass
                         closeAvoidningCloseShootPose
                 ))
         );
+        shootPreload.setBrakingStrength(1);
 //        shootPreload.setBrakingStrength(0.5);
 //        shootClose.setLinearHeadingInterpolation(intakingTargetPos1.getHeading(),intakingTargetPos1.getHeading()-Math.PI/5);
 
@@ -92,24 +93,37 @@ public class MiddleGateCloseFar extends AutoSuperClass
                         closeAvoidningCloseShootPose
                 ))
         );
-        pressGateAndIntake =getPathFromBezierCurve(
+        pressGate = getPathFromBezierCurve(
                 correctBezierCurve(
                         new BezierCurve(
                                 closeAvoidningCloseShootPose,
                                 GoToPressAndIntakeControlPoint,
-                                pressingAndIntakingGate
+                                pressGateForInt
                         )
                 )
+        );
+        intakeGate =getPathFromBezierCurve(
+                correctBezierLine(
+                        new BezierLine(
+                                pressGateForInt,
+                                intakingGate
+                        )
+                )
+        );
+        pressAndIntakeGate = new PathChain(
+                pressGate,
+                intakeGate
         );
 
         shootGateBalls = getPathFromBezierCurve(
                 correctBezierLine(
                         new BezierLine(
-                                pressingAndIntakingGate,
+                                intakingGate,
 //                                new Pose(90,60),
                                 closeAvoidningCloseShootPose
                         )
                 ));
+        shootGateBalls.setBrakingStrength(0.5);
 //        shootGateBallsClose = getPathFromBezierCurve(
 //                correctBezierLine(
 //                        new BezierLine(
@@ -180,9 +194,9 @@ public class MiddleGateCloseFar extends AutoSuperClass
                 ))
         );
         collectFar = getPathFromBezierCurve(
-                correctBezierLine(new BezierLine(
-                        intakingPrepPos3,
-
+                correctBezierCurve(new BezierCurve(
+                        closeShootPose,
+                        new Pose(75.3,50.97),
                         intakingTargetPos3
                 ))
         );
@@ -191,12 +205,18 @@ public class MiddleGateCloseFar extends AutoSuperClass
                 collectFar
         );
 //        collectFar.setLinearHeadingInterpolation(intakingTargetPos3.getHeading()-Math.PI/5,0);
-
         shootFar = getPathFromBezierCurve(
                 correctBezierLine(new BezierLine(
                         intakingTargetPos3,
 
-                        closeCloseShootPose
+                        closeCloseShootPose.plus(new Pose(10,10,0))
+                ))
+        );
+        shootFar.setBrakingStrength(0.5);
+        LEAVE = getPathFromBezierCurve(
+                correctBezierLine(new BezierLine(
+                        closeCloseShootPose.plus(new Pose(10,10,0)),
+                        closeCloseShootPose.plus(new Pose(20,0,0))
                 ))
         );
 
@@ -278,7 +298,12 @@ public class MiddleGateCloseFar extends AutoSuperClass
                     }else {
                         bot.intake.setPower(1);
                     }
-                    if((!follower.isBusy())&& incrementingStep()){
+                    if((!follower.isBusy())){
+                        nextStep();
+                    }
+                },
+                ()->{
+                    if(stepTimer.getElapsedTime()>300){
                         bot.launchHandler.initLaunch();
                         nextStep();
                     }
@@ -287,7 +312,7 @@ public class MiddleGateCloseFar extends AutoSuperClass
                 {
                     if (bot.launchHandler.launchPhase==Bot.LaunchPhase.NULL){
                         setLaunchPose(shootGateBalls.endPose());
-                        bot.follower.followPath(pressGateAndIntake);
+                        bot.follower.followPath(pressAndIntakeGate);
                         bot.intake.setPower(1);
                         nextStep();
                     }
@@ -362,7 +387,7 @@ public class MiddleGateCloseFar extends AutoSuperClass
                     if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL&& incrementingStep())
                     {
                         setLaunchPose(shootFar.endPose());
-                        follower.followPath(goGetFar, true);
+                        follower.followPath(collectFar, true);
                         nextStep();
                     }
                 },
@@ -392,6 +417,11 @@ public class MiddleGateCloseFar extends AutoSuperClass
                         nextStep();
                     }
                 }
+//                ()->{
+//                    if(bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL){
+//                        bot.follower.followPath(LEAVE);
+//                    }
+//                }
         );
     }
     public boolean incrementingStep(){
@@ -443,7 +473,12 @@ public class MiddleGateCloseFar extends AutoSuperClass
     public void autonomousPathUpdate()
     {
         bot.update();
-        bot.aimTurret(launchPose);
+        Pose dif = follower.getPose().minus(launchPose);
+        if(ExtraMath.closeTo0(dif.getHeading(),Math.PI/5)&&ExtraMath.closeTo0(dif.getAsVector().getMagnitude(),10)){
+            bot.aimTurret(launchPose);
+        }else{
+            bot.aimTurret();
+        }
 //        if(currentStep == 1){
 //        }
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL/*&&currentStep == 1*/)
