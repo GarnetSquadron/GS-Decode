@@ -12,6 +12,20 @@
 // Custom definitions may go here
 
 // Include common definitions from above.
+tasks.register("runMath", JavaExec) {
+
+    dependsOn("compileDebugJavaWithJavac")
+
+    classpath = files(
+            layout.buildDirectory.dir(
+                    "intermediates/javac/debug/compileDebugJavaWithJavac/classes"
+            )
+    )
+
+    mainClass.set("org.firstinspires.ftc.teamcode.Runner")
+}
+
+
 buildscript {
     repositories {
         mavenCentral()

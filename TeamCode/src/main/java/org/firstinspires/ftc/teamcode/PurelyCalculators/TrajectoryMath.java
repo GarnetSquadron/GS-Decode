@@ -8,13 +8,15 @@ import java.util.Arrays;
 
 public class TrajectoryMath
 {
+    public static double minGoalHeight = 38.75;//0.9645 meters
+    public static double maxGoalHeight = 53.7598425;// 1.3655 meters
     static public double ratio = 0;
     /**
      * needs to be somewhere between minGoalHeight and maxGoalHeight, so why not the average
      */
     static public double getTargetHeight ()
     {
-        return FieldDimensions.maxGoalHeight * ratio + FieldDimensions.minGoalHeight * (1 - ratio) - RobotDimensions.Hood.approxBallExitHeight;
+        return maxGoalHeight * ratio + minGoalHeight * (1 - ratio) - RobotDimensions.Hood.approxBallExitHeight;
     }//The height difference is the height of the goal-the height of the ball as it exits
     public final static double g = 386.09;//9.8 m/s^2=386.09in/s
 
@@ -31,8 +33,14 @@ public class TrajectoryMath
         double targetHeight = getTargetHeight();
         double b = g*targetHeight-vel*vel;
         double c = distance*distance+targetHeight*targetHeight;
+//        System.out.println("targetHeight: "+targetHeight+ "\nb:" +b+"\nc:"+c);
         double[] tSquared = ExtraMath.quadraticFormula(a,b,c);
+
+
         if(tSquared.length==2){
+//            System.out.println("tSquared:["+tSquared[0]+", "+tSquared[1]+"]");
+//            System.out.println("tsquared exists");
+//            return tSquared;
             //not sure if stream is the fastest option but its simpler
             return Arrays.stream(tSquared)//solves a quadratic in terms of t^2
                     .map(Math::sqrt)//gets t from t^2 (we know t is positive because it is the time after launch, not before)
@@ -40,6 +48,12 @@ public class TrajectoryMath
                     .toArray();//turns it back to an arrays
         }
         else return new double[] {};
+    }
+    public static double getDet(double vel,double distance){
+        double targetHeight = getTargetHeight();
+        double b = g*targetHeight-vel*vel;
+        double c = distance*distance+targetHeight*targetHeight;
+        return b*b-4*a*c;
     }
     /**
      * chooses the optimum angle (rn if theres a choice it just chooses the higher one by default because that one is more fun)
@@ -69,7 +83,7 @@ public class TrajectoryMath
      * @param t the times that are
      * @return
      */
-    static double getAngleFromTime(double t,double distance){
+    public static double getAngleFromTime(double t,double distance){
         double targetHeight = getTargetHeight();
         return Math.atan((g/2*t*t+targetHeight)/(distance));
     }
