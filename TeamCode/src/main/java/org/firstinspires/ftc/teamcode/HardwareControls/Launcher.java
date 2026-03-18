@@ -124,7 +124,7 @@ public class Launcher {
     public void updatePID(double targetVel){
         PIDF.updateArrays(motor1.getEncoder().getVelocity(),targetVel,motor1.getEncoder().getPos());
     }
-    public boolean spinFlyWheelWithinRange(double flyVel){
+    public boolean spinFlyWheelWithinRange(double flyVel,double EXTRApower){
         //spin up the flywheel to get it within the provided range
         //if its in the range return true otherwise
 
@@ -133,9 +133,14 @@ public class Launcher {
         updatePID(flyVel);
         double power = PIDF.getPidNewWay(currentVel,flyVel,motor1.getEncoder().getPos());
 
-        spinUpFlywheel(power);
+        spinUpFlywheel(power+EXTRApower);
         //temporary flywheel code, just guesses the velocity.
         //it doesn't exist anymore mb
+
+        return PIDF.isStable();
+    }
+    public boolean spinFlyWheelWithinRange(double flyVel){
+        spinFlyWheelWithinRange(flyVel,0);
 
         return PIDF.isStable();
     }

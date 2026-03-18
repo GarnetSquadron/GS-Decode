@@ -27,7 +27,7 @@ public class FieldDimensions
     /**
      * red side of the triangle
      */
-    public static Pose botOnTinyTriangleRedSide = new Pose(87.3,9.54,Math.toRadians(-90));
+    public static Pose botOnTinyTriangleRedSide = new Pose(87.3,9.54,Math.toRadians(0));
     /**
      * blue side of the triangle
      */

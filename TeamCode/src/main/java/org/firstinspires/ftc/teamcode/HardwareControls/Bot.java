@@ -134,7 +134,7 @@ public class Bot
         putConstant(132,320,55);
         putConstant(130,330,55);
 //        putConstant(138,340,55);
-//        putConstant(144,340,45);
+        putConstant(143,350,48);
 //        putConstant(150,350,43);
     }
     public Bot(HardwareMap hardwareMap, double[] targetGoalPos,double turretPosition){
@@ -253,7 +253,7 @@ public class Bot
         }
 
         public boolean pauseBetweenShots(){
-            return false;//getDistance()>120;
+            return getDistance()>120;
         }
         public boolean isUpToSpeed(){
             return pauseBetweenShots()?launcher.PIDF.isStable():launcher.PIDF.isStable();
@@ -313,25 +313,27 @@ public class Bot
 ////                telemetry.addData("vel has destabilized",launcher.launcherPIDF.hasDestabilized());
 //
 //                if(shouldSpinUp()&&launchPhase!=LaunchPhase.SPINNING_UP&&!isPausedToSpinUp){
-//                    isPausedToSpinUp = true;
+////                    isPausedToSpinUp = true;
+//                    launchPhase = LaunchPhase.SPINNING_UP;
 //                    pauseStartTime = TIME.getTime();
 //                    intake.setPower(pauseBetweenShots()?-0.5:0);
 //                }
-//                if(isPausedToSpinUp){
-//                    launcher.spinFlyWheelWithinRange(targetSpeed);
-////                    telemetry.addLine("paused");
-//                    intake.setPower(0);
-//                    if(isUpToSpeed()){
-//                        isPausedToSpinUp = false;
-//                        //change the phase start time so that there is the correct time remaining in that phase.
-//                        phaseStartTime = TIME.getTime();
-//                        if(launchPhase==LaunchPhase.RELEASING_BALLS){powerIntake();}
-//                    }
-//                    //if paused, do not carry out the instructions in the switch case
-//                    return launchPhase;
-//                }
+////                if(isPausedToSpinUp){
+////                    launcher.spinFlyWheelWithinRange(targetSpeed);
+//////                    telemetry.addLine("paused");
+////                    intake.setPower(0);
+////                    if(isUpToSpeed()){
+////                        isPausedToSpinUp = false;
+////                        //change the phase start time so that there is the correct time remaining in that phase.
+////                        phaseStartTime = TIME.getTime();
+////                        if(launchPhase==LaunchPhase.RELEASING_BALLS){powerIntake();}
+////                    }
+////                    //if paused, do not carry out the instructions in the switch case
+////                    return launchPhase;
+////                }
 //            }
-//            telemetry.addLine("going to switch case");
+            telemetry.addLine("going to switch case");
+            double EXTRApower = 0.05;
             switch (launchPhase){
                 case NULL: {
                     break;
@@ -357,11 +359,10 @@ public class Bot
                     }
                     break;
                 }
-
                 case GATE_OPENING:{
                     intake.stop();
                     intake.openGate();
-                    launcher.spinFlyWheelWithinRange(targetSpeed);
+                    launcher.spinFlyWheelWithinRange(targetSpeed,EXTRApower);
                     if (getElapsedTime() > 0.5)
                     {
                         launchPhase = LaunchPhase.RELEASING_BALLS;
@@ -373,7 +374,7 @@ public class Bot
                 case RELEASING_BALLS:{
                     intake.openGate();
                     powerIntake();
-                    launcher.spinFlyWheelWithinRange(targetSpeed);
+                    launcher.spinFlyWheelWithinRange(targetSpeed,EXTRApower);
 //                    telemetry.addLine("releasing balls!");
                     if(getElapsedTime() > 0.5){
                         launchPhase = LaunchPhase.KICKING_SERVO;
@@ -384,7 +385,7 @@ public class Bot
                 case KICKING_SERVO:{
                     intake.openGate();
                     intake.kickBall();
-                    launcher.spinFlyWheelWithinRange(targetSpeed);
+                    launcher.spinFlyWheelWithinRange(targetSpeed,EXTRApower);
                     if(getElapsedTime()>0.5){
                         launchPhase = LaunchPhase.SHUTDOWN;
                         phaseStartTime = TIME.getTime();
