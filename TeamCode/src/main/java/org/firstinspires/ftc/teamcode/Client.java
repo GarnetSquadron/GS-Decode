@@ -1,71 +1,89 @@
 package org.firstinspires.ftc.teamcode;
 
-
 import java.io.*;
 import java.net.*;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.core.*;
 
 public class Client {
 
+    //temp
+    String c = "";
     // Initialize socket and input/output streams
     private Socket s = null;
+    private double lastPush;
     private DataInputStream in = null;
     private DataOutputStream out = null;
-    public String latestError = "";
-    private String addr;
-    private int port;
-    private String m = " ";
+    private boolean connected = false;
+    //initialize the Json payload and Json tools
+    ObjectMapper mapper = new ObjectMapper();
+    public JsonPayload load = new JsonPayload();
+    int logsSent = 0;
+    private String m = "";
+    public String latestInfo ="none";
 
-
-    public Client(String addr, int port)
-    {
-        this.addr = addr;
-        this.port = port;
-    }
-    // Establish a connection
-    public boolean attemptConnection() {
+    void connect(String addr, int port) {
+        latestInfo = ("attempting to connect");
+        // Establish a connection
         try {
             s = new Socket(addr, port);
+            latestInfo = ("Connected");
+            connected = true;
 
             // Takes input from terminal
             in = new DataInputStream(System.in);
 
             // Sends output to the socket
             out = new DataOutputStream(s.getOutputStream());
-            return true;
-        }
-        catch (UnknownHostException u) {
-            latestError = u.getMessage();
-            return false;
-        }
-        catch (IOException i) {
-            latestError = i.getMessage();
-            return false;
+        } catch (UnknownHostException u) {
+            latestInfo = ("unable to connect" + u);
+            return;
+        } catch (IOException i) {
+            latestInfo = (i.getMessage());
+            return;
         }
     }
-        public void sendStringViaSocket(String sm) {
-            if(sm != null && sm.length() > 0){
-                m = sm;
+
+    public Client(String addr, int port) {
+        connect(addr, port);
+        int timer = 0;
+        while (!connected) {
+            timer++;
+            if (timer > 100) {
+                connect(addr, port);
+                timer = 0;
             }
-            // Keep reading until "Over" is input
-            if (!m.equals("Over")) {
-                try {
-                    out.writeUTF(m);
-                } catch (IOException i) {
-                    latestError = i.getMessage();
-                }
-            }
-            else{ // Close the connection
-                try {
-                    in.close();
-                    out.close();
-                    s.close();
-                } catch (IOException i) {
-                    latestError = i.getMessage();
-                }
-            }
+
         }
+        // String to read message from input
+        // Keep reading until "Over" is input
 
-    public static void main(String[] args) {
 
+
+    }
+    public void close(){
+        // Close the connection
+        try {
+            latestInfo = "disconnecting";
+            out.writeUTF("Over");
+            in.close();
+            out.close();
+            s.close();
+        } catch (IOException i) {
+            latestInfo = (i.getMessage());
+        }
+    }
+    public void sendLog(){
+        if ((System.currentTimeMillis() -lastPush)>5) {
+            try {
+                load.setTimeStamp((System.nanoTime() - lastPush) / 1000000);
+                m = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(load);
+                latestInfo = (m);
+                out.writeUTF(m);
+            } catch (IOException e) {
+                latestInfo = ("error " + e);
+            }
+            lastPush = System.currentTimeMillis();
+        }
     }
 }

@@ -30,11 +30,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.Telemetry.SectionedTelemetry;
 import org.firstinspires.ftc.teamcode.Telemetry.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
-import org.firstinspires.ftc.teamcode.logger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 @Configurable
