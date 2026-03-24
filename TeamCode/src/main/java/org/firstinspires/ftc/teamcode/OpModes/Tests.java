@@ -30,7 +30,11 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.Telemetry.SectionedTelemetry;
 import org.firstinspires.ftc.teamcode.Telemetry.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
+import org.firstinspires.ftc.teamcode.logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 @Configurable
@@ -66,6 +70,7 @@ public class Tests extends SelectableOpMode
             s.add("light test",LightTest::new);
             s.add("simple telemetry", SectionedTelemetryTest::new);
             s.add("flywheel test",FlyWheelTest::new);
+            s.add("logger test", loggerTest::new);
         });
     }
 
@@ -187,10 +192,10 @@ class ServoTest extends OpMode
             servo.setPosition(1);//up
         }
         if (gamepad1.a) {
-            servo.setPosition(0.6);
+            servo.setPosition(0.66666);
         }
         if (gamepad1.b) {
-            servo.setPosition(0.14);
+            servo.setPosition(0.33333);
         }
         if (gamepad1.y) {
             servo.setPosition(0);//down
@@ -344,14 +349,12 @@ class TurretMathTest extends OpMode{
 }
 class HoodTest extends OpMode{
     Launcher launcher;
-    ColorSensor colorSensor;
     double distance = 48;
     double vel = 273;
     @Override
     public void init()
     {
         launcher = new Launcher(hardwareMap);
-        colorSensor = hardwareMap.get(ColorSensor.class,"sensor");
     }
 
     @Override
@@ -387,7 +390,6 @@ class HoodTest extends OpMode{
         telemetry.addData("t^2 solution #1", tSquared.length==0?-1:tSquared[0]);
         telemetry.addData("t^2 solution #2", tSquared.length<2?-1:tSquared[1]);
         telemetry.addData("length",angles.length);
-        telemetry.addData("color", colorSensor.argb());
         for(int i=0;i<angles.length;i++){
             telemetry.addData("angle "+String.valueOf(i),Math.toDegrees(angles[i]));
         }
@@ -594,12 +596,12 @@ class FlyWheelTest extends OpMode{
 //            Kd -= 0.01;
 //        }
         gpad.update();
-        launcher.PIDF.Kp += gpad.getIncrement("dpad_up","dpad_down",0.001);
+        launcher.PIDF.Kp += gpad.getIncrement("dpad_up","dpad_down",0.0001);
         launcher.PIDF.Ki += gpad.getIncrement("dpad_right","dpad_left",0.00001);
-        launcher.PIDF.Kd += gpad.getIncrement("a","y",0.00001);
-        launcher.PIDF.Kv += gpad.getIncrement("b","x",0.001);
+        launcher.PIDF.Kd += gpad.getIncrement("a","y",0.001);
+        launcher.PIDF.Ks += gpad.getIncrement("b","x",0.001);
         target += gpad.getIncrement("left_bumper","right_bumper",10);
-        launcher.updateSpeedMeasurements(target);
+        launcher.updateTelemetry(target);
         if(gpad.getCurrentValue("right_trigger")||gpad.getCurrentValue("left_trigger")) {
             //launcher.launcherPIDF.setConstants(Kp, Kd,0, Ks,Kv,Ka);
             telemetry.addData("stabilized at target",launcher.spinFlyWheelWithinRange(target));
@@ -613,11 +615,11 @@ class FlyWheelTest extends OpMode{
         }
 //        telemetry.addData("target ", target);
 //        telemetry.addData("velocity",launcher.getFlywheelEncoder().getVelocity());
-        if(launcher.PIDF.hasStabilized()&&!prevStabilized) {
+        if(launcher.PIDF.isStable()&&!prevStabilized) {
             spunUpTime = TIME.getTime();
             oscilCount++;
         }
-        prevStabilized = launcher.PIDF.hasStabilized();
+        prevStabilized = launcher.PIDF.isStable();
         lights.leftLight.setColor(prevStabilized? Light.Color.Orange: Light.Color.Green);
 
 
@@ -648,4 +650,24 @@ class FlyWheelTest extends OpMode{
         telemetry.clearAll();
     }
 
+}
+
+class loggerTest extends OpMode{
+    private static final Logger log = LoggerFactory.getLogger(loggerTest.class);
+    private logger logger;
+    int i = 0;
+    String error = "none";
+    @Override
+    public void init(){
+        logger = new logger();
+        logger.connect();
+    }
+    @Override
+    public void loop(){
+        i++;
+        error = logger.c.latestError;
+        logger.send("this is a message"+i);
+        telemetry.addData("error: ", error);
+        telemetry.update();
+    }
 }

@@ -30,7 +30,6 @@ public class MainTeleop extends SettingSelectorOpMode
     double driverAngle = 0;
     VoltageSensor voltageSensor;
     KickStand stand;
-    boolean adjustingConstants = false;
     Pose startingPose;
     double turretPos;
     public static Follower follower;
@@ -209,6 +208,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //bot.intake.openGate();
         currentMonitor = new CurrentMonitor(hardwareMap,bot);
         follower.startTeleopDrive();
+        bot.launcher.resetPID();
     }
     public void move(double yInput,double xInput,double turnInput){
         double forwardForce = modifyInput(0.05,yInput);
@@ -234,6 +234,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //I wanted to find a better way, but this seems like the best option for organizing the button inputs
         //==============================INPUTS====================================\\
         boolean intakeToggle = Gpad.getCurrentValue(intakeButtonName);
+        boolean idleFlywheelInput = Gpad.getToggleValue("b");
         boolean initSpinUpFlywheelInput = Gpad.getRisingEdge(launchButtonName);
         boolean spinUpFlywheelInput = Gpad.getCurrentValue(launchButtonName);
         boolean releaseTheBallsInput = Gpad.getFallingEdge(launchButtonName);
@@ -252,8 +253,6 @@ public class MainTeleop extends SettingSelectorOpMode
         bot.velMap.increment(bot.getDistance(),Gpad.getIncrement("dpad_up","dpad_down",1));
         bot.angleMap.increment(bot.getDistance(),Gpad.getIncrement("dpad_right","dpad_left",1));
 
-        adjustingConstants = Gpad.getToggleValue("b");
-        if(Gpad.getRisingEdge("x")&&adjustingConstants){bot.oldPutConstant(bot.getDistance(),bot.launcher.flywheelToBallSpeedRatio,TrajectoryMath.ratio,bot.launcher.ratio);}
 
         //servoPos = gamepad1.left_trigger*20+30;
 
@@ -263,15 +262,21 @@ public class MainTeleop extends SettingSelectorOpMode
 
         if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
             if(initSpinUpFlywheelInput){
-                bot.launcher.resetPID();
+//                bot.launcher.resetPID();
             }
             if (spinUpFlywheelInput)
             {
                 bot.spinFlywheelToTunedSpeed();
-            }
-            if (releaseTheBallsInput)
+            }else if (releaseTheBallsInput)
             {
                 bot.launchHandler.initLaunch();
+            }else{
+                if(!idleFlywheelInput){
+                    bot.idleFlywheel();
+                }else{
+                    bot.launcher.updatePID(0);
+                    bot.launcher.setPower(0);
+                }
             }
         }
         else {
@@ -303,7 +308,7 @@ public class MainTeleop extends SettingSelectorOpMode
 
         double launchAngle = bot.launcher.getAngle();
 
-        bot.updateSpeedMeasure(follower.getPose().getAsVector());
+//        bot.updatePIDMeasures(follower.getPose().getAsVector());
         Bot.LaunchPhase launchPhase = bot.update();
 //        if(!adjustingConstants){
         bot.updateConstants();
@@ -418,7 +423,7 @@ public class MainTeleop extends SettingSelectorOpMode
         //telemetry.addData("is auto clear",telemetry.isAutoClear());
         telemetry.updateSection();
         telemetry.updateSection("TURRET");
-//        telemetry.updateSection("LAUNCHER");
+        telemetry.updateSection("LAUNCHER");
 //        telemetry.updateSection("PIDF");
 //        telemetry.updateSection("BOT");
 //        telemetry.updateSection("TURRET");

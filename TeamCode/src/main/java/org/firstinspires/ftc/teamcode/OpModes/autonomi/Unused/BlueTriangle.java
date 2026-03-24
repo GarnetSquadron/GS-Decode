@@ -225,7 +225,7 @@ public class BlueTriangle extends AutoSuperClass {
         if (bot.launchHandler.launchPhase == Bot.LaunchPhase.NULL) {
             bot.spinFlywheelToTunedSpeed(shootPose.getAsVector());
         }
-        bot.updateSpeedMeasure(shootPose.getAsVector());
+//        bot.updatePIDMeasures(shootPose.getAsVector());
         updateSteps();
     }
 
