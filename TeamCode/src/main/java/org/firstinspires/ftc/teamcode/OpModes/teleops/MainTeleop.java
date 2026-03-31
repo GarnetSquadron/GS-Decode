@@ -407,7 +407,7 @@ public class MainTeleop extends SettingSelectorOpMode
 //
 //            telemetry.addData("target goal pos x", targetGoalPos[0]);
 //            telemetry.addData("target goal pos y", targetGoalPos[1]);
-//            telemetry.addData("position", follower.getPose());
+            telemetry.addData("position", follower.getPose());
         }
         else{
             telemetry.addLine(logo);

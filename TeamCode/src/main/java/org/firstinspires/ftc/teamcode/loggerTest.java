@@ -3,20 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @TeleOp(name = "loggerTest")
 public class loggerTest extends OpMode {
-    private static final Logger log = LoggerFactory.getLogger(loggerTest.class);
-    private logger logger;
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(loggerTest.class);
+    private Logger logger;
     int i = 0;
     String error = "none";
 
     @Override
     public void start() {
-        logger = new logger();
-        logger.connect();
+        logger = Logger.getInstance();
     }
     @Override
     public void init(){
@@ -25,10 +23,14 @@ public class loggerTest extends OpMode {
     @Override
     public void loop() {
         i++;
-        error = logger.c.latestError;
-        logger.send("this is a message" + i);
-        telemetry.addData("error: ", error);
-        telemetry.update();
+        if(logger.error != null){
+            telemetry.addData("error", logger.error);
+        }
+        telemetry.addData("message",logger.getMessage());
+        logger.addData(i,"value");
+        logger.updatePayload();
+        logger.sendLog();
+
     }
     @Override
     public void stop(){
