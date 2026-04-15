@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.app.ApplicationErrorReport;
+
+import com.bylazar.battery.PanelsBattery;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.slf4j.LoggerFactory;
-
 @TeleOp(name = "loggerTest")
 public class loggerTest extends OpMode {
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(loggerTest.class);
     private Logger logger;
     int i = 0;
     String error = "none";
@@ -27,6 +27,7 @@ public class loggerTest extends OpMode {
             telemetry.addData("error", logger.error);
         }
         telemetry.addData("message",logger.getMessage());
+        
         logger.addData(i,"value");
         logger.updatePayload();
         logger.sendLog();

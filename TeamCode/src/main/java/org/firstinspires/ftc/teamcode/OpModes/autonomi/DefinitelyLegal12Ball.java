@@ -260,7 +260,7 @@ public class DefinitelyLegal12Ball extends AutoSuperClass
         initSteps(
 //                ()->{
 //
-//                    if(gamepad1.b){//TODO: remove this because it is illegal for a real match
+//                    if(gamepad1.b){//TODO: remove this because it is illegal for a real match, or not
 //                        telemetry.addLine("next step");
 //                        nextStep();
 //                    }

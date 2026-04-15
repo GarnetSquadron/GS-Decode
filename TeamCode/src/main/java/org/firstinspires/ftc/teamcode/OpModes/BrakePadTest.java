@@ -3,15 +3,15 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.HardwareControls.BreakPad;
+import org.firstinspires.ftc.teamcode.HardwareControls.BrakePad;
 
-@TeleOp(name = "launcher")
-public class BreakPadTest extends OpMode {
+@TeleOp(name = "BrakePad")
+public class BrakePadTest extends OpMode {
 
-    BreakPad pad;
+    BrakePad pad;
     @Override
     public void init(){
-        pad = new BreakPad(hardwareMap);
+        pad = new BrakePad(hardwareMap);
     }
 
     @Override

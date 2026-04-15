@@ -30,6 +30,7 @@ import org.firstinspires.ftc.teamcode.PurelyCalculators.time.TIME;
 import org.firstinspires.ftc.teamcode.Telemetry.SectionedTelemetry;
 import org.firstinspires.ftc.teamcode.Telemetry.SimplerTelemetry;
 import org.firstinspires.ftc.teamcode.Vision.aprilTags.ObeliskIdentifier;
+import org.firstinspires.ftc.teamcode.Logger;
 
 import java.util.List;
 
@@ -649,20 +650,19 @@ class FlyWheelTest extends OpMode{
 }
 
 class loggerTest extends OpMode{
-    private static final Logger log = LoggerFactory.getLogger(loggerTest.class);
-    private logger logger;
+    private Logger logger;
     int i = 0;
     String error = "none";
     @Override
     public void init(){
-        logger = new logger();
-        logger.connect();
+        logger = Logger.getInstance();
     }
     @Override
     public void loop(){
         i++;
-        error = logger.c.latestError;
-        logger.send("this is a message"+i);
+        error = logger.c.latestInfo;
+        logger.addData("rando", "this is important");
+        logger.sendLog();
         telemetry.addData("error: ", error);
         telemetry.update();
     }
