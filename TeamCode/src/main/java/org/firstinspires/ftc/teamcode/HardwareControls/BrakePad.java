@@ -7,7 +7,7 @@ public class BrakePad {
     boolean dropped = false;
     Servo breakServo;
     public BrakePad(HardwareMap hardwareMap){
-        breakServo = hardwareMap.get(Servo.class, "breakPad");
+        breakServo = hardwareMap.get(Servo.class, "brakePad");
         breakServo.setPosition(0);
     }
 
