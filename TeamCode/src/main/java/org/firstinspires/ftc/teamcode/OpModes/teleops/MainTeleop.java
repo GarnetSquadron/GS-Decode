@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.Dimensions.FieldDimensions;
 import org.firstinspires.ftc.teamcode.Dimensions.RobotDimensions;
 import org.firstinspires.ftc.teamcode.HardwareControls.Bot;
+import org.firstinspires.ftc.teamcode.HardwareControls.BrakePad;
 import org.firstinspires.ftc.teamcode.HardwareControls.KickStand;
 import org.firstinspires.ftc.teamcode.OpModes.CurrentMonitor;
 import org.firstinspires.ftc.teamcode.OpModes.SettingSelectorOpMode;
@@ -28,6 +29,7 @@ import kotlin.Pair;
 public class MainTeleop extends SettingSelectorOpMode
 {
     double driverAngle = 0;
+    BrakePad brakePad;
     VoltageSensor voltageSensor;
     KickStand stand;
     Pose startingPose;
@@ -43,6 +45,7 @@ public class MainTeleop extends SettingSelectorOpMode
     String intakeButtonName,launchButtonName,aimButtonName,stopLaunchName;
     static HashMap<String,String> selections = new HashMap<String, String>(){{put("personal config","Nathan");put("position","tiny triangle");}};
 
+    boolean brakePadMode = false;
     BetterControllerClass Gpad;
 
     CurrentMonitor currentMonitor;
@@ -209,6 +212,8 @@ public class MainTeleop extends SettingSelectorOpMode
         currentMonitor = new CurrentMonitor(hardwareMap,bot);
         follower.startTeleopDrive();
         bot.launcher.resetPID();
+        brakePad = new BrakePad(hardwareMap);
+        brakePad.raisePad();
     }
     public void move(double yInput,double xInput,double turnInput){
         double forwardForce = modifyInput(0.05,yInput);
@@ -239,6 +244,8 @@ public class MainTeleop extends SettingSelectorOpMode
         boolean spinUpFlywheelInput = Gpad.getCurrentValue(launchButtonName);
         boolean releaseTheBallsInput = Gpad.getFallingEdge(launchButtonName);
         boolean stopTheBallsInput = Gpad.getRisingEdge(stopLaunchName);
+
+        brakePadMode = Gpad.getToggleValue("y");
 //        boolean turretZeroInput = gamepad1.x;
         boolean autoAimOn = Gpad.getCurrentValue(aimButtonName);
         boolean resetTurretPID = Gpad.getRisingEdge(aimButtonName);
@@ -263,6 +270,9 @@ public class MainTeleop extends SettingSelectorOpMode
         if(bot.launchHandler.launchPhase== Bot.LaunchPhase.NULL){
             if(initSpinUpFlywheelInput){
 //                bot.launcher.resetPID();
+                if(brakePadMode){
+                    brakePad.dropPad2();
+                }
             }
             if (spinUpFlywheelInput)
             {
@@ -277,6 +287,7 @@ public class MainTeleop extends SettingSelectorOpMode
                     bot.launcher.updatePID(0);
                     bot.launcher.setPower(0);
                 }
+                brakePad.raisePad();
             }
         }
         else {

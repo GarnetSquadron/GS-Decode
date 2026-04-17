@@ -16,10 +16,19 @@ public class BrakePadTest extends OpMode {
 
     @Override
     public void loop(){
+        if (gamepad1.b){
+            pad.dropPadd();
+        }
         if (gamepad1.a){
             pad.dropPad();
         }
-        if (gamepad1.b){
+        if (gamepad1.x){
+            pad.dropPad2();
+        }
+        if (gamepad1.y){
+            pad.dropPad3();
+        }
+        if (gamepad1.left_bumper){
             pad.raisePad();
         }
     }
